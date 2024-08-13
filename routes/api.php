@@ -14,6 +14,9 @@ use App\Http\Controllers\AuthController;
 |
 */
 
+Route::get('/test2', function(){
+    return "test2";
+});
 
 // Registration Route
 Route::post('/register', [AuthController::class, 'register']);
@@ -21,6 +24,6 @@ Route::post('/register', [AuthController::class, 'register']);
 // Login Route
 Route::post('/login', [AuthController::class, 'login']);
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
+Route::middleware(['auth:api', 'check.subscription'])->get('/user', function (Request $request) {
     return $request->user();
 });

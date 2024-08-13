@@ -42,7 +42,6 @@ class LoginController extends Controller
      * */
     public function username()
     {
-        return " blank";
         $identity = request()->identity;
         $field = filter_var($identity, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
         request()->merge([$field => $identity]);

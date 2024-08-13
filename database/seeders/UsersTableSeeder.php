@@ -29,47 +29,57 @@ class UsersTableSeeder extends Seeder
 
         $d = [
 
-            ['name' => 'CJ Inspired',
+            [
+                'name' => 'CJ Inspired',
                 'email' => 'cj@cj.com',
                 'username' => 'cj',
                 'password' => $password,
                 'user_type' => 'super_admin',
+                'organisation_id' => 3,
                 'code' => strtoupper(Str::random(10)),
                 'remember_token' => Str::random(10),
             ],
 
-            ['name' => 'Admin KORA',
-            'email' => 'admin@admin.com',
-            'password' => $password,
-            'user_type' => 'admin',
-            'username' => 'admin',
-            'code' => strtoupper(Str::random(10)),
-            'remember_token' => Str::random(10),
+            [
+                'name' => 'Admin KORA',
+                'email' => 'admin@admin.com',
+                'password' => $password,
+                'user_type' => 'admin',
+                'username' => 'admin',
+                'organisation_id' => 2,
+                'code' => strtoupper(Str::random(10)),
+                'remember_token' => Str::random(10),
             ],
 
-            ['name' => 'Teacher Chike',
+            [
+                'name' => 'Teacher Chike',
                 'email' => 'teacher@teacher.com',
                 'user_type' => 'teacher',
                 'username' => 'teacher',
                 'password' => $password,
+                'organisation_id' => 1,
                 'code' => strtoupper(Str::random(10)),
                 'remember_token' => Str::random(10),
             ],
 
-            ['name' => 'Parent Kaba',
+            [
+                'name' => 'Parent Kaba',
                 'email' => 'parent@parent.com',
                 'user_type' => 'parent',
                 'username' => 'parent',
                 'password' => $password,
+                'organisation_id' => 2,
                 'code' => strtoupper(Str::random(10)),
                 'remember_token' => Str::random(10),
             ],
 
-            ['name' => 'Accountant Jeff',
+            [
+                'name' => 'Accountant Jeff',
                 'email' => 'accountant@accountant.com',
                 'user_type' => 'accountant',
                 'username' => 'accountant',
                 'password' => $password,
+                'organisation_id' => 3,
                 'code' => strtoupper(Str::random(10)),
                 'remember_token' => Str::random(10),
             ],

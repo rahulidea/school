@@ -8,6 +8,7 @@ use App\Models\Nationality;
 use App\Models\StaffRecord;
 use App\Models\State;
 use App\Models\StudentRecord;
+use App\Models\Organisation;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -35,7 +36,7 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
-
+    
     public function student_record()
     {
         return $this->hasOne(StudentRecord::class);
@@ -64,5 +65,10 @@ class User extends Authenticatable
     public function staff()
     {
         return $this->hasMany(StaffRecord::class);
+    }
+
+    public function organisation()
+    {
+        return $this->belongsTo(Organisation::class);
     }
 }
