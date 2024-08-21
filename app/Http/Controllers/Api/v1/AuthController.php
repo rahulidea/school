@@ -1,14 +1,15 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\v1;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use App\User;
 use Illuminate\Support\Str;
+use App\Http\Controllers\Api\APIController;
 
-class AuthController extends Controller
+class AuthController extends APIController
 {
     public function register(Request $request)
     {
@@ -19,7 +20,8 @@ class AuthController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
+            return $this->throwValidation($validation->errors(),422);
+            // return response()->json($validator->errors(), 422);
         }
 
         $user = User::create([
@@ -28,7 +30,8 @@ class AuthController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        return response()->json(['message' => 'User registered successfully!'], 201);
+        return $this->respond('User registered successfully!',201);
+        // return response()->json(['message' => 'User registered successfully!'], 201);
     }
 
     public function login(Request $request)
@@ -37,19 +40,22 @@ class AuthController extends Controller
             'email' => 'required|string|email',
             'password' => 'required|string',
         ]);
-
+        
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
+            return $this->throwValidation($validation->messages()->first(),422);
+            // return response()->json($validator->errors(), 422);
         }
 
         $user = User::where('email', $request->email)->first();
 
         if (!$user || !Hash::check($request->password, $user->password)) {
-            return response()->json(['message' => 'Unauthorized'], 401);
+            return $this->throwValidation("Wrong user name and password",401);
+            // return response()->json(['message' => 'Unauthorized'], 401);
         }
 
         $token = $user->createToken('Personal Access Token')->plainTextToken;
 
-        return response()->json(['token' => $token], 200);
+        return $this->respond('Login success',$token);
+        // return response()->json(['token' => $token], 200);
     }
 }

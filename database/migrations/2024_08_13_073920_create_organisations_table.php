@@ -16,7 +16,7 @@ class CreateOrganisationsTable extends Migration
         Schema::create('organisations', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->foreignId('subscription_id')->nullable()->constrained()->onDelete('cascade');
+            $table->foreignId('subscription_id')->nullable();
             $table->date('expiry_date');
             $table->timestamps();
         });
