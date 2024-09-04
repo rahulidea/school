@@ -9,6 +9,7 @@ use App\Models\StaffRecord;
 use App\Models\State;
 use App\Models\StudentRecord;
 use App\Models\Organisation;
+use App\Models\UserType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -71,4 +72,10 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Organisation::class);
     }
+
+    public function getUserTypeId()
+    {
+        return UserType::where('title', $this->user_type)->value('id');
+    }
+
 }

@@ -9,6 +9,10 @@ Route::get('/terms-of-use', 'HomeController@terms_of_use')->name('terms_of_use')
 
 Route::group(['middleware' => 'auth'], function () {
 
+    Route::get('/testt', function(){
+        return Auth::user()->getUserTypeId();
+    });
+
     Route::get('/', 'HomeController@dashboard')->name('home');
     Route::get('/home', 'HomeController@dashboard')->name('home');
     Route::get('/dashboard', 'HomeController@dashboard')->name('dashboard');
