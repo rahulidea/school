@@ -5,7 +5,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Api\v1\AuthController;
 use App\Http\Controllers\Api\v1\UserHomeController;
 use App\Http\Controllers\Api\v1\StudentController;
-
+use App\Http\Controllers\API\v1\AttendanceController;
 
 
 /*
@@ -78,6 +78,22 @@ Route::group(['namespace' => 'Api\V1', 'prefix' => 'v1', 'as' => 'v1.'], functio
 
         });
             
+        Route::middleware('check.subscription')->group(function(){
+            Route::get('/user', function(Request $request) {
+                return $request->user();
+            });
 
+            Route::get('/another-protected-route', function() {
+                return "This route is protected by both auth and subscription check";
+            });
+        });
+        // Route that not required subscription check
+        Route::post('/test3', function(){
+            return "This route not required any subscription";
+        });
+        Route::post('/holidays/store-update', [AttendanceController::class, 'storeOrUpdateHoliday']);
+        Route::post('/attendance/add', [AttendanceController::class, 'store']);
+        Route::get('/attendance', [AttendanceController::class, 'index']);
+    //    Route::post('/attendance', [AttendanceController::class, 'index']);
     });
 });
