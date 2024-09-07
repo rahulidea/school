@@ -29,6 +29,7 @@ class StudentRecordController extends Controller
         $this->my_class = $my_class;
         $this->user = $user;
         $this->student = $student;
+
    }
 
     public function reset_pass($st_id)
@@ -103,6 +104,7 @@ class StudentRecordController extends Controller
 
     public function not_graduated($sr_id)
     {
+        
         $d['grad'] = 0;
         $d['grad_date'] = NULL;
         $d['session'] = Qs::getSetting('current_session');
@@ -113,7 +115,9 @@ class StudentRecordController extends Controller
 
     public function show($sr_id)
     {
+
         $sr_id = Qs::decodeHash($sr_id);
+     
         if(!$sr_id){return Qs::goWithDanger();}
 
         $data['sr'] = $this->student->getRecord(['id' => $sr_id])->first();
@@ -137,6 +141,7 @@ class StudentRecordController extends Controller
         $data['dorms'] = $this->student->getAllDorms();
         $data['states'] = $this->loc->getStates();
         $data['nationals'] = $this->loc->getAllNationals();
+      
         return view('pages.support_team.students.edit', $data);
     }
 
