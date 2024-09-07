@@ -65,7 +65,9 @@ Route::group(['namespace' => 'Api\V1', 'prefix' => 'v1', 'as' => 'v1.'], functio
 			Route::get('listAllClass', [StudentController::class, 'listClass'])->middleware('teamSAT');
 			Route::get('list/{class_id}', [StudentController::class, 'listByClass'])->middleware('teamSAT');
 
-
+			Route::get('student_details/{sr_id}', [StudentController::class, 'studentDetails']);
+			Route::get('edit/{sr_id}', [StudentController::class, 'edit']);
+			Route::post('/update/{sr_id}', [StudentController::class, 'update']);
             /* Promotions */
             /*Route::post('promote_selector', 'PromotionController@selector');
             Route::get('promotion/manage', 'PromotionController@manage');
