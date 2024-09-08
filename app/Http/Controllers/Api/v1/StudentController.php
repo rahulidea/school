@@ -87,6 +87,7 @@ class StudentController extends APIController
 
     public function update(StudentRecordUpdate $req, $sr_id)
     {
+        
         if(!$sr_id){return Qs::goWithDanger();}
 
         $sr = $this->student->getRecord(['id' => $sr_id])->first();
