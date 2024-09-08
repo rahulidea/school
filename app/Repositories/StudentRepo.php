@@ -60,6 +60,11 @@ class StudentRepo {
         return $this->activeStudents()->whereIn('user_id', $ids)->with('user');
     }
 
+    public function getRecordBySrIDs($sr_id)
+    {
+        return $this->activeStudents()->whereIn('id', $sr_id)->with('user');
+    }
+
     public function findByUserId($st_id)
     {
         return $this->getRecord(['user_id' => $st_id]);
