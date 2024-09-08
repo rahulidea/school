@@ -34,6 +34,60 @@ class StudentController extends APIController
          $this->student = $student;
     }
 
+    public function reset_pass(Request $req, $st_id)
+    {
+        $data['password'] = Hash::make($req->password);
+        $this->user->update($st_id, $data);
+        return $this->respond('success',$data);
+    }
+
+    public function create()
+    {
+        $data['my_classes'] = $this->my_class->all();
+        $data['parents'] = $this->user->getUserByType('parent');
+        $data['dorms'] = $this->student->getAllDorms();
+        $data['states'] = $this->loc->getStates();
+        $data['nationals'] = $this->loc->getAllNationals();
+
+        return $this->respond('success',$data);
+    }
+
+    public function store(StudentRecordCreate $req)
+    {
+
+
+       $data =  $req->only(Qs::getUserRecord());
+       $sr =  $req->only(Qs::getStudentData());
+
+        $ct = $this->my_class->findTypeByClass($req->my_class_id)->code;
+       /* $ct = ($ct == 'J') ? 'JSS' : $ct;
+        $ct = ($ct == 'S') ? 'SS' : $ct;*/
+
+        $data['user_type'] = 'student';
+        $data['name'] = ucwords($req->name);
+        $data['code'] = strtoupper(Str::random(10));
+        $data['password'] = Hash::make('student');
+        $data['photo'] = Qs::getDefaultUserImage();
+        $adm_no = $req->adm_no;
+        $data['username'] = strtoupper(Qs::getAppCode().'/'.$ct.'/'.$sr['year_admitted'].'/'.($adm_no ?: mt_rand(1000, 99999)));
+
+        if($req->hasFile('photo')) {
+            $photo = $req->file('photo');
+            $f = Qs::getFileMetaData($photo);
+            $f['name'] = 'photo.' . $f['ext'];
+            $f['path'] = $photo->storeAs(Qs::getUploadPath('student').$data['code'], $f['name']);
+            $data['photo'] = asset('storage/' . $f['path']);
+        }
+
+        $user = $this->user->create($data); // Create User
+
+        $sr['adm_no'] = $data['username'];
+        $sr['user_id'] = $user->id;
+        $sr['session'] = Qs::getSetting('current_session');
+
+        $this->student->createRecord($sr); // Create Student
+        return Qs::jsonStoreOk();
+    }
 
     public function listClass()
     {
@@ -59,7 +113,7 @@ class StudentController extends APIController
     {
         if(!$sr_id){return Qs::goWithDanger();}
 
-        $data = $this->student->getRecordByUserIDs([$sr_id])->first();
+        $data = $this->student->getRecordBySrIDs([$sr_id])->first();
 
         /* Prevent Other Students/Parents from viewing Profile of others */
         if(Auth::user()->id != $data->user_id && !Qs::userIsTeamSAT() && !Qs::userIsMyChild($data->user_id, Auth::user()->id)){
@@ -87,7 +141,7 @@ class StudentController extends APIController
 
     public function update(StudentRecordUpdate $req, $sr_id)
     {
-        if(!$sr_id){return Qs::goWithDanger();}
+        // if(!$sr_id){return Qs::goWithDanger();}
 
         $sr = $this->student->getRecord(['id' => $sr_id])->first();
         $d =  $req->only(Qs::getUserRecord());
@@ -109,7 +163,9 @@ class StudentController extends APIController
        
         /*** If Class/Section is Changed in Same Year, Delete Marks/ExamRecord of Previous Class/Section ****/
         Mk::deleteOldRecord($sr->user->id, $srec['my_class_id']);
+        
+        return $this->respond('succes',[]);
 
-        return Qs::jsonUpdateOk();
+        // return Qs::jsonUpdateOk();
     }
 }

@@ -58,8 +58,9 @@ Route::group(['namespace' => 'Api\V1', 'prefix' => 'v1', 'as' => 'v1.'], functio
 
             /*************** Students *****************/
         Route::group(['prefix' => 'students'], function(){
-			Route::get('testr', [StudentController::class, 'test']);
-			Route::get('reset_pass/{st_id}', [StudentController::class, 'reset_pass']);
+			Route::get('create', [StudentController::class, 'create']);
+			Route::post('save_student', [StudentController::class, 'store']);
+			Route::post('reset_pass/{st_id}', [StudentController::class, 'reset_pass']);
 			Route::get('graduated', [StudentController::class, 'graduated']);
 			Route::put('not_graduated/{id}', [StudentController::class, 'not_graduated']);
 			Route::get('listAllClass', [StudentController::class, 'listClass'])->middleware('teamSAT');
