@@ -35,7 +35,6 @@ class APIController extends Controller
     public function setStatusCode($statusCode)
     {
         $this->statusCode = $statusCode;
-
         return $this;
     }
 

@@ -47,7 +47,17 @@ class StudentController extends APIController
     {
         // $data['my_class'] = $mc = $this->my_class->getMC(['id' => $class_id])->first();
         $data['students'] = $this->student->findStudentsByClass($class_id);
-        // $data['sections'] = $this->my_class->getClassSections($class_id);
+        $data['sections'] = $this->my_class->getClassSections($class_id);
+
+
+        return $this->respond('succes',
+            $data
+        );
+    }
+
+    public function listBySection($section_id)
+    {
+        $data['students'] = $this->student->findStudentsBySection($section_id);
 
 
         return $this->respond('succes',
@@ -61,6 +71,9 @@ class StudentController extends APIController
 
         $data = $this->student->getRecordByUserIDs([$sr_id])->first();
 
+        if(!$data){
+            return $this->respondWithError("User Not Found");
+        }
         /* Prevent Other Students/Parents from viewing Profile of others */
         if(Auth::user()->id != $data->user_id && !Qs::userIsTeamSAT() && !Qs::userIsMyChild($data->user_id, Auth::user()->id)){
             return $this->throwValidation("Record Not Found",422);
@@ -105,11 +118,84 @@ class StudentController extends APIController
 
         $srec = $req->only(Qs::getStudentData());
        
-        $this->student->updateRecord($sr_id, $srec); // Update St Rec
+        $data = $this->student->updateRecord($sr_id, $srec); // Update St Rec
        
         /*** If Class/Section is Changed in Same Year, Delete Marks/ExamRecord of Previous Class/Section ****/
         Mk::deleteOldRecord($sr->user->id, $srec['my_class_id']);
 
-        return Qs::jsonUpdateOk();
+        return $this->respond('Record Updated',$data);
+    }
+
+    public function store(StudentRecordCreate $req)
+    {
+       $data =  $req->only(Qs::getUserRecord());
+       $sr =  $req->only(Qs::getStudentData());
+        $ct = $this->my_class->findTypeByClass($req->my_class_id)->code;
+       /* $ct = ($ct == 'J') ? 'JSS' : $ct;
+        $ct = ($ct == 'S') ? 'SS' : $ct;*/
+
+        $data['user_type'] = 'student';
+        $data['name'] = ucwords($req->name);
+        $data['code'] = strtoupper(Str::random(10));
+        $data['password'] = Hash::make('student');
+        $data['photo'] = Qs::getDefaultUserImage();
+        $adm_no = $req->adm_no;
+        $data['username'] = strtoupper(Qs::getAppCode().'/'.$ct.'/'.$sr['year_admitted'].'/'.($adm_no ?: mt_rand(1000, 99999)));
+
+        if($req->hasFile('photo')) {
+            $photo = $req->file('photo');
+            $f = Qs::getFileMetaData($photo);
+            $f['name'] = 'photo.' . $f['ext'];
+            $f['path'] = $photo->storeAs(Qs::getUploadPath('student').$data['code'], $f['name']);
+            $data['photo'] = asset('storage/' . $f['path']);
+        }
+
+        $user = $this->user->create($data); // Create User
+
+        $sr['adm_no'] = $data['username'];
+        $sr['user_id'] = $user->id;
+        $sr['session'] = Qs::getSetting('current_session');
+        $this->student->createRecord($sr); // Create Student
+    
+        return $this->respond('Student Record Added', $data);
+    }
+    
+    public function show($sr_id)
+    {
+
+        $sr_id = Qs::decodeHash($sr_id);
+     
+        if(!$sr_id){return Qs::goWithDanger();}
+
+        $data['sr'] = $this->student->getRecord(['id' => $sr_id])->first();
+
+        /* Prevent Other Students/Parents from viewing Profile of others */
+        if(Auth::user()->id != $data['sr']->user_id && !Qs::userIsTeamSAT() && !Qs::userIsMyChild($data['sr']->user_id, Auth::user()->id)){
+            return redirect(route('dashboard'))->with('pop_error', __('msg.denied'));
+        }
+
+        return $this->respond('Record Found', $data);
+    }
+
+    public function reset_pass(Request $req)
+    {
+    //    $st_id = Qs::decodeHash($st_id);
+        $data['password'] = Hash::make($req->password);
+        $this->user->update($req->id, $data);
+        return $this->respond('Password Updated', []);
+    }
+
+    public function destroy($st_id)
+    {        
+        $sr = $this->student->getRecord(['user_id' => $st_id])->first();
+        $path = Qs::getUploadPath('student').$sr->user->code;
+        Storage::exists($path) ? Storage::deleteDirectory($path) : false;
+        $data = $this->user->delete($sr->user->id);
+
+        return $this->respond('User Deleted', $data);
+    }
+
+    public function test(){
+        return "test function";
     }
 }

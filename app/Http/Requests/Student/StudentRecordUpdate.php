@@ -3,6 +3,8 @@
 namespace App\Http\Requests\Student;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use App\Helpers\Qs;
 
 class StudentRecordUpdate extends FormRequest
@@ -55,11 +57,20 @@ class StudentRecordUpdate extends FormRequest
     protected function getValidatorInstance()
     {
         $input = $this->all();
-
+        dd(Qs::decodeHash($input['my_parent_id']));
         $input['my_parent_id'] = $input['my_parent_id'] ? Qs::decodeHash($input['my_parent_id']) : NULL;
 
         $this->getInputSource()->replace($input);
 
         return parent::getValidatorInstance();
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(response()->json([
+            'success' => false,
+            'message' => 'Validation errors',
+            'errors' => $validator->errors()
+        ], 422));
     }
 }

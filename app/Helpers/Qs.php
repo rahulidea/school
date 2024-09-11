@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Auth;
 
 class Qs
 {
+    protected $statusCode = 200;
+
     public static function displayError($errors)
     {
         foreach ($errors as $err) {
@@ -363,4 +365,19 @@ class Qs
         return ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
     }
 
+    public static function respondWithError($message, $status_code)
+    {
+        return QS::respondError([
+            'status' => false,
+            'error' => [
+                'message' => $message,
+                'status_code' => $status_code,
+            ],
+        ], $status_code);
+    }
+
+    public static function respondError($msg, $status_code, $headers = [])
+    {
+        return response()->json($msg, $status_code, $headers);
+    }
 }

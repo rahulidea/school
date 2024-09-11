@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use App\Helpers\Qs;
 
 class CheckSubscriptionId
 {
@@ -21,7 +22,8 @@ class CheckSubscriptionId
             if ($organisation->expiry_date && $organisation->expiry_date > now()) {
                 return $next($request);
             }else{
-                return response()->json(['error' => 'Subscription Expired'], 403);
+            //    return response()->json(['error' => 'Subscription Expired'], 403);
+                return QS::respondWithError("Subscription Expired", 403);//->respondWithError($message);
             }
         }
 

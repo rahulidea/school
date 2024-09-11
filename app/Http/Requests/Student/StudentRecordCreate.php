@@ -3,6 +3,8 @@
 namespace App\Http\Requests\Student;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use App\Helpers\Qs;
 
 class StudentRecordCreate extends FormRequest
@@ -63,5 +65,14 @@ class StudentRecordCreate extends FormRequest
         $this->getInputSource()->replace($input);
 
         return parent::getValidatorInstance();
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(response()->json([
+            'success' => false,
+            'message' => 'Validation errors',
+            'errors' => $validator->errors()
+        ], 422));
     }
 }

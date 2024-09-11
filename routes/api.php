@@ -57,17 +57,24 @@ Route::group(['namespace' => 'Api\V1', 'prefix' => 'v1', 'as' => 'v1.'], functio
 
 
             /*************** Students *****************/
+            
         Route::group(['prefix' => 'students'], function(){
 			Route::get('testr', [StudentController::class, 'test']);
-			Route::get('reset_pass/{st_id}', [StudentController::class, 'reset_pass']);
+			Route::post('reset_pass', [StudentController::class, 'reset_pass']);
 			Route::get('graduated', [StudentController::class, 'graduated']);
 			Route::put('not_graduated/{id}', [StudentController::class, 'not_graduated']);
 			Route::get('listAllClass', [StudentController::class, 'listClass'])->middleware('teamSAT');
 			Route::get('list/{class_id}', [StudentController::class, 'listByClass'])->middleware('teamSAT');
+			Route::get('section/{section_id}', [StudentController::class, 'listBySection'])->middleware('teamSAT');
 
 			Route::get('student_details/{sr_id}', [StudentController::class, 'studentDetails']);
 			Route::get('edit/{sr_id}', [StudentController::class, 'edit']);
+			Route::get('delete/{sr_id}', [StudentController::class, 'destroy']);
 			Route::post('/update/{sr_id}', [StudentController::class, 'update']);
+
+            Route::post('/add', [StudentController::class, 'store']);
+            Route::get('/{sr_id}', [StudentController::class, 'show']);
+
             /* Promotions */
             /*Route::post('promote_selector', 'PromotionController@selector');
             Route::get('promotion/manage', 'PromotionController@manage');
@@ -77,6 +84,8 @@ Route::group(['namespace' => 'Api\V1', 'prefix' => 'v1', 'as' => 'v1.'], functio
             Route::post('promote/{fc}/{fs}/{tc}/{ts}', 'PromotionController@promote');*/
 
         });
+
+        
             
         Route::middleware('check.subscription')->group(function(){
             Route::get('/user', function(Request $request) {
