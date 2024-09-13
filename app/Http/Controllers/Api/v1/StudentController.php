@@ -34,7 +34,6 @@ class StudentController extends APIController
          $this->student = $student;
     }
 
-
     public function listClass()
     {
         $data['class'] = $mc = $this->my_class->all();
@@ -69,7 +68,7 @@ class StudentController extends APIController
     {
         if(!$sr_id){return Qs::goWithDanger();}
 
-        $data = $this->student->getRecordByUserIDs([$sr_id])->first();
+        $data = $this->student->getRecordBySrIDs([$sr_id])->first();
 
         if(!$data){
             return $this->respondWithError("User Not Found");
@@ -100,6 +99,7 @@ class StudentController extends APIController
 
     public function update(StudentRecordUpdate $req, $sr_id)
     {
+        
         if(!$sr_id){return Qs::goWithDanger();}
 
         $sr = $this->student->getRecord(['id' => $sr_id])->first();
@@ -122,7 +122,7 @@ class StudentController extends APIController
        
         /*** If Class/Section is Changed in Same Year, Delete Marks/ExamRecord of Previous Class/Section ****/
         Mk::deleteOldRecord($sr->user->id, $srec['my_class_id']);
-
+        
         return $this->respond('Record Updated',$data);
     }
 
