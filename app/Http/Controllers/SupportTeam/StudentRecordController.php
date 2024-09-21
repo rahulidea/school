@@ -135,7 +135,7 @@ class StudentRecordController extends Controller
         $sr_id = Qs::decodeHash($sr_id);
         if(!$sr_id){return Qs::goWithDanger();}
 
-        $data['sr'] = $this->student->getRecord(['id' => $sr_id])->first();
+        $data['sr'] = $this->student->getGradRecord(['id' => $sr_id])->first();
         $data['my_classes'] = $this->my_class->all();
         $data['parents'] = $this->user->getUserByType('parent');
         $data['dorms'] = $this->student->getAllDorms();

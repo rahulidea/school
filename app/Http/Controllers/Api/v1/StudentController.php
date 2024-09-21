@@ -82,27 +82,44 @@ class StudentController extends APIController
         return $this->respond('Record Found',$data);
     }
 
-
-    public function edit($sr_id)
+    public function edit($sr_id, $is_grad=0)
     {
         if(!$sr_id){return Qs::goWithDanger();}
 
-        $data['sr'] = $this->student->getRecord(['id' => $sr_id])->first();
+        if($is_grad){
+            $data['sr'] = $this->student->getGradRecord(['id' => $sr_id])->first();
+        }else{
+            $data['sr'] = $this->student->getRecord(['id' => $sr_id])->first();
+        }
+        
+        if(!$data['sr']){
+            return $this->respondError("Student Record Not Found");
+        }
+
         $data['my_classes'] = $this->my_class->all();
         $data['parents'] = $this->user->getUserByType('parent');
         $data['dorms'] = $this->student->getAllDorms();
         $data['states'] = $this->loc->getStates();
         $data['nationals'] = $this->loc->getAllNationals();
-      
+        $data['hashed_id'] = Qs::hash($sr_id);
+        
         return $this->respond('Record Found',$data);
+        
     }
 
-
-    public function update(StudentRecordUpdate $req, $sr_id)
+    public function update(StudentRecordUpdate $req, $sr_id, $is_grad=0)
     {
         if(!$sr_id){return Qs::goWithDanger();}
 
-        $sr = $this->student->getRecord(['id' => $sr_id])->first();
+        if($is_grad){
+            $sr = $this->student->getGradRecord(['id' => $sr_id])->first();
+        }else{
+            $sr = $this->student->getRecord(['id' => $sr_id])->first();
+        }
+        if(!$sr){
+            return $this->respondError("Student Record Not Found");
+        }
+
         $d =  $req->only(Qs::getUserRecord());
         $d['name'] = ucwords($req->name);
 
@@ -160,14 +177,22 @@ class StudentController extends APIController
         return $this->respond('Student Record Added', $data);
     }
     
-    public function show($sr_id)
+    public function show($sr_id, $is_grad=0)
     {
 
-        $sr_id = Qs::decodeHash($sr_id);
+        //    return $sr_id = Qs::decodeHash($sr_id);
      
         if(!$sr_id){return Qs::goWithDanger();}
 
-        $data['sr'] = $this->student->getRecord(['id' => $sr_id])->first();
+        if($is_grad){
+            $data['sr'] = $this->student->getGradRecord(['id' => $sr_id])->first();
+        }else{
+            $data['sr'] = $this->student->getRecord(['id' => $sr_id])->first();
+        }
+
+        if(!$data['sr']){
+            return $this->respondError("Student Record Not Found");
+        }
 
         /* Prevent Other Students/Parents from viewing Profile of others */
         if(Auth::user()->id != $data['sr']->user_id && !Qs::userIsTeamSAT() && !Qs::userIsMyChild($data['sr']->user_id, Auth::user()->id)){
@@ -179,20 +204,53 @@ class StudentController extends APIController
 
     public function reset_pass(Request $req)
     {
-    //    $st_id = Qs::decodeHash($st_id);
+        //    $st_id = Qs::decodeHash($st_id);
         $data['password'] = Hash::make($req->password);
         $this->user->update($req->id, $data);
         return $this->respond('Password Updated', []);
     }
 
-    public function destroy($st_id)
+    public function destroy($st_id, $is_grad=0)
     {        
         $sr = $this->student->getRecord(['user_id' => $st_id])->first();
+        if($is_grad){
+            $sr = $this->student->getGradRecord(['user_id' => $st_id])->first();
+        }else{
+            $sr = $this->student->getRecord(['user_id' => $st_id])->first();
+        }
+        if(!$sr){
+            return $this->respondError("Student Record Not Found");
+        }
         $path = Qs::getUploadPath('student').$sr->user->code;
         Storage::exists($path) ? Storage::deleteDirectory($path) : false;
         $data = $this->user->delete($sr->user->id);
 
         return $this->respond('User Deleted', $data);
+    }
+
+    public function graduated()
+    {
+        $data['my_classes'] = $this->my_class->all();
+        $data['students'] = $this->student->allGradStudents();
+
+        return $this->respond('User Record', $data);
+    }
+
+    public function show_graduate($sr_id)
+    {
+
+        $sr_id = Qs::decodeHash($sr_id);
+     
+        if(!$sr_id){return Qs::goWithDanger();}
+
+        $data['sr'] = $this->student->getGradRecord(['id' => $sr_id])->first();
+
+        /* Prevent Other Students/Parents from viewing Profile of others */
+        if(Auth::user()->id != $data['sr']->user_id && !Qs::userIsTeamSAT() && !Qs::userIsMyChild($data['sr']->user_id, Auth::user()->id)){
+            return redirect(route('dashboard'))->with('pop_error', __('msg.denied'));
+        }
+
+        return $this->respond('Record Found', $data);
     }
 
     public function test(){

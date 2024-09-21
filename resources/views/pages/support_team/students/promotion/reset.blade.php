@@ -34,7 +34,7 @@
                 <tbody>
                 @foreach($promotions->sortBy('fc.name')->sortBy('student.name') as $p)
                     <tr>
-                        <td>{{ $loop->iteration }}</td>
+                        <td>{{ $loop->iteration }} -- {{ $p->id }}</td>
                         <td><img class="rounded-circle" style="height: 40px; width: 40px;" src="{{ $p->student->photo }}" alt="photo"></td>
                         <td>{{ $p->student->name }}</td>
                         <td>{{ $p->fc->name.' '.$p->fs->name }}</td>
