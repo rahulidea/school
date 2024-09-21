@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\v1\AuthController;
 use App\Http\Controllers\Api\v1\UserHomeController;
 use App\Http\Controllers\Api\v1\StudentController;
 use App\Http\Controllers\API\v1\AttendanceController;
+use App\Http\Controllers\API\v1\PromotionController;
 
 
 /*
@@ -59,29 +60,35 @@ Route::group(['namespace' => 'Api\V1', 'prefix' => 'v1', 'as' => 'v1.'], functio
             /*************** Students *****************/
             
         Route::group(['prefix' => 'students'], function(){
-			Route::get('testr', [StudentController::class, 'test']);
+            
+			Route::get('testr', [PromotionController::class, 'promotion']);
 			Route::post('reset_pass', [StudentController::class, 'reset_pass']);
 			Route::get('graduated', [StudentController::class, 'graduated']);
 			Route::put('not_graduated/{id}', [StudentController::class, 'not_graduated']);
 			Route::get('listAllClass', [StudentController::class, 'listClass'])->middleware('teamSAT');
 			Route::get('list/{class_id}', [StudentController::class, 'listByClass'])->middleware('teamSAT');
 			Route::get('section/{section_id}', [StudentController::class, 'listBySection'])->middleware('teamSAT');
+            
 
-			Route::get('student_details/{sr_id}', [StudentController::class, 'studentDetails']);
-			Route::get('edit/{sr_id}', [StudentController::class, 'edit']);
-			Route::get('delete/{sr_id}', [StudentController::class, 'destroy']);
-			Route::post('/update/{sr_id}', [StudentController::class, 'update']);
-
-            Route::post('/add', [StudentController::class, 'store']);
-            Route::get('/{sr_id}', [StudentController::class, 'show']);
-
+            Route::get('promotion', 'PromotionController@promotion');
             /* Promotions */
-            /*Route::post('promote_selector', 'PromotionController@selector');
+            // Route::post('promote_selector', 'PromotionController@selector');
             Route::get('promotion/manage', 'PromotionController@manage');
             Route::delete('promotion/reset/{pid}', 'PromotionController@reset');
             Route::delete('promotion/reset_all', 'PromotionController@reset_all');
             Route::get('promotion/{fc?}/{fs?}/{tc?}/{ts?}', 'PromotionController@promotion');
-            Route::post('promote/{fc}/{fs}/{tc}/{ts}', 'PromotionController@promote');*/
+            Route::post('promote/{fc}/{fs}/{tc}/{ts}', 'PromotionController@promote');
+
+
+			Route::get('student_details/{sr_id}', [StudentController::class, 'show']); //delete studentDetails method
+			Route::get('edit/{sr_id}/{is_grad?}', [StudentController::class, 'edit']);
+			Route::get('delete/{sr_id}/{is_grad?}', [StudentController::class, 'destroy']);
+			Route::post('/update/{sr_id}/{is_grad?}', [StudentController::class, 'update']);            
+            Route::post('/add', [StudentController::class, 'store']);
+            
+            Route::get('graduated/{sr_id}', [StudentController::class, 'show_graduate']);
+            Route::get('view/{sr_id}/{is_grad?}', [StudentController::class, 'show']);
+            
 
         });
 

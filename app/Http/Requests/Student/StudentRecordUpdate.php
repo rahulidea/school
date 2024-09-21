@@ -57,7 +57,6 @@ class StudentRecordUpdate extends FormRequest
     protected function getValidatorInstance()
     {
         $input = $this->all();
-        dd(Qs::decodeHash($input['my_parent_id']));
         $input['my_parent_id'] = $input['my_parent_id'] ? Qs::decodeHash($input['my_parent_id']) : NULL;
 
         $this->getInputSource()->replace($input);
