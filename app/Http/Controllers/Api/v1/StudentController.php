@@ -13,17 +13,23 @@ use App\Repositories\LocationRepo;
 use App\Repositories\MyClassRepo;
 use App\Repositories\StudentRepo;
 use App\Repositories\UserRepo;
+use App\Models\BloodGroup;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
+use App\Helpers\FireBasePushNotification;
+
+use Google\Client as GoogleClient;
+use Illuminate\Support\Facades\Http;
+
 class StudentController extends APIController
 {
-    protected $loc, $my_class, $user, $student;
+    protected $loc, $my_class, $user, $student, $push_notification;
 
-    public function __construct(LocationRepo $loc, MyClassRepo $my_class, UserRepo $user, StudentRepo $student)
+    public function __construct(LocationRepo $loc, MyClassRepo $my_class, UserRepo $user, StudentRepo $student, FireBasePushNotification $push_notification)
     {
         $this->middleware('teamSA', ['only' => ['edit','update', 'reset_pass', 'create', 'store', 'graduated'] ]);
         $this->middleware('super_admin', ['only' => ['destroy',] ]);
@@ -32,6 +38,8 @@ class StudentController extends APIController
          $this->my_class = $my_class;
          $this->user = $user;
          $this->student = $student;
+
+         $this->push_notification = $push_notification;
     }
 
 
@@ -84,16 +92,18 @@ class StudentController extends APIController
 
     public function edit($sr_id, $is_grad=0)
     {
-        if(!$sr_id){return Qs::goWithDanger();}
+        if($sr_id!=0){
+            if(!$sr_id){return Qs::goWithDanger();}
 
-        if($is_grad){
-            $data['sr'] = $this->student->getGradRecord(['id' => $sr_id])->first();
-        }else{
-            $data['sr'] = $this->student->getRecord(['id' => $sr_id])->first();
-        }
-        
-        if(!$data['sr']){
-            return $this->respondError("Student Record Not Found");
+            if($is_grad){
+                $data['sr'] = $this->student->getGradRecord(['id' => $sr_id])->first();
+            }else{
+                $data['sr'] = $this->student->getRecord(['id' => $sr_id])->first();
+            }
+            
+            if(!$data['sr']){
+                return $this->respondError("Student Record Not Found");
+            }
         }
 
         $data['my_classes'] = $this->my_class->all();
@@ -102,7 +112,7 @@ class StudentController extends APIController
         $data['states'] = $this->loc->getStates();
         $data['nationals'] = $this->loc->getAllNationals();
         $data['hashed_id'] = Qs::hash($sr_id);
-        
+        $data['blood_groups']=BloodGroup::all();
         return $this->respond('Record Found',$data);
         
     }
@@ -253,7 +263,42 @@ class StudentController extends APIController
         return $this->respond('Record Found', $data);
     }
 
-    public function test(){
-        return "test function";
+    public function citys($state_id){
+        $data['citys'] = $this->loc->getLGAs($state_id);
+        return $this->respond('Record Found', $data);
+    }
+
+    public function classSections($class_id){
+        $data['sections'] = $this->my_class->getClassSections($class_id);
+        return $this->respond('Record Found', $data);
+    }
+
+    public function sendPusgNotification(Request $request){
+        $request->validate([
+            'fc_token' => 'required',
+            'title' => 'required|string',
+            'body' => 'required|string',
+        ]);
+
+        // $user = \App\Models\User::find($request->user_id);
+        // $fcm = $user->fcm_token;
+
+        $response=  $this->push_notification->toDevice($request->fc_token,$request->body,$request->title);
+
+        if ($response) {
+            // return response()->json([
+            //     'message' => 'Curl Error: ' . $err
+            // ], 500);
+            // return $this->respondError('Curl Error: ' . $err);
+        } else {
+            // return response()->json([
+            //     'message' => 'Notification has been sent',
+            //     'response' => json_decode($response, true)
+            // ]);
+
+            // return $this->respond('Notification has been sent', $response);
+        }
+
+        return $this->respond('Notification has been sent', $response);
     }
 }

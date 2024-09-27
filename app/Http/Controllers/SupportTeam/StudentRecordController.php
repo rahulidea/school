@@ -147,7 +147,7 @@ class StudentRecordController extends Controller
 
     public function update(StudentRecordUpdate $req, $sr_id)
     {
-        return $req->all();
+        //return $req->all();
         $sr_id = Qs::decodeHash($sr_id);
         if(!$sr_id){return Qs::goWithDanger();}
 

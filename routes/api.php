@@ -51,6 +51,9 @@ Route::group(['namespace' => 'Api\V1', 'prefix' => 'v1', 'as' => 'v1.'], functio
     Route::group(['middleware' => ['auth:api']], function () {
             Route::post('userHome', 'UserHomeController@userHome');
 
+            Route::post('sendPusgNotification', [StudentController::class, 'sendPusgNotification']);
+
+
             Route::post('logout', 'AuthController@logout');
             Route::get('/user', function (Request $request) {
                 return $request->user();
@@ -69,6 +72,11 @@ Route::group(['namespace' => 'Api\V1', 'prefix' => 'v1', 'as' => 'v1.'], functio
 			Route::get('list/{class_id}', [StudentController::class, 'listByClass'])->middleware('teamSAT');
 			Route::get('section/{section_id}', [StudentController::class, 'listBySection'])->middleware('teamSAT');
             
+            Route::get('citys/{state_id}', [StudentController::class, 'citys']);
+            Route::get('class_sections/{class_id}', [StudentController::class, 'classSections']);
+
+
+
 
             Route::get('promotion', 'PromotionController@promotion');
             /* Promotions */
@@ -89,6 +97,7 @@ Route::group(['namespace' => 'Api\V1', 'prefix' => 'v1', 'as' => 'v1.'], functio
             Route::get('graduated/{sr_id}', [StudentController::class, 'show_graduate']);
             Route::get('view/{sr_id}/{is_grad?}', [StudentController::class, 'show']);
             
+
 
         });
 
