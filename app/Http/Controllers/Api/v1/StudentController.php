@@ -193,7 +193,7 @@ class StudentController extends APIController
     public function show($sr_id, $is_grad=0)
     {
 
-        return $sr_id = Qs::decodeHash($sr_id);
+        $sr_id = Qs::decodeHash($sr_id);
      
         if(!$sr_id){return $this->respondWithError("Student ID required");}
 
