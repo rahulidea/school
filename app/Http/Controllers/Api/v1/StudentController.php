@@ -21,7 +21,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 use App\Helpers\FireBasePushNotification;
-
+use App\Models\State;
 use Google\Client as GoogleClient;
 use Illuminate\Support\Facades\Http;
 
@@ -75,7 +75,7 @@ class StudentController extends APIController
 
     public function studentDetails($sr_id)
     {
-        if(!$sr_id){return Qs::goWithDanger();}
+        if(!$sr_id){return $this->respondWithError("Student ID required");}
 
         $data = $this->student->getRecordByUserIDs([$sr_id])->first();
 
@@ -91,9 +91,11 @@ class StudentController extends APIController
     }
 
     public function edit($sr_id, $is_grad=0)
-    {
+    {   
+        return State::with(['cities:id,name,state_id'])->get();        
         if($sr_id!=0){
-            if(!$sr_id){return Qs::goWithDanger();}
+            $sr_id = Qs::decodeHash($sr_id);
+            if(!$sr_id){return $this->respondWithError("Student ID required");}
 
             if($is_grad){
                 $data['sr'] = $this->student->getGradRecord(['id' => $sr_id])->first();
@@ -118,8 +120,9 @@ class StudentController extends APIController
     }
 
     public function update(StudentRecordUpdate $req, $sr_id, $is_grad=0)
-    {
-        if(!$sr_id){return Qs::goWithDanger();}
+    {   
+        $sr_id = Qs::decodeHash($sr_id);
+        if(!$sr_id){return $this->respondWithError("Student ID required");}
 
         if($is_grad){
             $sr = $this->student->getGradRecord(['id' => $sr_id])->first();
@@ -190,9 +193,9 @@ class StudentController extends APIController
     public function show($sr_id, $is_grad=0)
     {
 
-        //    return $sr_id = Qs::decodeHash($sr_id);
+        return $sr_id = Qs::decodeHash($sr_id);
      
-        if(!$sr_id){return Qs::goWithDanger();}
+        if(!$sr_id){return $this->respondWithError("Student ID required");}
 
         if($is_grad){
             $data['sr'] = $this->student->getGradRecord(['id' => $sr_id])->first();
@@ -212,16 +215,17 @@ class StudentController extends APIController
         return $this->respond('Record Found', $data);
     }
 
-    public function reset_pass(Request $req)
+    public function reset_pass($st_id, Request $req)
     {
-        //    $st_id = Qs::decodeHash($st_id);
+        $st_id = Qs::decodeHash($st_id);
         $data['password'] = Hash::make($req->password);
         $this->user->update($req->id, $data);
         return $this->respond('Password Updated', []);
     }
 
     public function destroy($st_id, $is_grad=0)
-    {        
+    {   
+        $st_id = Qs::decodeHash($st_id);     
         $sr = $this->student->getRecord(['user_id' => $st_id])->first();
         if($is_grad){
             $sr = $this->student->getGradRecord(['user_id' => $st_id])->first();
@@ -251,7 +255,7 @@ class StudentController extends APIController
 
         $sr_id = Qs::decodeHash($sr_id);
      
-        if(!$sr_id){return Qs::goWithDanger();}
+        if(!$sr_id){return $this->respondWithError("Student ID required");}
 
         $data['sr'] = $this->student->getGradRecord(['id' => $sr_id])->first();
 

@@ -6,6 +6,7 @@ use App\Models\BloodGroup;
 use App\Models\StaffRecord;
 use App\Models\UserType;
 use App\User;
+use App\Helpers\Qs;
 
 
 class UserRepo {
@@ -28,7 +29,10 @@ class UserRepo {
 
     public function getUserByType($type)
     {
-        return User::where(['user_type' => $type])->orderBy('name', 'asc')->get();
+        return User::where(['user_type' => $type])->orderBy('name', 'asc')->get()->map(function ($user) {
+            $user->hashed_id = QS::hash($user->id);
+            return $user;
+        });
     }
 
     public function getAllTypes()
