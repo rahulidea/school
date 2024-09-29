@@ -10,7 +10,7 @@ class LocationRepo
 {
     public function getStates()
     {
-        return State::all();
+        return State::with(['cities:id,name,state_id'])->get();
     }
 
     public function getAllStates()
