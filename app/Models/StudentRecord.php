@@ -13,6 +13,8 @@ class StudentRecord extends Eloquent
     protected $fillable = [
         'session', 'user_id', 'my_class_id', 'section_id', 'my_parent_id', 'dorm_id', 'dorm_room_no', 'adm_no', 'year_admitted', 'wd', 'wd_date', 'grad', 'grad_date', 'house', 'age'
     ];
+    
+    protected $appends = ['hashed_id'];
 
     public function user()
     {
