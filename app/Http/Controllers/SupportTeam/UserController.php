@@ -38,6 +38,7 @@ class UserController extends Controller
         $d['users'] = $this->user->getPTAUsers();
         $d['nationals'] = $this->loc->getAllNationals();
         $d['blood_groups'] = $this->user->getBloodGroups();
+        
         return view('pages.support_team.users.index', $d);
     }
 

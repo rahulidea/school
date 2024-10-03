@@ -197,7 +197,7 @@ class StudentController extends APIController
         if($is_grad){
             $data['sr'] = $this->student->getGradRecord(['id' => $sr_id])->first();
         }else{
-            $data['sr'] = $this->student->getRecord(['id' => $sr_id])->first();
+            $data['sr'] = $this->student->getRecordWithClass(['id' => $sr_id])->first();
         }
 
         if(!$data['sr']){

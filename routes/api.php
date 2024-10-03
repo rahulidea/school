@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\v1\UserHomeController;
 use App\Http\Controllers\Api\v1\StudentController;
 use App\Http\Controllers\API\v1\AttendanceController;
 use App\Http\Controllers\API\v1\PromotionController;
+use App\Http\Controllers\Api\v1\UserController;
 
 
 /*
@@ -55,10 +56,8 @@ Route::group(['namespace' => 'Api\V1', 'prefix' => 'v1', 'as' => 'v1.'], functio
 
 
             Route::post('logout', 'AuthController@logout');
-            Route::get('/user', function (Request $request) {
-                return $request->user();
-            });
-
+           
+            Route::get('get_user_create', [UserController::class, 'get_user_create']);
 
             /*************** Students *****************/
             
@@ -74,9 +73,6 @@ Route::group(['namespace' => 'Api\V1', 'prefix' => 'v1', 'as' => 'v1.'], functio
             
             Route::get('citys/{state_id}', [StudentController::class, 'citys']);
             Route::get('class_sections/{class_id}', [StudentController::class, 'classSections']);
-
-
-
 
             Route::get('promotion', 'PromotionController@promotion');
             /* Promotions */
