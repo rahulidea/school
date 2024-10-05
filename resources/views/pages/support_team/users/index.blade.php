@@ -32,9 +32,9 @@
                                     <div class="form-group">
                                         <label for="user_type"> Select User: <span class="text-danger">*</span></label>
                                         <select required data-placeholder="Select User" class="form-control select" name="user_type" id="user_type">
-                                @foreach($user_types as $ut)
-                                    <option value="{{ Qs::hash($ut->id) }}">{{ $ut->name }}</option>
-                                @endforeach
+                                        @foreach($user_types as $ut)
+                                            <option value="{{ Qs::hash($ut->id) }}">{{ $ut->name }}</option>
+                                        @endforeach
                                         </select>
                                     </div>
                                 </div>

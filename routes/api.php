@@ -58,6 +58,7 @@ Route::group(['namespace' => 'Api\V1', 'prefix' => 'v1', 'as' => 'v1.'], functio
             Route::post('logout', 'AuthController@logout');
            
             Route::get('get_user_create', [UserController::class, 'get_user_create']);
+            Route::get('get_user_types', [UserController::class, 'get_user_types']);
 
             /*************** Students *****************/
             

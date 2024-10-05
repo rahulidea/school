@@ -57,7 +57,7 @@ class StudentRepo {
 
     public function getRecordWithClass(array $data)
     {
-        return $this->activeStudents()->where($data)->with(['user','my_class']);
+        return $this->activeStudents()->where($data)->with(['user','my_class','section']);
     }
 
     public function getRecordByUserIDs($ids)

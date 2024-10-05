@@ -44,4 +44,14 @@ class UserController extends APIController
 
         return $this->respond('success',$d);
     }
+
+    public function get_user_types(){
+
+        $ut = $this->user->getAllTypes();
+        $ut2 = $ut->where('level', '>', 2);
+
+        $d = Qs::userIsAdmin() ? $ut2 : $ut;
+
+        return $this->respond('success',$d);
+    }
 }
