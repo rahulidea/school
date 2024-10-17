@@ -15,18 +15,21 @@ class CheckSubscriptionId
      * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
-    public function handle(Request $request, Closure $next)
+    public function handle(Request $request, Closure $next, ...$allowedPlans)
     {
-        if ($request->user() && $request->user()->organisation->subscription['id'] != 1) {
-            $organisation = $request->user()->organisation;
+        $user = $request->user();
+        if ($user && $user->organisation->subscription['id'] != 1) {
+            $organisation = $user->organisation;
             if ($organisation->expiry_date && $organisation->expiry_date > now()) {
-                return $next($request);
+                if (in_array($organisation->subscription['id'], $allowedPlans)) {
+                    return $next($request);
+                } else {
+                    return QS::respondWithError("Subscription plan does not allow access to this resource", 403);
+                }
             }else{
-            //    return response()->json(['error' => 'Subscription Expired'], 403);
-                return QS::respondWithError("Subscription Expired", 403);//->respondWithError($message);
+                return QS::respondWithError("Subscription Expired", 403);
             }
         }
-
         return response()->json(['error' => 'Only paid subscription allow'], 403);
     }
 }

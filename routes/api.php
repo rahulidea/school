@@ -59,6 +59,7 @@ Route::group(['namespace' => 'Api\V1', 'prefix' => 'v1', 'as' => 'v1.'], functio
            
             Route::get('get_user_create', [UserController::class, 'get_user_create']);
             Route::get('get_user_types', [UserController::class, 'get_user_types']);
+            Route::post('/user/save_user', [UserController::class, 'store']);
 
             /*************** Students *****************/
             
@@ -98,10 +99,18 @@ Route::group(['namespace' => 'Api\V1', 'prefix' => 'v1', 'as' => 'v1.'], functio
 
         });
 
-        
-            
-        Route::middleware('check.subscription')->group(function(){
+        //Susbcription Table
+        // 1 - Free
+        // 2 - Gold
+        // 3 - Diamond    
+        Route::middleware('check.subscription:23')->group(function(){
             Route::get('/user', function(Request $request) {
+                return $request->user();
+            });
+
+
+            Route::get('/damn', function(Request $request) {
+                //$request->attributes->set('allowedPlans', [2, 3, 4, 5, 6]);
                 return $request->user();
             });
 
