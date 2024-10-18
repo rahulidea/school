@@ -80,10 +80,10 @@ class UserController extends Controller
 
         $staff_id = Qs::getAppCode().'/STAFF/'.date('Y/m', strtotime($req->emp_date)).'/'.mt_rand(1000, 9999);
         $data['username'] = $uname = ($user_is_teamSA) ? $req->username : $staff_id;
-
+        
         $pass = $req->password ?: $user_type;
         $data['password'] = Hash::make($pass);
-
+        
         if($req->hasFile('photo')) {
             $photo = $req->file('photo');
             $f = Qs::getFileMetaData($photo);
@@ -91,7 +91,7 @@ class UserController extends Controller
             $f['path'] = $photo->storeAs(Qs::getUploadPath($user_type).$data['code'], $f['name']);
             $data['photo'] = asset('storage/' . $f['path']);
         }
-
+        
         /* Ensure that both username and Email are not blank*/
         if(!$uname && !$req->email){
             return back()->with('pop_error', __('msg.user_invalid'));
@@ -158,11 +158,12 @@ class UserController extends Controller
 
     public function show($user_id)
     {
+
         $user_id = Qs::decodeHash($user_id);
         if(!$user_id){return back();}
 
         $data['user'] = $this->user->find($user_id);
-
+      
         /* Prevent Other Students from viewing Profile of others*/
         if(Auth::user()->id != $user_id && !Qs::userIsTeamSAT() && !Qs::userIsMyChild(Auth::user()->id, $user_id)){
             return redirect(route('dashboard'))->with('pop_error', __('msg.denied'));
