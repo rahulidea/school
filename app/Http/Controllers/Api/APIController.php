@@ -56,7 +56,7 @@ class APIController extends Controller
 
         return response()->json($response, $this->getStatusCode(), $headers);
     }
-    public function respond($msg,$data, $headers = [])
+    public function respond($msg, $data, $headers = [])
     {
         $response = [
             'status' => true,

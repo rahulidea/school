@@ -73,7 +73,7 @@ class UserController extends APIController
     {
         // Redirect if Making Changes to Head of Super Admins
         if(Qs::headSA($id)){
-            return $this->respondError(__('msg.denied'));
+            return $this->respondWithError(__('msg.denied'));
         }
 
         $data['password'] = Hash::make('user');
@@ -109,7 +109,7 @@ class UserController extends APIController
         } 
         /* Ensure that both username and Email are not blank*/
         if(!$uname && !$req->email){
-            return $this->respondError(__('msg.user_invalid'));
+            return $this->respondWithError(__('msg.user_invalid'));
             // return $this->respondWithError('error',__('msg.user_invalid'));
         }
         
@@ -134,7 +134,7 @@ class UserController extends APIController
 
         // Redirect if Making Changes to Head of Super Admins
         if(Qs::headSA($id)){
-            return $this->respondError(__('msg.denied'));
+            return $this->respondWithError(__('msg.denied'));
         }
 
         $user = $this->user->find($id);
@@ -172,7 +172,7 @@ class UserController extends APIController
             $this->user->updateStaffRecord(['user_id' => $id], $d2);
         }
 
-        $data["ANAND"] = Qs::jsonUpdateOk();
+        // $data["ANAND"] = Qs::jsonUpdateOk();
         return $this->respond(__('msg.update_ok'), $data);
     }
 
@@ -188,7 +188,7 @@ class UserController extends APIController
 
         /* Prevent Other Students from viewing Profile of others*/
         if(Auth::user()->id != $user_id && !Qs::userIsTeamSAT() && !Qs::userIsMyChild(Auth::user()->id, $user_id)){
-            return $this->respondError(__('msg.denied'));
+            return $this->respondWithError(__('msg.denied'));
         }
 
         return $this->respond("Success", $data);
@@ -200,13 +200,13 @@ class UserController extends APIController
 
         // Redirect if Making Changes to Head of Super Admins
         if(Qs::headSA($id)){
-            return $this->respondError(__('msg.denied'));
+            return $this->respondWithError(__('msg.denied'));
         }
 
         $user = $this->user->find($id);
 
         if($user->user_type == 'teacher' && $this->userTeachesSubject($user)) {
-            return $this->respondError(__('msg.del_teacher'));
+            return $this->respondWithError(__('msg.del_teacher'));
         }
 
         $path = Qs::getUploadPath($user->user_type).$user->code;
@@ -214,6 +214,12 @@ class UserController extends APIController
         $this->user->delete($user->id);
 
         return $this->respondMessage(__('msg.del_ok'));
+    }
+
+    protected function userTeachesSubject($user)
+    {
+        $subjects = $this->my_class->findSubjectByTeacher($user->id);
+        return ($subjects->count() > 0) ? true : false;
     }
 
 }
