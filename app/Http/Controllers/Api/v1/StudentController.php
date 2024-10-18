@@ -108,11 +108,11 @@ class StudentController extends APIController
             if(!$data['sr']){
                 return $this->respondError("Student Record Not Found");
             }
+
+            $data['sections'] = $this->my_class->getClassSections($data['sr']->my_class_id);
         }
 
         $data['my_classes'] = $this->my_class->getAllWithSection();
-        
-        $data['sections'] = $this->my_class->getClassSections($data['sr']->my_class_id);
         $data['parents'] = $this->user->getUserByType('parent');
         $data['dorms'] = $this->student->getAllDorms();
         $data['states'] = $this->loc->getStates();

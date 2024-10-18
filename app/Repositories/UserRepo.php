@@ -35,9 +35,25 @@ class UserRepo {
         });
     }
 
+    public function getUserByTypeApi($type)
+    {
+        return User::whereIn('user_type' , $type)->orderBy('name', 'asc')->get()->map(function ($user) {
+            $user->hashed_id = QS::hash($user->id);
+            return $user;
+        });
+    }
+
     public function getAllTypes()
     {
         return UserType::all();
+    }
+
+    public function getAllTypesWithHashedId()
+    {
+        return UserType::orderBy('id', 'asc')->get()->map(function ($userType) {
+            $userType->hashed_id = QS::hash($userType->id);
+            return $userType;
+        });
     }
 
     public function findType($id)
