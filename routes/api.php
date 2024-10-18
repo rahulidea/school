@@ -57,11 +57,7 @@ Route::group(['namespace' => 'Api\V1', 'prefix' => 'v1', 'as' => 'v1.'], functio
 
             Route::post('logout', 'AuthController@logout');
            
-            Route::get('get_user_create', [UserController::class, 'get_user_create']);
-            Route::get('get_user_types', [UserController::class, 'get_user_types']);
-            Route::post('/user/save_user', [UserController::class, 'store']);
-
-            /*************** Students *****************/
+        /*************** Students *****************/
             
         Route::group(['prefix' => 'students'], function(){
             
@@ -97,6 +93,21 @@ Route::group(['namespace' => 'Api\V1', 'prefix' => 'v1', 'as' => 'v1.'], functio
             
 
 
+        });
+        /*************** Users *****************/
+        Route::group(['prefix' => 'user'], function(){
+            Route::post('get_user_create', [UserController::class, 'get_user_create']);
+            Route::get('get_user_types', [UserController::class, 'get_user_types']);
+            Route::post('get_users_by_types', [UserController::class, 'get_usersByTypes']);
+
+
+            Route::post('save_user', [UserController::class, 'store']);
+            Route::put('save_user/{user_hash}', [UserController::class, 'update']);
+            Route::post('reset_pass/{user_id}', [UserController::class, 'reset_pass']);
+            Route::delete('destroy/{user_hash}', [UserController::class, 'destroy']);
+
+            Route::get('show/{user_hash}', [UserController::class, 'show']);
+            
         });
 
         //Susbcription Table
