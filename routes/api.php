@@ -2,12 +2,13 @@
 
 use Illuminate\Http\Request;
 
+use App\Repositories\UserRepo;
 use App\Http\Controllers\Api\v1\AuthController;
-use App\Http\Controllers\Api\v1\UserHomeController;
-use App\Http\Controllers\Api\v1\StudentController;
-use App\Http\Controllers\API\v1\AttendanceController;
-use App\Http\Controllers\API\v1\PromotionController;
 use App\Http\Controllers\Api\v1\UserController;
+use App\Http\Controllers\Api\v1\StudentController;
+use App\Http\Controllers\Api\v1\UserHomeController;
+use App\Http\Controllers\API\v1\PromotionController;
+use App\Http\Controllers\API\v1\AttendanceController;
 
 
 /*
@@ -114,9 +115,10 @@ Route::group(['namespace' => 'Api\V1', 'prefix' => 'v1', 'as' => 'v1.'], functio
         // 1 - Free
         // 2 - Gold
         // 3 - Diamond    
-        Route::middleware('check.subscription:23')->group(function(){
+        Route::middleware('check.subscription:2,3')->group(function(){
             Route::get('/user', function(Request $request) {
-                return $request->user();
+                $userRepo = new UserRepo();
+                return $userRepo->getAll();
             });
 
 

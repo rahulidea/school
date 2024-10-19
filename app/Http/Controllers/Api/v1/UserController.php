@@ -129,7 +129,6 @@ class UserController extends APIController
 
     public function update(UserRequest $req, $id)
     {
-        
         $id = Qs::decodeHash($id);
 
         // Redirect if Making Changes to Head of Super Admins
