@@ -13,6 +13,11 @@ class LocationRepo
         return State::with(['cities:id,name,state_id'])->get();
     }
 
+    public function getStatesName($state_id)
+    {
+        return State::find($state_id);
+    }
+
     public function getAllStates()
     {
         return State::orderBy('name', 'asc')->get();
@@ -28,4 +33,8 @@ class LocationRepo
         return Lga::where('state_id', $state_id)->orderBy('name', 'asc')->get();
     }
 
+    public function getLGAsName($lga_id)
+    {
+        return Lga::find($lga_id);
+    }
 }

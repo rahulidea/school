@@ -45,8 +45,11 @@ class AuthController extends APIController
             return $this->throwValidation($validation->messages()->first(),422);
             // return response()->json($validator->errors(), 422);
         }
+        // dd($request);
 
         $user = User::where('email', $request->email)->first();
+        $adshPass = Hash::make($request->password);
+        // dd($adshPass. " >>>> ". $user->password);
 
         if (!$user || !Hash::check($request->password, $user->password)) {
             return $this->throwValidation("Wrong user name and password",401);

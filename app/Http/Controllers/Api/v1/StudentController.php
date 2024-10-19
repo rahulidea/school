@@ -2,28 +2,30 @@
 
 namespace App\Http\Controllers\Api\v1;
 
-use App\Http\Controllers\Api\APIController;
-use Illuminate\Http\Request;
+use Exception;
+use App\Helpers\Mk;
 
 use App\Helpers\Qs;
-use App\Helpers\Mk;
-use App\Http\Requests\Student\StudentRecordCreate;
-use App\Http\Requests\Student\StudentRecordUpdate;
-use App\Repositories\LocationRepo;
+use App\Models\State;
+use App\Models\BloodGroup;
+use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use App\Repositories\UserRepo;
 use App\Repositories\MyClassRepo;
 use App\Repositories\StudentRepo;
-use App\Repositories\UserRepo;
-use App\Models\BloodGroup;
+use App\Repositories\LocationRepo;
+use Google\Client as GoogleClient;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
-
-use App\Helpers\FireBasePushNotification;
-use App\Models\State;
-use Google\Client as GoogleClient;
 use Illuminate\Support\Facades\Http;
+
+use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Storage;
+use App\Helpers\FireBasePushNotification;
+use App\Http\Controllers\Api\APIController;
+use App\Http\Requests\Student\StudentRecordCreate;
+use App\Http\Requests\Student\StudentRecordUpdate;
 
 class StudentController extends APIController
 {
@@ -105,9 +107,11 @@ class StudentController extends APIController
             if(!$data['sr']){
                 return $this->respondError("Student Record Not Found");
             }
+
+            $data['sections'] = $this->my_class->getClassSections($data['sr']->my_class_id);
         }
 
-        $data['my_classes'] = $this->my_class->all();
+        $data['my_classes'] = $this->my_class->getAllWithSection();
         $data['parents'] = $this->user->getUserByType('parent');
         $data['dorms'] = $this->student->getAllDorms();
         $data['states'] = $this->loc->getStates();
@@ -179,14 +183,20 @@ class StudentController extends APIController
             $data['photo'] = asset('storage/' . $f['path']);
         }
 
-        $user = $this->user->create($data); // Create User
+        try{
+            $user = $this->user->create($data); // Create User
 
-        $sr['adm_no'] = $data['username'];
-        $sr['user_id'] = $user->id;
-        $sr['session'] = Qs::getSetting('current_session');
-        $this->student->createRecord($sr); // Create Student
-    
-        return $this->respond('Student Record Added', $data);
+            $sr['adm_no'] = $data['username'];
+            $sr['user_id'] = $user->id;
+            $sr['session'] = Qs::getSetting('current_session');
+            $this->student->createRecord($sr); 
+
+            return $this->respond('Student Record Added', $data);
+        } catch (QueryException $e) {
+            return $this->respondError($e->getMessage());
+        } catch (Exception $e) {
+            return $this->respondError($e->getMessage()); 
+        }
     }
     
     public function show($sr_id, $is_grad=0)
@@ -199,7 +209,7 @@ class StudentController extends APIController
         if($is_grad){
             $data['sr'] = $this->student->getGradRecord(['id' => $sr_id])->first();
         }else{
-            $data['sr'] = $this->student->getRecord(['id' => $sr_id])->first();
+            $data['sr'] = $this->student->getRecordWithClass(['id' => $sr_id])->first();
         }
 
         if(!$data['sr']){

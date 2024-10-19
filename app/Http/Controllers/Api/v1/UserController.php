@@ -1,7 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\SupportTeam;
+namespace App\Http\Controllers\Api\v1;
 
+
+use App\Http\Controllers\Api\APIController;
+use Illuminate\Http\Request;
+use Validator;
 use App\Helpers\Qs;
 use App\Http\Requests\UserRequest;
 use App\Repositories\LocationRepo;
@@ -13,8 +17,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
-
-class UserController extends Controller
+class UserController extends APIController
 {
     protected $user, $loc, $my_class;
 
@@ -28,41 +31,54 @@ class UserController extends Controller
         $this->my_class = $my_class;
     }
 
-    public function index()
-    {
-        $ut = $this->user->getAllTypes();
+    public function get_user_create(Request $req){
+        $id = $req->hashed_id;
+        $id = Qs::decodeHash($id);
+        $d['user'] = $this->user->find($id);
+
+        $ut = $this->user->getAllTypesWithHashedId();
         $ut2 = $ut->where('level', '>', 2);
 
         $d['user_types'] = Qs::userIsAdmin() ? $ut2 : $ut;
         $d['states'] = $this->loc->getStates();
-        $d['users'] = $this->user->getPTAUsers();
+        // $d['users'] = $this->user->getPTAUsers();
         $d['nationals'] = $this->loc->getAllNationals();
         $d['blood_groups'] = $this->user->getBloodGroups();
-        
-        return view('pages.support_team.users.index', $d);
+
+        return $this->respond('success',$d);
     }
 
-    public function edit($id)
-    {
-        $id = Qs::decodeHash($id);
-        $d['user'] = $this->user->find($id);
-        $d['states'] = $this->loc->getStates();
-        $d['users'] = $this->user->getPTAUsers();
-        $d['blood_groups'] = $this->user->getBloodGroups();
-        $d['nationals'] = $this->loc->getAllNationals();
-        return view('pages.support_team.users.edit', $d);
+    public function get_user_types(Request $req){
+
+        // $ut = $this->user->getAllTypes();//->whereIn('level', $req->type);
+        // if(!Qs::userIsAdmin()){
+        //     $ut = $ut->where('level','>', 1);
+        // }
+
+
+        $ut = $this->user->getAllTypes();
+        $ut2 = $ut->where('level', '>', 2);
+
+        $d = Qs::userIsAdmin() ? $ut2 : $ut;
+        return $this->respond('success',$d);
+    }
+
+
+    public function get_usersByTypes(Request $req){
+        $d = $this->user->getUserByTypeApi($req->type);
+        return $this->respond('success',$d);
     }
 
     public function reset_pass($id)
     {
         // Redirect if Making Changes to Head of Super Admins
         if(Qs::headSA($id)){
-            return back()->with('flash_danger', __('msg.denied'));
+            return $this->respondWithError(__('msg.denied'));
         }
 
         $data['password'] = Hash::make('user');
         $this->user->update($id, $data);
-        return back()->with('flash_success', __('msg.pu_reset'));
+        return $this->respondMessage(__('msg.pu_reset'));
     }
 
     public function store(UserRequest $req)
@@ -74,7 +90,7 @@ class UserController extends Controller
         $data['user_type'] = $user_type;
         $data['photo'] = Qs::getDefaultUserImage();
         $data['code'] = strtoupper(Str::random(10));
-
+        
         $user_is_staff = in_array($user_type, Qs::getStaff());
         $user_is_teamSA = in_array($user_type, Qs::getTeamSA());
 
@@ -82,23 +98,24 @@ class UserController extends Controller
         $data['username'] = $uname = ($user_is_teamSA) ? $req->username : $staff_id;
         
         $pass = $req->password ?: $user_type;
+
         $data['password'] = Hash::make($pass);
-        
         if($req->hasFile('photo')) {
             $photo = $req->file('photo');
             $f = Qs::getFileMetaData($photo);
             $f['name'] = 'photo.' . $f['ext'];
             $f['path'] = $photo->storeAs(Qs::getUploadPath($user_type).$data['code'], $f['name']);
             $data['photo'] = asset('storage/' . $f['path']);
-        }
-        
+        } 
         /* Ensure that both username and Email are not blank*/
         if(!$uname && !$req->email){
-            return back()->with('pop_error', __('msg.user_invalid'));
+            return $this->respondWithError(__('msg.user_invalid'));
+            // return $this->respondWithError('error',__('msg.user_invalid'));
         }
-
+        
+        $data['nal_id'] = 1;
         $user = $this->user->create($data); // Create User
-
+        
         /* CREATE STAFF RECORD */
         if($user_is_staff){
             $d2 = $req->only(Qs::getStaffRecord());
@@ -106,8 +123,8 @@ class UserController extends Controller
             $d2['code'] = $staff_id;
             $this->user->createStaffRecord($d2);
         }
-
-        return Qs::jsonStoreOk();
+        return $this->respond(__('msg.store_ok'), $user);
+        // return Qs::jsonStoreOk();
     }
 
     public function update(UserRequest $req, $id)
@@ -116,7 +133,7 @@ class UserController extends Controller
 
         // Redirect if Making Changes to Head of Super Admins
         if(Qs::headSA($id)){
-            return Qs::json(__('msg.denied'), FALSE);
+            return $this->respondWithError(__('msg.denied'));
         }
 
         $user = $this->user->find($id);
@@ -143,6 +160,7 @@ class UserController extends Controller
             $f['path'] = $photo->storeAs(Qs::getUploadPath($user_type).$user->code, $f['name']);
             $data['photo'] = asset('storage/' . $f['path']);
         }
+        $data['nal_id'] = 1;
 
         $this->user->update($id, $data);   /* UPDATE USER RECORD */
 
@@ -153,23 +171,26 @@ class UserController extends Controller
             $this->user->updateStaffRecord(['user_id' => $id], $d2);
         }
 
-        return Qs::jsonUpdateOk();
+        // $data["ANAND"] = Qs::jsonUpdateOk();
+        return $this->respond(__('msg.update_ok'), $data);
     }
 
     public function show($user_id)
     {
-
         $user_id = Qs::decodeHash($user_id);
         if(!$user_id){return back();}
 
-        $data['user'] = $this->user->find($user_id);
-      
+        $data = $this->user->find($user_id);
+
+        $data['state_name'] = $this->loc->getStatesName($data->state_id)->name;
+        $data['lga_name'] = $this->loc->getLGAsName($data->lga_id)->name;
+
         /* Prevent Other Students from viewing Profile of others*/
         if(Auth::user()->id != $user_id && !Qs::userIsTeamSAT() && !Qs::userIsMyChild(Auth::user()->id, $user_id)){
-            return redirect(route('dashboard'))->with('pop_error', __('msg.denied'));
+            return $this->respondWithError(__('msg.denied'));
         }
 
-        return view('pages.support_team.users.show', $data);
+        return $this->respond("Success", $data);
     }
 
     public function destroy($id)
@@ -178,20 +199,20 @@ class UserController extends Controller
 
         // Redirect if Making Changes to Head of Super Admins
         if(Qs::headSA($id)){
-            return back()->with('pop_error', __('msg.denied'));
+            return $this->respondWithError(__('msg.denied'));
         }
 
         $user = $this->user->find($id);
 
         if($user->user_type == 'teacher' && $this->userTeachesSubject($user)) {
-            return back()->with('pop_error', __('msg.del_teacher'));
+            return $this->respondWithError(__('msg.del_teacher'));
         }
 
         $path = Qs::getUploadPath($user->user_type).$user->code;
         Storage::exists($path) ? Storage::deleteDirectory($path) : true;
         $this->user->delete($user->id);
 
-        return back()->with('flash_success', __('msg.del_ok'));
+        return $this->respondMessage(__('msg.del_ok'));
     }
 
     protected function userTeachesSubject($user)

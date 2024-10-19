@@ -2,11 +2,13 @@
 
 use Illuminate\Http\Request;
 
+use App\Repositories\UserRepo;
 use App\Http\Controllers\Api\v1\AuthController;
-use App\Http\Controllers\Api\v1\UserHomeController;
+use App\Http\Controllers\Api\v1\UserController;
 use App\Http\Controllers\Api\v1\StudentController;
-use App\Http\Controllers\API\v1\AttendanceController;
+use App\Http\Controllers\Api\v1\UserHomeController;
 use App\Http\Controllers\API\v1\PromotionController;
+use App\Http\Controllers\API\v1\AttendanceController;
 
 
 /*
@@ -55,12 +57,8 @@ Route::group(['namespace' => 'Api\V1', 'prefix' => 'v1', 'as' => 'v1.'], functio
 
 
             Route::post('logout', 'AuthController@logout');
-            Route::get('/user', function (Request $request) {
-                return $request->user();
-            });
-
-
-            /*************** Students *****************/
+           
+        /*************** Students *****************/
             
         Route::group(['prefix' => 'students'], function(){
             
@@ -74,9 +72,6 @@ Route::group(['namespace' => 'Api\V1', 'prefix' => 'v1', 'as' => 'v1.'], functio
             
             Route::get('citys/{state_id}', [StudentController::class, 'citys']);
             Route::get('class_sections/{class_id}', [StudentController::class, 'classSections']);
-
-
-
 
             Route::get('promotion', 'PromotionController@promotion');
             /* Promotions */
@@ -100,11 +95,35 @@ Route::group(['namespace' => 'Api\V1', 'prefix' => 'v1', 'as' => 'v1.'], functio
 
 
         });
+        /*************** Users *****************/
+        Route::group(['prefix' => 'user'], function(){
+            Route::post('get_user_create', [UserController::class, 'get_user_create']);
+            Route::get('get_user_types', [UserController::class, 'get_user_types']);
+            Route::post('get_users_by_types', [UserController::class, 'get_usersByTypes']);
 
-        
+
+            Route::post('save_user', [UserController::class, 'store']);
+            Route::put('save_user/{user_hash}', [UserController::class, 'update']);
+            Route::post('reset_pass/{user_id}', [UserController::class, 'reset_pass']);
+            Route::delete('destroy/{user_hash}', [UserController::class, 'destroy']);
+
+            Route::get('show/{user_hash}', [UserController::class, 'show']);
             
-        Route::middleware('check.subscription')->group(function(){
+        });
+
+        //Susbcription Table
+        // 1 - Free
+        // 2 - Gold
+        // 3 - Diamond    
+        Route::middleware('check.subscription:2,3')->group(function(){
             Route::get('/user', function(Request $request) {
+                $userRepo = new UserRepo();
+                return $userRepo->getAll();
+            });
+
+
+            Route::get('/damn', function(Request $request) {
+                //$request->attributes->set('allowedPlans', [2, 3, 4, 5, 6]);
                 return $request->user();
             });
 
