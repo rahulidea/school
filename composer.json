@@ -10,6 +10,8 @@
         "fakerphp/faker": "^1.14",
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
+        "google/apiclient": "^2.17",
+        "google/auth": "^1.42",
         "guzzlehttp/guzzle": "^7.0.1",
         "hashids/hashids": "^4.1.0",
         "laravel/framework": "^8.40",

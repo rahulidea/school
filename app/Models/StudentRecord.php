@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use App\Helpers\Qs;
 use App\User;
 use Eloquent;
+use App\Models\MyClass;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class StudentRecord extends Eloquent
@@ -13,6 +15,8 @@ class StudentRecord extends Eloquent
     protected $fillable = [
         'session', 'user_id', 'my_class_id', 'section_id', 'my_parent_id', 'dorm_id', 'dorm_room_no', 'adm_no', 'year_admitted', 'wd', 'wd_date', 'grad', 'grad_date', 'house', 'age'
     ];
+    
+    protected $appends = ['hashed_id'];
 
     public function user()
     {
@@ -37,5 +41,10 @@ class StudentRecord extends Eloquent
     public function dorm()
     {
         return $this->belongsTo(Dorm::class);
+    }
+
+    public function getHashedIdAttribute()
+    {
+        return QS::hash($this->id);
     }
 }

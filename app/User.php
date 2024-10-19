@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Helpers\Qs;
 use App\Models\BloodGroup;
 use App\Models\Lga;
 use App\Models\Nationality;
@@ -28,6 +29,8 @@ class User extends Authenticatable
     protected $fillable = [
         'name', 'username', 'email', 'phone', 'phone2', 'dob', 'gender', 'photo', 'address', 'bg_id', 'password', 'nal_id', 'state_id', 'lga_id', 'code', 'user_type', 'email_verified_at'
     ];
+
+    protected $appends = ['hashed_id'];
 
     /**
      * The attributes that should be hidden for arrays.
@@ -78,4 +81,8 @@ class User extends Authenticatable
         return UserType::where('title', $this->user_type)->value('id');
     }
 
+    public function getHashedIdAttribute()
+    {
+        return QS::hash($this->id);
+    }
 }
