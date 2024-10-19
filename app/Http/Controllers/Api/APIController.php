@@ -46,7 +46,17 @@ class APIController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function respond($msg,$data, $headers = [])
+    public function respondMessage($msg, $headers = [])
+    {
+        $response = [
+            'status' => true,
+            'message' => $msg,
+           
+        ];
+
+        return response()->json($response, $this->getStatusCode(), $headers);
+    }
+    public function respond($msg, $data, $headers = [])
     {
         $response = [
             'status' => true,

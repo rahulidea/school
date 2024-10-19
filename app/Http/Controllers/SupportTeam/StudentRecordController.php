@@ -47,6 +47,7 @@ class StudentRecordController extends Controller
         $data['dorms'] = $this->student->getAllDorms();
         $data['states'] = $this->loc->getStates();
         $data['nationals'] = $this->loc->getAllNationals();
+
         return view('pages.support_team.students.add', $data);
     }
 

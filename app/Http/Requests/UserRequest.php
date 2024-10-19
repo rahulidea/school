@@ -20,32 +20,35 @@ class UserRequest extends FormRequest
      */
     public function rules()
     {
+        $id = Qs::decodeHash($this->route('user_hash'));
+        
         $store =  [
             'name' => 'required|string|min:6|max:150',
             'password' => 'nullable|string|min:3|max:50',
             'user_type' => 'required',
             'gender' => 'required|string',
-            'phone' => 'sometimes|nullable|string|min:6|max:20',
+            'phone' => 'required|nullable|string|min:6|max:20',
             'email' => 'sometimes|nullable|email|max:100|unique:users',
-            'username' => 'sometimes|nullable|alpha_dash|min:8|max:100|unique:users',
+            'username' => 'sometimes|nullable|alpha_dash|min:6|max:100|unique:users',
             'photo' => 'sometimes|nullable|image|mimes:jpeg,gif,png,jpg|max:2048',
             'address' => 'required|string|min:6|max:120',
             'state_id' => 'required',
             'lga_id' => 'required',
-            'nal_id' => 'required',
+            // 'nal_id' => 'required',
         ];
         $update =  [
             'name' => 'required|string|min:6|max:150',
             'gender' => 'required|string',
             'phone' => 'sometimes|nullable|string|min:6|max:20',
             'phone2' => 'sometimes|nullable|string|min:6|max:20',
-            'email' => 'sometimes|nullable|email|max:100|unique:users,email,'.$this->user,
+            'email' => 'sometimes|nullable|email|max:100|unique:users,email,' . $id . ',id',
             'photo' => 'sometimes|nullable|image|mimes:jpeg,gif,png,jpg|max:2048',
             'address' => 'required|string|min:6|max:120',
             'state_id' => 'required',
             'lga_id' => 'required',
-            'nal_id' => 'required',
+            // 'nal_id' => 'required',
         ];
+    //    dd($this->user->id);
         return ($this->method() === 'POST') ? $store : $update;
     }
 
@@ -72,6 +75,10 @@ class UserRequest extends FormRequest
         }
 
         if($this->method() === 'PUT'){
+            $input = $this->all();
+            $input['user_type'] = Qs::decodeHash($input['user_type']);
+
+            $this->getInputSource()->replace($input);
             $this->user = Qs::decodeHash($this->user);
         }
 
