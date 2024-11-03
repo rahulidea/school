@@ -2,13 +2,13 @@
 
 use Illuminate\Http\Request;
 
-use App\Repositories\UserRepo;
 use App\Http\Controllers\Api\v1\AuthController;
-use App\Http\Controllers\Api\v1\UserController;
-use App\Http\Controllers\Api\v1\StudentController;
 use App\Http\Controllers\Api\v1\UserHomeController;
-use App\Http\Controllers\API\v1\PromotionController;
+use App\Http\Controllers\Api\v1\StudentController;
 use App\Http\Controllers\API\v1\AttendanceController;
+use App\Http\Controllers\API\v1\PromotionController;
+use App\Http\Controllers\Api\v1\UserController;
+use App\Http\Controllers\Api\v1\OrganisationController;
 
 
 /*
@@ -112,9 +112,7 @@ Route::group(['namespace' => 'Api\V1', 'prefix' => 'v1', 'as' => 'v1.'], functio
         });
 
         //Susbcription Table
-        // 1 - Free
-        // 2 - Gold
-        // 3 - Diamond    
+        // 1 - Free // 2 - Gold // 3 - Diamond    
         Route::middleware('check.subscription:2,3')->group(function(){
             Route::get('/user', function(Request $request) {
                 $userRepo = new UserRepo();
@@ -132,9 +130,14 @@ Route::group(['namespace' => 'Api\V1', 'prefix' => 'v1', 'as' => 'v1.'], functio
             });
         });
         // Route that not required subscription check
-        Route::post('/test3', function(){
-            return "This route not required any subscription";
-        });
+        Route::get('/test3', [OrganisationController::class, 'index']);
+        Route::get('/org/{org_id?}', [OrganisationController::class, 'index']);
+        Route::post('/org', [OrganisationController::class, 'store']);
+        Route::put('/org/{org_id}', [OrganisationController::class, 'update']);
+        Route::get('/school/{school_id?}', [OrganisationController::class, 'school_index']);
+        Route::post('/school', [OrganisationController::class, 'school_store']);
+        Route::put('/school/{school_id}', [OrganisationController::class, 'school_update']);
+
         Route::post('/holidays/store-update', [AttendanceController::class, 'storeOrUpdateHoliday']);
         Route::post('/attendance/add', [AttendanceController::class, 'store']);
         Route::get('/attendance', [AttendanceController::class, 'index']);
