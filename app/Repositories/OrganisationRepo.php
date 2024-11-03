@@ -23,6 +23,10 @@ class OrganisationRepo
         return Organisation::find($id)->update($data);
     }
 
+    public function deleteOrg($id){
+        return Organisation::destroy($id);
+    }
+
     public function allSchool($id)
     {   
         return School::orderBy('name', 'asc')->where("id",($id>0)?"=":">",$id)->get();
@@ -36,5 +40,9 @@ class OrganisationRepo
     public function updateSchool($id, $data)
     {
         return School::find($id)->update($data);
+    }
+
+    public function deleteSchool($id){
+        return School::destroy($id);
     }
 }

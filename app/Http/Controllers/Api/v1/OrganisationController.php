@@ -69,6 +69,13 @@ class OrganisationController extends APIController
         );
     }
 
+    public function deleteOrg($id){
+        $data = $this->org->deleteOrg($id);
+        return $this->respond('succes',
+            $data
+        );
+    }
+
     public function school_index($id=0){
         $data = $this->org->allSchool($id);
         return $this->respond('succes',
@@ -109,6 +116,13 @@ class OrganisationController extends APIController
         $data = $this->org->updateSchool($id, $data);
 
         return $this->respond('School Update successfully',
+            $data
+        );
+    }
+
+    public function deleteSchool($id){
+        $data = $this->org->deleteSchool($id);
+        return $this->respond('succes',
             $data
         );
     }
