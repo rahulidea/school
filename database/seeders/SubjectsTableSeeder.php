@@ -36,14 +36,16 @@ class SubjectsTableSeeder extends Seeder
                     'name' => $subjects[0],
                     'slug' => $sub_slug[0],
                     'my_class_id' => $my_class->id,
-                    'teacher_id' => $teacher_id
+                    'teacher_id' => $teacher_id,
+                    'school_id' => rand(1,10)
                 ],
 
                 [
                     'name' => $subjects[1],
                     'slug' => $sub_slug[1],
                     'my_class_id' => $my_class->id,
-                    'teacher_id' => $teacher_id
+                    'teacher_id' => $teacher_id,
+                    'school_id' => rand(1,10)
                 ],
 
             ];

@@ -27,6 +27,7 @@ class CreateUsersTable extends Migration
             $table->string('phone')->nullable();
             $table->string('phone2')->nullable();
             $table->foreignId('organisation_id')->nullable();
+            $table->foreignId('school_id')->nullable();
             $table->unsignedInteger('bg_id')->nullable();
             $table->unsignedInteger('state_id')->nullable();
             $table->unsignedInteger('lga_id')->nullable();

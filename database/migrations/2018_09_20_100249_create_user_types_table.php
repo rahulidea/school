@@ -18,6 +18,7 @@ class CreateUserTypesTable extends Migration
             $table->string('title');
             $table->string('name');
             $table->string('level');
+            $table->foreignId('school_id')->nullable();
             $table->timestamps();
         });
     }
