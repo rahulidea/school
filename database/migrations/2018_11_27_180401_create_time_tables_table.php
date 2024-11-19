@@ -16,6 +16,7 @@ class CreateTimeTablesTable extends Migration
         Schema::create('time_table_records', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name', 100)->unique();
+            $table->foreignId('school_id')->nullable();
             $table->unsignedInteger('my_class_id');
             $table->unsignedInteger('exam_id')->nullable();
             $table->string('year', 100);

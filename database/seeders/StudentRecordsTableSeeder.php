@@ -61,7 +61,8 @@ class StudentRecordsTableSeeder extends Seeder
         StudentRecord::factory()->create([
             'my_class_id' => $section->my_class_id,
             'user_id' => $user->id,
-            'section_id' => $section->id
+            'section_id' => $section->id,
+            
         ]);
     }
 }

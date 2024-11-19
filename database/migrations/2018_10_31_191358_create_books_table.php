@@ -16,6 +16,7 @@ class CreateBooksTable extends Migration
         Schema::create('books', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name', 100);
+            $table->foreignId('school_id')->nullable();
             $table->unsignedInteger('my_class_id')->nullable();
             $table->string('description')->nullable();
             $table->string('author')->nullable();

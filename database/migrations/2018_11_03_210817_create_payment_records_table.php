@@ -15,6 +15,7 @@ class CreatePaymentRecordsTable extends Migration
     {
         Schema::create('payment_records', function (Blueprint $table) {
             $table->increments('id');
+            $table->foreignId('school_id')->nullable();
             $table->unsignedInteger('payment_id');
             $table->unsignedInteger('student_id');
             $table->string('ref_no', 100)->unique()->nullable();

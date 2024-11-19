@@ -15,6 +15,7 @@ class CreateHolidaysTable extends Migration
     {
         Schema::create('holidays', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('school_id')->nullable();
             $table->string('name');
             $table->date('date');
             $table->timestamps();

@@ -15,6 +15,7 @@ class CreateStudentRecordsTable extends Migration
     {
         Schema::create('student_records', function (Blueprint $table) {
             $table->increments('id');
+            $table->foreignId('school_id')->nullable();
             $table->unsignedInteger('user_id');
             $table->unsignedInteger('my_class_id');
             $table->unsignedInteger('section_id');

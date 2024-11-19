@@ -18,6 +18,7 @@ class CreateSkillsTable extends Migration
             $table->string('name');
             $table->string('skill_type');
             $table->string('class_type')->nullable();
+            $table->foreignId('school_id')->nullable();
             $table->timestamps();
         });
     }

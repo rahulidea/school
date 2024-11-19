@@ -15,6 +15,7 @@ class CreatePromotionsTable extends Migration
     {
         Schema::create('promotions', function (Blueprint $table) {
             $table->increments('id');
+            $table->foreignId('school_id')->nullable();
             $table->unsignedInteger('student_id');
             $table->unsignedInteger('from_class');
             $table->unsignedInteger('from_section');

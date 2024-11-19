@@ -15,6 +15,7 @@ class CreateReceiptsTable extends Migration
     {
         Schema::create('receipts', function (Blueprint $table) {
             $table->increments('id');
+            $table->foreignId('school_id')->nullable();
             $table->unsignedInteger('pr_id');
             $table->Integer('amt_paid');
             $table->Integer('balance');

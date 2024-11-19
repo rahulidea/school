@@ -18,6 +18,7 @@ class CreateExamsTable extends Migration
             $table->string('name');
             $table->tinyInteger('term');
             $table->string('year', 40);
+            $table->foreignId('school_id')->nullable();
             $table->timestamps();
         });
 

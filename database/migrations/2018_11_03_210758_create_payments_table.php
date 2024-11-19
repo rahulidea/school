@@ -19,6 +19,7 @@ class CreatePaymentsTable extends Migration
             $table->integer('amount');
             $table->string('ref_no', 100)->unique();
             $table->string('method', 100)->default('cash');
+            $table->foreignId('school_id')->nullable();
             $table->unsignedInteger('my_class_id')->nullable();
             $table->string('description')->nullable();
             $table->string('year');

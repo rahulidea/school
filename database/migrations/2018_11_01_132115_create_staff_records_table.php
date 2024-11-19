@@ -15,6 +15,7 @@ class CreateStaffRecordsTable extends Migration
     {
         Schema::create('staff_records', function (Blueprint $table) {
             $table->increments('id');
+            $table->foreignId('school_id')->nullable();
             $table->unsignedInteger('user_id');
             $table->string('code', 100)->nullable()->unique();
             $table->string('emp_date')->nullable();

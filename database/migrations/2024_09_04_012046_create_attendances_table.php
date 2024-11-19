@@ -15,6 +15,7 @@ class CreateAttendancesTable extends Migration
     {
         Schema::create('attendances', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('school_id')->nullable();
             $table->unsignedInteger('student_id');
             $table->foreign('student_id')->references('id')->on('student_records')->onDelete('cascade');
             $table->unsignedInteger('my_classes');

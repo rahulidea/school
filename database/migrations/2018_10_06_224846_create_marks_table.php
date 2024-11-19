@@ -15,6 +15,7 @@ class CreateMarksTable extends Migration
     {
         Schema::create('marks', function (Blueprint $table) {
             $table->increments('id');
+            $table->foreignId('school_id')->nullable();
             $table->unsignedInteger('student_id');
             $table->unsignedInteger('subject_id');
             $table->unsignedInteger('my_class_id');
