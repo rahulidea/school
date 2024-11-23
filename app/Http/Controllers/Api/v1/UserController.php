@@ -178,7 +178,9 @@ class UserController extends APIController
     public function show($user_id)
     {
         $user_id = Qs::decodeHash($user_id);
-        if(!$user_id){return back();}
+        if(!$user_id){
+            return $this->respondWithError("Student Record Not Found");
+        }
 
         $data = $this->user->find($user_id);
 

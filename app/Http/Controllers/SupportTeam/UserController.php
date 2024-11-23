@@ -7,6 +7,7 @@ use App\Http\Requests\UserRequest;
 use App\Repositories\LocationRepo;
 use App\Repositories\MyClassRepo;
 use App\Repositories\UserRepo;
+use App\Repositories\SchoolRepo;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -16,9 +17,9 @@ use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
-    protected $user, $loc, $my_class;
+    protected $user, $loc, $my_class, $school;
 
-    public function __construct(UserRepo $user, LocationRepo $loc, MyClassRepo $my_class)
+    public function __construct(UserRepo $user, LocationRepo $loc, MyClassRepo $my_class, SchoolRepo $school)
     {
         $this->middleware('teamSA', ['only' => ['index', 'store', 'edit', 'update'] ]);
         $this->middleware('super_admin', ['only' => ['reset_pass','destroy'] ]);
@@ -26,6 +27,7 @@ class UserController extends Controller
         $this->user = $user;
         $this->loc = $loc;
         $this->my_class = $my_class;
+        $this->school = $school;
     }
 
     public function index()
@@ -34,17 +36,19 @@ class UserController extends Controller
         $ut2 = $ut->where('level', '>', 2);
 
         $d['user_types'] = Qs::userIsAdmin() ? $ut2 : $ut;
+        $d['schools'] = Qs::userIsAdmin() ? $this->school->getAll()->where('id', Auth::user()->school_id): $this->school->getAll()->where('organisation_id', Auth::user()->organisation_id);
         $d['states'] = $this->loc->getStates();
         $d['users'] = $this->user->getPTAUsers();
         $d['nationals'] = $this->loc->getAllNationals();
         $d['blood_groups'] = $this->user->getBloodGroups();
-        
         return view('pages.support_team.users.index', $d);
     }
 
     public function edit($id)
     {
         $id = Qs::decodeHash($id);
+        if(Qs::userIsSuperAdmin())
+            $d['schools'] = $this->school->getAll()->where('organisation_id', Auth::user()->organisation_id); 
         $d['user'] = $this->user->find($id);
         $d['states'] = $this->loc->getStates();
         $d['users'] = $this->user->getPTAUsers();
@@ -74,6 +78,9 @@ class UserController extends Controller
         $data['user_type'] = $user_type;
         $data['photo'] = Qs::getDefaultUserImage();
         $data['code'] = strtoupper(Str::random(10));
+
+        $data['school_id'] = $req->school_id;
+        $data['organisation_id'] = Auth::user()->organisation_id;
 
         $user_is_staff = in_array($user_type, Qs::getStaff());
         $user_is_teamSA = in_array($user_type, Qs::getTeamSA());
@@ -128,6 +135,7 @@ class UserController extends Controller
         $data = $req->except(Qs::getStaffRecord());
         $data['name'] = ucwords($req->name);
         $data['user_type'] = $user_type;
+        $data['school_id'] = $req->school_id;
 
         if($user_is_staff && !$user_is_teamSA){
             $data['username'] = Qs::getAppCode().'/STAFF/'.date('Y/m', strtotime($req->emp_date)).'/'.mt_rand(1000, 9999);

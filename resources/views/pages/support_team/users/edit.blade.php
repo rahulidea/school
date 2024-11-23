@@ -14,6 +14,19 @@
                 <h6>Personal Data</h6>
                 <fieldset>
                     <div class="row">
+                        @if(QS::userIsSuperAdmin())
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                <label for="user_type"> Select School: <span class="text-danger">*</span></label>
+                                    <select required data-placeholder="Select User" class="form-control select" name="school_id" id="school_id">
+                                    @foreach($schools as $ut)
+                                        <option value="{{ $ut->id }}">{{ $ut->name }}</option>
+                                    @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        @endif
+
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label for="user_type"> Select User: <span class="text-danger">*</span></label>
@@ -30,7 +43,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="form-group">
                                 <label>Address: <span class="text-danger">*</span></label>
                                 <input value="{{ $user->address }}" class="form-control" placeholder="Address" name="address" type="text" required>

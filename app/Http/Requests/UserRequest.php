@@ -34,6 +34,7 @@ class UserRequest extends FormRequest
             'address' => 'required|string|min:6|max:120',
             'state_id' => 'required',
             'lga_id' => 'required',
+            'school_id' => 'required',
             // 'nal_id' => 'required',
         ];
         $update =  [
@@ -46,6 +47,7 @@ class UserRequest extends FormRequest
             'address' => 'required|string|min:6|max:120',
             'state_id' => 'required',
             'lga_id' => 'required',
+            'school_id' => 'required',
             // 'nal_id' => 'required',
         ];
     //    dd($this->user->id);

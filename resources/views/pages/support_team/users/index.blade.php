@@ -30,6 +30,17 @@
                             <div class="row">
                                 <div class="col-md-2">
                                     <div class="form-group">
+                                       <label for="user_type"> Select School: <span class="text-danger">*</span></label>
+                                        <select required data-placeholder="Select User" class="form-control select" name="school_id" id="school_id">
+                                        @foreach($schools as $ut)
+                                            <option value="{{ $ut->id }}">{{ $ut->name }}</option>
+                                        @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-2">
+                                    <div class="form-group">
                                         <label for="user_type"> Select User: <span class="text-danger">*</span></label>
                                         <select required data-placeholder="Select User" class="form-control select" name="user_type" id="user_type">
                                         @foreach($user_types as $ut)
@@ -46,7 +57,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <div class="form-group">
                                         <label>Address: <span class="text-danger">*</span></label>
                                         <input value="{{ old('address') }}" class="form-control" placeholder="Address" name="address" type="text" required>
@@ -57,15 +68,15 @@
                             <div class="row">
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label>Email address: </label>
-                                        <input value="{{ old('email') }}" type="email" name="email" class="form-control" placeholder="your@email.com">
+                                        <label>Email address: <span class="text-danger">*</span></label>
+                                        <input value="{{ old('email') }}" required type="email" name="email" class="form-control" placeholder="your@email.com">
                                     </div>
                                 </div>
 
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label>Username: </label>
-                                        <input value="{{ old('username') }}" type="text" name="username" class="form-control" placeholder="Username">
+                                        <label>Username: <span class="text-danger">*</span></label>
+                                        <input value="{{ old('username') }}" required type="text" name="username" class="form-control" placeholder="Username">
                                     </div>
                                 </div>
 
