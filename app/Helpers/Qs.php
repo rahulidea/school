@@ -5,6 +5,7 @@ namespace App\Helpers;
 use App\Models\Setting;
 use App\Models\StudentRecord;
 use App\Models\Subject;
+use App\Models\School;
 use Hashids\Hashids;
 use Illuminate\Support\Facades\Auth;
 
@@ -379,5 +380,10 @@ class Qs
     public static function respondError($msg, $status_code, $headers = [])
     {
         return response()->json($msg, $status_code, $headers);
+    }
+
+    public static function getSchoolId(){
+        $school_id = Qs::userIsSuperAdmin() ? School::where('organisation_id', Auth::user()->organisation_id)->pluck('id')->toArray() : (array) Auth::user()->school_id;
+        return $school_id;
     }
 }

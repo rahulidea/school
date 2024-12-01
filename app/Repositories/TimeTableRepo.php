@@ -5,13 +5,14 @@ namespace App\Repositories;
 use App\Models\TimeSlot;
 use App\Models\TimeTable;
 use App\Models\TimeTableRecord;
+use App\Helpers\QS;
 
 class TimeTableRepo
 {
 
     public function getTimeTable($where)
     {
-        return TimeTable::with(['subject', 'time_slot'])->orderBy('timestamp_from')->where($where)->get();
+        return TimeTable::wherein('school_id',QS::getSchoolId())->with(['subject', 'time_slot'])->orderBy('timestamp_from')->where($where)->get();
     }
 
     public function create($data)
@@ -82,7 +83,7 @@ class TimeTableRepo
 
     public function getAllRecords()
     {
-        return TimeTableRecord::orderBy('created_at')->with(['my_class', 'exam'])->get();
+        return TimeTableRecord::wherein('school_id',QS::getSchoolId())->orderBy('created_at')->with(['my_class', 'exam'])->get();
     }
 
     public function getTTRByIDs($ids)

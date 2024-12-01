@@ -28,6 +28,7 @@ class CreateTimeTablesTable extends Migration
         Schema::create('time_slots', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('ttr_id');
+            $table->foreignId('school_id')->nullable();
             $table->tinyInteger('hour_from');
             $table->string('min_from', 2);
             $table->string('meridian_from', 2);
@@ -49,6 +50,7 @@ class CreateTimeTablesTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('ttr_id');
             $table->unsignedInteger('ts_id');
+            $table->foreignId('school_id')->nullable();
             $table->unsignedInteger('subject_id')->nullable();
             $table->string('exam_date', 50)->nullable();
             $table->string('timestamp_from', 100);

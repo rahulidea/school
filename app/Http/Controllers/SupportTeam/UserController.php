@@ -32,6 +32,7 @@ class UserController extends Controller
 
     public function index()
     {
+    //    dd(QS::getSchoolId());
         $ut = $this->user->getAllTypes();
         $ut2 = $ut->where('level', '>', 2);
 

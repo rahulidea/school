@@ -6,23 +6,24 @@ use App\Models\ClassType;
 use App\Models\MyClass;
 use App\Models\Section;
 use App\Models\Subject;
+use App\Helpers\Qs;
 
 class MyClassRepo
 {
 
     public function all()
     {
-        return MyClass::orderBy('name', 'asc')->with('class_type')->get();
+        return MyClass::wherein('school_id',QS::getSchoolId())->orderBy('name', 'asc')->with('class_type')->get();
     }
 
     public function getAllWithSection()
     {
-        return MyClass::orderBy('name', 'asc')->with(['class_type','section'])->get();
+        return MyClass::wherein('school_id',QS::getSchoolId())->orderBy('name', 'asc')->with(['class_type','section'])->get();
     }
 
     public function getMC($data)
     {
-        return MyClass::where($data)->with('section');
+        return MyClass::wherein('school_id',QS::getSchoolId())->where($data)->with('section');
     }
 
     public function find($id)

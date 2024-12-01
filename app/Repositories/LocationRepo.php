@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Models\Nationality;
 use App\Models\State;
 use App\Models\Lga;
+use App\Helpers\Qs;
 
 class LocationRepo
 {

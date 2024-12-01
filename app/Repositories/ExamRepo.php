@@ -7,18 +7,19 @@ use App\Models\ExamRecord;
 use App\Models\Grade;
 use App\Models\Mark;
 use App\Models\Skill;
+use App\Helpers\Qs;
 
 class ExamRepo
 {
 
     public function all()
     {
-        return Exam::orderBy('name', 'asc')->orderBy('year', 'desc')->get();
+        return Exam::wherein('school_id',QS::getSchoolId())->orderBy('name', 'asc')->orderBy('year', 'desc')->get();
     }
 
     public function getExam($data)
     {
-        return Exam::where($data)->get();
+        return Exam::wherein('school_id',QS::getSchoolId())->where($data)->get();
     }
 
     public function find($id)
@@ -48,7 +49,7 @@ class ExamRepo
 
     public function getRecord($data)
     {
-        return ExamRecord::where($data)->get();
+        return ExamRecord::wherein('school_id',QS::getSchoolId())->where($data)->get();
     }
 
     public function findRecord($id)
@@ -65,12 +66,12 @@ class ExamRepo
 
     public function allGrades()
     {
-        return Grade::orderBy('name')->get();
+        return Grade::wherein('school_id',QS::getSchoolId())->orderBy('name')->get();
     }
 
     public function getGrade($data)
     {
-        return Grade::where($data)->get();
+        return Grade::wherein('school_id',QS::getSchoolId())->where($data)->get();
     }
 
     public function findGrade($id)
@@ -112,19 +113,19 @@ class ExamRepo
 
     public function getExamYears($student_id)
     {
-        return Mark::where('student_id', $student_id)->select('year')->distinct()->get();
+        return Mark::wherein('school_id',QS::getSchoolId())->where('student_id', $student_id)->select('year')->distinct()->get();
     }
 
     public function getMark($data)
     {
-        return Mark::where($data)->with('grade')->get();
+        return Mark::wherein('school_id',QS::getSchoolId())->where($data)->with('grade')->get();
     }
 
     /*********** Skills ***************/
 
     public function getSkill($where)
     {
-        return Skill::where($where)->orderBy('name')->get();
+        return Skill::wherein('school_id',QS::getSchoolId())->where($where)->orderBy('name')->get();
     }
 
     public function getSkillByClassType($class_type = NULL, $skill_type = NULL)
