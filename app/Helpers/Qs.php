@@ -386,4 +386,5 @@ class Qs
         $school_id = Qs::userIsSuperAdmin() ? School::where('organisation_id', Auth::user()->organisation_id)->pluck('id')->toArray() : (array) Auth::user()->school_id;
         return $school_id;
     }
+
 }

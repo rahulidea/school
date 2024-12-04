@@ -42,7 +42,7 @@ class UserRequest extends FormRequest
             'gender' => 'required|string',
             'phone' => 'sometimes|nullable|string|min:6|max:20',
             'phone2' => 'sometimes|nullable|string|min:6|max:20',
-            'email' => 'sometimes|nullable|email|max:100|unique:users,email,' . $id . ',id',
+            // 'email' => 'sometimes|nullable|email|max:100|unique:users,email,' . $id . ',id',
             'photo' => 'sometimes|nullable|image|mimes:jpeg,gif,png,jpg|max:2048',
             'address' => 'required|string|min:6|max:120',
             'state_id' => 'required',
@@ -78,7 +78,7 @@ class UserRequest extends FormRequest
 
         if($this->method() === 'PUT'){
             $input = $this->all();
-            $input['user_type'] = Qs::decodeHash($input['user_type']);
+            // $input['user_type'] = Qs::decodeHash($input['user_type']);
 
             $this->getInputSource()->replace($input);
             $this->user = Qs::decodeHash($this->user);

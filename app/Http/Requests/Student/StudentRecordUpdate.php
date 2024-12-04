@@ -34,7 +34,7 @@ class StudentRecordUpdate extends FormRequest
             'section_id' => 'required',
             'state_id' => 'required',
             'lga_id' => 'required',
-            'nal_id' => 'required',
+            // 'nal_id' => 'required',
             'my_parent_id' => 'sometimes|nullable',
             'dorm_id' => 'sometimes|nullable',
         ];
@@ -43,7 +43,7 @@ class StudentRecordUpdate extends FormRequest
     public function attributes()
     {
         return  [
-            'nal_id' => 'Nationality',
+            // 'nal_id' => 'Nationality',
             'dorm_id' => 'Dormitory',
             'state_id' => 'State',
             'lga_id' => 'LGA',

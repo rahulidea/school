@@ -32,7 +32,6 @@ class UserController extends Controller
 
     public function index()
     {
-    //    dd(QS::getSchoolId());
         $ut = $this->user->getAllTypes();
         $ut2 = $ut->where('level', '>', 2);
 
@@ -55,6 +54,7 @@ class UserController extends Controller
         $d['users'] = $this->user->getPTAUsers();
         $d['blood_groups'] = $this->user->getBloodGroups();
         $d['nationals'] = $this->loc->getAllNationals();
+
         return view('pages.support_team.users.edit', $d);
     }
 

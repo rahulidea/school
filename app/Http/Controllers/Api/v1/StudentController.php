@@ -124,7 +124,7 @@ class StudentController extends APIController
     }
 
     public function update(StudentRecordUpdate $req, $sr_id, $is_grad=0)
-    {   
+    {           
         $sr_id = Qs::decodeHash($sr_id);
         if(!$sr_id){return $this->respondWithError("Student ID required");}
 
@@ -139,6 +139,7 @@ class StudentController extends APIController
 
         $d =  $req->only(Qs::getUserRecord());
         $d['name'] = ucwords($req->name);
+        $d["nal_id"]=$nal = $this->loc->getAllNationals()->first()->id;
 
         if($req->hasFile('photo')) {
             $photo = $req->file('photo');
@@ -162,6 +163,7 @@ class StudentController extends APIController
 
     public function store(StudentRecordCreate $req)
     {
+
        $data =  $req->only(Qs::getUserRecord());
        $sr =  $req->only(Qs::getStudentData());
         $ct = $this->my_class->findTypeByClass($req->my_class_id)->code;
@@ -175,7 +177,8 @@ class StudentController extends APIController
         $data['photo'] = Qs::getDefaultUserImage();
         $adm_no = $req->adm_no;
         $data['username'] = strtoupper(Qs::getAppCode().'/'.$ct.'/'.$sr['year_admitted'].'/'.($adm_no ?: mt_rand(1000, 99999)));
-
+        $data["nal_id"]=$nal = $this->loc->getAllNationals()->first()->id;
+        
         if($req->hasFile('photo')) {
             $photo = $req->file('photo');
             $f = Qs::getFileMetaData($photo);
@@ -225,11 +228,15 @@ class StudentController extends APIController
         return $this->respond('Record Found', $data);
     }
 
-    public function reset_pass($st_id, Request $req)
+    public function reset_pass(Request $req)
     {
-        $st_id = Qs::decodeHash($st_id);
-        $data['password'] = Hash::make($req->password);
-        $this->user->update($req->id, $data);
+        // Redirect if Making Changes to Head of Super Admins
+        if(Qs::headSA($req->user_id)){
+            return $this->respondError(__('msg.denied'));
+        }
+
+        $data['password'] = Hash::make('user');
+        $this->user->update($req->user_id, $data);
         return $this->respond('Password Updated', []);
     }
 

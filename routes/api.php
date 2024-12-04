@@ -120,7 +120,7 @@ Route::group(['namespace' => 'Api\V1', 'prefix' => 'v1', 'as' => 'v1.'], functio
             });
 
 
-            Route::get('/damn', function(Request $request) {
+            Route::get('/user', function(Request $request) {
                 //$request->attributes->set('allowedPlans', [2, 3, 4, 5, 6]);
                 return $request->user();
             });
