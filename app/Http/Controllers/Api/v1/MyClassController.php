@@ -53,7 +53,6 @@ class MyClassController extends APIController
 
     public function edit($id)
     {
-        dd($id);
         $d['c'] = $c = $this->my_class->find($id);
 
         return $this->respond('success',$d);
