@@ -34,7 +34,7 @@ class TimeTableRepo
 
     public function getTimeSlot($where)
     {
-        return TimeSlot::orderBy('timestamp_from')->where($where);
+        return TimeSlot::orderBy('timestamp_from')->wherein('school_id',QS::getSchoolId())->where($where);
     }
 
     public function getTimeSlotByTTR($ttr_id)
@@ -44,7 +44,7 @@ class TimeTableRepo
 
     protected function getDistinctTTR($remove_ttr = NULL)
     {
-        return $remove_ttr ? TimeSlot::where('ttr_id', '<>', $remove_ttr)->distinct()->select('ttr_id')->pluck('ttr_id') : TimeSlot::distinct()->select('ttr_id')->pluck('ttr_id');
+        return $remove_ttr ? TimeSlot::wherein('school_id',QS::getSchoolId())->where('ttr_id', '<>', $remove_ttr)->distinct()->select('ttr_id')->pluck('ttr_id') : TimeSlot::distinct()->select('ttr_id')->pluck('ttr_id');
     }
 
     public function getExistingTS($remove_ttr = NULL)
@@ -88,7 +88,7 @@ class TimeTableRepo
 
     public function getTTRByIDs($ids)
     {
-        return TimeTableRecord::orderBy('name')->whereIn('id', $ids)->get();
+        return TimeTableRecord::wherein('school_id',QS::getSchoolId())->orderBy('name')->whereIn('id', $ids)->get();
     }
 
     public function getRecord($where)
@@ -113,6 +113,6 @@ class TimeTableRepo
 
     public function findRecord($id)
     {
-        return TimeTableRecord::findOrFail($id);
+        return TimeTableRecord::wherein('school_id',QS::getSchoolId())->findOrFail($id);
     }
 }

@@ -37,7 +37,7 @@ class UserController extends Controller
         $ut2 = $ut->where('level', '>', 2);
 
         $d['user_types'] = Qs::userIsAdmin() ? $ut2 : $ut;
-        $d['schools'] = Qs::userIsAdmin() ? $this->school->getAll()->where('id', Auth::user()->school_id): $this->school->getAll()->where('organisation_id', Auth::user()->organisation_id);
+        $d['schools'] = Qs::getSchool();
         $d['states'] = $this->loc->getStates();
         $d['users'] = $this->user->getPTAUsers();
         $d['nationals'] = $this->loc->getAllNationals();
