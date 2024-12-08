@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\v1\StudentController;
 use App\Http\Controllers\API\v1\AttendanceController;
 use App\Http\Controllers\API\v1\PromotionController;
 use App\Http\Controllers\Api\v1\UserController;
+use App\Http\Controllers\Api\v1\MyClassController;
 use App\Http\Controllers\Api\v1\OrganisationController;
 
 
@@ -109,6 +110,17 @@ Route::group(['namespace' => 'Api\V1', 'prefix' => 'v1', 'as' => 'v1.'], functio
 
             Route::get('show/{user_hash}', [UserController::class, 'show']);
             
+        });
+
+        /**************Manage Classes************* */
+        Route::group(['prefix' => 'manage_classes'], function(){
+            // Route::resource('classes', 'MyClassController');
+
+            Route::get('show', [MyClassController::class, 'show']);
+            Route::post('create', [MyClassController::class, 'store']);
+            Route::get('{class}/edit', [MyClassController::class, 'edit']);
+            Route::put('update/{class}', [MyClassController::class, 'update']);
+            Route::delete('destroy/{class}', [MyClassController::class, 'destroy']);
         });
 
         //Susbcription Table
