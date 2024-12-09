@@ -8,7 +8,7 @@ use App\Http\Requests\MyClass\ClassCreate;
 use App\Http\Requests\MyClass\ClassUpdate;
 use App\Repositories\MyClassRepo;
 use App\Repositories\UserRepo;
-use App\Http\Controllers\Controller;
+use Throwable;
 
 class MyClassController extends APIController
 {
@@ -36,19 +36,23 @@ class MyClassController extends APIController
         $data = $req->all();
         $data['school_id'] = QS::getSchoolId()[0];
 
+        try{
+            $mc = $this->my_class->create($data);
 
-        $mc = $this->my_class->create($data);
+            // Create Default Section
+            $s =['my_class_id' => $mc->id,
+                'name' => 'A',
+                'active' => 1,
+                'teacher_id' => NULL,
+            ];
 
-        // Create Default Section
-        $s =['my_class_id' => $mc->id,
-            'name' => 'A',
-            'active' => 1,
-            'teacher_id' => NULL,
-        ];
+            $this->my_class->createSection($s);
 
-        $this->my_class->createSection($s);
-
-        return $this->respond(__('msg.store_ok'),$mc);
+            return $this->respond(__('msg.store_ok'),$mc);
+        } catch (Throwable $e) {
+            $this->setStatusCode(500);
+            return $this->respondWithError($e->getMessage());
+        }
         // return Qs::jsonStoreOk();
     }
 
