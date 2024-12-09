@@ -36,6 +36,7 @@ class MyClassController extends APIController
         $data = $req->all();
         $data['school_id'] = QS::getSchoolId()[0];
 
+
         $mc = $this->my_class->create($data);
 
         // Create Default Section
@@ -53,8 +54,7 @@ class MyClassController extends APIController
 
     public function edit($id)
     {
-        dd($id);
-        $d['c'] = $c = $this->my_class->find($id);
+        $d = $c = $this->my_class->find($id);
 
         return $this->respond('success',$d);
     }
@@ -64,13 +64,13 @@ class MyClassController extends APIController
         $data = $req->only(['name']);
         $this->my_class->update($id, $data);
 
-        return $this->respond(__('msg.update_ok'),"");
+        return $this->respondMessage(__('msg.update_ok'));
     }
 
     public function destroy($id)
     {
         $this->my_class->delete($id);
-        return $this->respond(__('msg.del_ok'),$mc);
+        return $this->respondMessage(__('msg.del_ok'));
     }
 
 }
