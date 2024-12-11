@@ -14,7 +14,7 @@ Route::group(['middleware' => 'auth'], function () {
     });
 
     Route::get('/', 'HomeController@dashboard')->name('home');
-    Route::get('/home', 'HomeController@dashboard')->name('home');
+    Route::redirect('/home', '/');
     Route::get('/dashboard', 'HomeController@dashboard')->name('dashboard');
 
     Route::group(['prefix' => 'my_account'], function() {
