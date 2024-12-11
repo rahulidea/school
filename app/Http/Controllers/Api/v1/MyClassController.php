@@ -16,7 +16,7 @@ class MyClassController extends APIController
 
     public function __construct(MyClassRepo $my_class, UserRepo $user)
     {
-        $this->middleware('teamSA', ['except' => ['destroy',] ]);
+        $this->middleware('teamSA', ['only' => ['edit','update', 'reset_pass', 'create', 'store', 'graduated'] ]);
         $this->middleware('super_admin', ['only' => ['destroy',] ]);
         
         $this->my_class = $my_class;
