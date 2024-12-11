@@ -35,9 +35,9 @@ class SubjectController extends APIController
     {
         $data = $req->all();
         $data['school_id'] = QS::getSchoolId()[0];
-        $this->my_class->createSubject($data);
+        $d = $this->my_class->createSubject($data);
 
-        return $this->respond(__('msg.store_ok'),$mc);
+        return $this->respond('success',$d);
     }
 
     public function edit($id)
