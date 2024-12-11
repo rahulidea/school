@@ -14,19 +14,32 @@
                 <h6>Personal data</h6>
                 <fieldset>
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="form-group">
                                 <label>Full Name: <span class="text-danger">*</span></label>
                                 <input value="{{ $sr->user->name }}" required type="text" name="name" placeholder="Full Name" class="form-control">
                             </div>
                         </div>
 
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="form-group">
                                 <label>Address: <span class="text-danger">*</span></label>
                                 <input value="{{ $sr->user->address }}" class="form-control" placeholder="Address" name="address" type="text" required>
                             </div>
                         </div>
+
+                        @if(QS::userIsSuperAdmin())
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                <label for="user_type"> Select School: <span class="text-danger">*</span></label>
+                                    <select required data-placeholder="Select User" class="form-control select" name="school_id" id="school_id">
+                                    @foreach($schools as $school)
+                                        <option {{ (old('school_id', $sr->school_id) == $school->id) ? 'selected' : '' }} value="{{ $school->id }}">{{ $school->name }}</option>
+                                    @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        @endif
                     </div>
 
                     <div class="row">
