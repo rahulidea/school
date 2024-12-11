@@ -104,7 +104,7 @@ class Qs
 
     public static function getStudentData($remove = [])
     {
-        $data = ['my_class_id', 'section_id', 'my_parent_id', 'dorm_id', 'dorm_room_no', 'year_admitted', 'house', 'age'];
+        $data = ['my_class_id', 'section_id', 'my_parent_id', 'dorm_id', 'dorm_room_no', 'year_admitted', 'house', 'age', 'school_id'];
 
         return $remove ? array_values(array_diff($data, $remove)) : $data;
 
@@ -387,4 +387,7 @@ class Qs
         return $school_id;
     }
 
+    public static function getSchool(){
+        return Qs::userIsAdmin() ? School::all()->where('id', Auth::user()->school_id): School::all()->where('organisation_id', Auth::user()->organisation_id);
+    }
 }

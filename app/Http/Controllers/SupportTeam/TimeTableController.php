@@ -30,7 +30,7 @@ class TimeTableController extends Controller
         $d['exams'] = $this->exam->getExam(['year' => $this->year]);
         $d['my_classes'] = $this->my_class->all();
         $d['tt_records'] = $this->tt->getAllRecords();
-
+        $d['schools'] = Qs::getSchool();
         return view('pages.support_team.timetables.index', $d);
     }
 
@@ -48,8 +48,7 @@ class TimeTableController extends Controller
             $d['exam'] = $this->exam->find($ttr->exam_id);
         }
 
-        $d['tts'] = $this->tt->getTimeTable(['ttr_id' => $ttr_id]);
-
+        $d['tts'] = $this->tt->getTimeTable(['ttr_id' => $ttr_id]);        
         return view('pages.support_team.timetables.manage', $d);
     }
 
@@ -159,6 +158,7 @@ class TimeTableController extends Controller
         $d['ttr'] = $ttr = $this->tt->findRecord($ttr_id);
         $d['exams'] = $this->exam->getExam(['year' => $ttr->year]);
         $d['my_classes'] = $this->my_class->all();
+        $d['schools'] = Qs::getSchool();
 
         return view('pages.support_team.timetables.edit', $d);
     }
@@ -232,8 +232,9 @@ class TimeTableController extends Controller
     }
 
     public function store_record(TTRecordRequest $req)
-    {
+    {   
         $data = $req->all();
+        dd($data);
         $data['year'] = $this->year;
         $this->tt->createRecord($data);
 

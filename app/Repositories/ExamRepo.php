@@ -24,7 +24,7 @@ class ExamRepo
 
     public function find($id)
     {
-        return Exam::find($id);
+        return Exam::wherein('school_id',QS::getSchoolId())->find($id);
     }
 
     public function create($data)
