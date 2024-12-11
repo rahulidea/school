@@ -2,25 +2,26 @@
 
 namespace App\Http\Controllers\SupportTeam;
 
-use App\Helpers\Qs;
 use App\Helpers\Mk;
-use App\Http\Requests\Student\StudentRecordCreate;
-use App\Http\Requests\Student\StudentRecordUpdate;
-use App\Repositories\LocationRepo;
+use App\Helpers\Qs;
+use Illuminate\Support\Str;
+use App\Repositories\UserRepo;
+use App\Repositories\SchoolRepo;
 use App\Repositories\MyClassRepo;
 use App\Repositories\StudentRepo;
-use App\Repositories\UserRepo;
+use App\Repositories\LocationRepo;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
+use App\Http\Requests\Student\StudentRecordCreate;
+use App\Http\Requests\Student\StudentRecordUpdate;
 
 class StudentRecordController extends Controller
 {
-    protected $loc, $my_class, $user, $student;
+    protected $loc, $my_class, $user, $student, $school;
 
-   public function __construct(LocationRepo $loc, MyClassRepo $my_class, UserRepo $user, StudentRepo $student)
+   public function __construct(LocationRepo $loc, MyClassRepo $my_class, UserRepo $user, StudentRepo $student, SchoolRepo $school)
    {
        $this->middleware('teamSA', ['only' => ['edit','update', 'reset_pass', 'create', 'store', 'graduated'] ]);
        $this->middleware('super_admin', ['only' => ['destroy',] ]);
@@ -29,7 +30,7 @@ class StudentRecordController extends Controller
         $this->my_class = $my_class;
         $this->user = $user;
         $this->student = $student;
-
+        $this->school = $school;
    }
 
     public function reset_pass($st_id)
@@ -46,6 +47,7 @@ class StudentRecordController extends Controller
         $data['parents'] = $this->user->getUserByType('parent');
         $data['dorms'] = $this->student->getAllDorms();
         $data['states'] = $this->loc->getStates();
+        $data['schools'] = Qs::getSchool();
         $data['nationals'] = $this->loc->getAllNationals();
 
         return view('pages.support_team.students.add', $data);
@@ -64,6 +66,7 @@ class StudentRecordController extends Controller
         $data['name'] = ucwords($req->name);
         $data['code'] = strtoupper(Str::random(10));
         $data['password'] = Hash::make('student');
+        $data['school_id'] = $req->school_id;
         $data['photo'] = Qs::getDefaultUserImage();
         $adm_no = $req->adm_no;
         $data['username'] = strtoupper(Qs::getAppCode().'/'.$ct.'/'.$sr['year_admitted'].'/'.($adm_no ?: mt_rand(1000, 99999)));
@@ -80,6 +83,7 @@ class StudentRecordController extends Controller
 
         $sr['adm_no'] = $data['username'];
         $sr['user_id'] = $user->id;
+        $sr['school_id'] = $user->school_id;
         $sr['session'] = Qs::getSetting('current_session');
 
         $this->student->createRecord($sr); // Create Student
@@ -135,20 +139,19 @@ class StudentRecordController extends Controller
     {
         $sr_id = Qs::decodeHash($sr_id);
         if(!$sr_id){return Qs::goWithDanger();}
-
-        $data['sr'] = $this->student->getGradRecord(['id' => $sr_id])->first();
+        if(Qs::userIsSuperAdmin())
+            $data['schools'] = $this->school->getAll()->where('organisation_id', Auth::user()->organisation_id);
+        $data['sr'] = $this->student->findByUserId($sr_id)->first();
         $data['my_classes'] = $this->my_class->all();
         $data['parents'] = $this->user->getUserByType('parent');
         $data['dorms'] = $this->student->getAllDorms();
         $data['states'] = $this->loc->getStates();
         $data['nationals'] = $this->loc->getAllNationals();
-      
         return view('pages.support_team.students.edit', $data);
     }
 
     public function update(StudentRecordUpdate $req, $sr_id)
     {
-        //return $req->all();
         $sr_id = Qs::decodeHash($sr_id);
         if(!$sr_id){return Qs::goWithDanger();}
 

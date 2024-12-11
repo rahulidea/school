@@ -28,7 +28,7 @@ class MyClassRepo
 
     public function find($id)
     {
-        return MyClass::find($id);
+        return MyClass::wherein('school_id',QS::getSchoolId())->find($id);
     }
 
     public function create($data)
@@ -122,7 +122,7 @@ class MyClassRepo
 
     public function getSubject($data)
     {
-        return Subject::where($data);
+        return Subject::wherein('school_id',QS::getSchoolId())->where($data);
     }
 
     public function getSubjectsByIDs($ids)

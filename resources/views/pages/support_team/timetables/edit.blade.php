@@ -20,6 +20,17 @@
                     </div>
 
                     <div class="form-group row">
+                        <label for="my_class_id" class="col-lg-3 col-form-label font-weight-semibold">School <span class="text-danger">*</span></label>
+                        <div class="col-lg-9">
+                            <select required data-placeholder="Select Class" class="form-control select" name="school_id" id="school_id">
+                                @foreach($schools as $school)
+                                    <option {{ (old('my_class_id', $ttr->school_id) == $school->id) ? 'selected' : '' }} value="{{ $school->id }}">{{ $school->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
                         <label for="my_class_id" class="col-lg-3 col-form-label font-weight-semibold">Class <span class="text-danger">*</span></label>
                         <div class="col-lg-9">
                             <select required data-placeholder="Select Class" class="form-control select" name="my_class_id" id="my_class_id">
