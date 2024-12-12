@@ -27,7 +27,7 @@ class SubjectController extends APIController
         $d['my_classes'] = $this->my_class->all();
         $d['teachers'] = $this->user->getUserByType('teacher');
         $d['subjects'] = $this->my_class->getAllSubjects();
-
+        
         return $this->respond('success',$d);
     }
 

@@ -14,7 +14,7 @@
                 <li class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Manage Subjects</a>
                     <div class="dropdown-menu dropdown-menu-right">
-                        @foreach($my_classes as $c)
+                        @foreach($subjects as $c)
                             <a href="#c{{ $c->id }}" class="dropdown-item" data-toggle="tab">{{ $c->name }}</a>
                         @endforeach
                     </div>
