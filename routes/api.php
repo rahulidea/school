@@ -130,7 +130,7 @@ Route::group(['namespace' => 'Api\V1', 'prefix' => 'v1', 'as' => 'v1.'], functio
 
             Route::get('show', [SubjectController::class, 'show']);
             Route::post('create', [SubjectController::class, 'store']);
-            Route::get('all-subjects', [SubjectController::class, 'allSubjects']);
+            Route::get('all-subjects/{class_id}', [SubjectController::class, 'allSubjects']);
             Route::get('{class}/edit', [SubjectController::class, 'edit']);
             Route::put('update/{class}', [SubjectController::class, 'update']);
             Route::delete('destroy/{class}', [SubjectController::class, 'destroy']);

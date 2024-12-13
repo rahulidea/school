@@ -31,9 +31,9 @@ class SubjectController extends APIController
         return $this->respond('success',$d);
     }
 
-    public function allSubjects()
+    public function allSubjects($class_id)
     {
-        $d = $this->my_class->getAllSubjects();
+        $d = $this->my_class->allSubjectByClass($class_id);
         
         return $this->respond('success',$d);
     }
