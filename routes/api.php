@@ -136,6 +136,19 @@ Route::group(['namespace' => 'Api\V1', 'prefix' => 'v1', 'as' => 'v1.'], functio
             Route::delete('destroy/{class}', [SubjectController::class, 'destroy']);
         });
 
+        /**************Manage Subjects************* */
+        Route::group(['prefix' => 'manage'], function(){
+            Route::resource('sections', 'SectionController');
+
+            // Route::get('show', [SubjectController::class, 'show']);
+            // Route::post('create', [SubjectController::class, 'store']);
+            // Route::get('all-subjects/{class_id}', [SubjectController::class, 'allSubjects']);
+            // Route::get('{class}/edit', [SubjectController::class, 'edit']);
+            // Route::put('update/{class}', [SubjectController::class, 'update']);
+            // Route::delete('destroy/{class}', [SubjectController::class, 'destroy']);
+        });
+        
+
         //Susbcription Table
         // 1 - Free // 2 - Gold // 3 - Diamond    
         Route::middleware('check.subscription:2,3')->group(function(){

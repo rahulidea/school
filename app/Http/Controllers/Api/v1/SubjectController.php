@@ -44,7 +44,7 @@ class SubjectController extends APIController
         $data['school_id'] = QS::getSchoolId()[0];
         $d = $this->my_class->createSubject($data);
 
-        return $this->respond('success',$d);
+        return $this->respond(__('msg.store_ok'),$d);
     }
 
     public function edit($id)
@@ -56,7 +56,7 @@ class SubjectController extends APIController
         $d['my_classes'] = $this->my_class->all();
         $d['teachers'] = $this->user->getUserByType('teacher');
 
-        return $this->respond('success',$d);
+        return $this->respond(__('msg.store_ok'),$d);
     }
 
     public function update(SubjectUpdate $req, $id)
