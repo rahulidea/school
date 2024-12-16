@@ -149,6 +149,12 @@ Route::group(['namespace' => 'Api\V1', 'prefix' => 'v1', 'as' => 'v1.'], functio
             // Route::delete('destroy/{class}', [SubjectController::class, 'destroy']);
         });
         
+        /**************Manage Droms************* */
+        Route::group(['prefix' => 'manage_dorms'], function(){
+            Route::resource('dorms', 'DormController');
+        
+             // Route::get('get-droms-list/{drom_id}', [DormController::class, 'getDromsList']);
+        });
 
         //Susbcription Table
         // 1 - Free // 2 - Gold // 3 - Diamond    
