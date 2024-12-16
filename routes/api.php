@@ -55,6 +55,7 @@ Route::group(['namespace' => 'Api\V1', 'prefix' => 'v1', 'as' => 'v1.'], functio
 
     Route::group(['middleware' => ['auth:api']], function () {
             Route::post('userHome', 'UserHomeController@userHome');
+            Route::get('get-schools', 'UserHomeController@getSchools');
 
             Route::post('sendPusgNotification', [StudentController::class, 'sendPusgNotification']);
 

@@ -26,6 +26,10 @@ class UserHomeController extends APIController
         return $this->respond('succes',
              $userCounts
         );
+    }
+    public function getSchools() {
+        $d = QS::getSchool();
 
+        return $this->respond('succes',$d);
     }
 }
