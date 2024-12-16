@@ -41,7 +41,7 @@ class SubjectController extends APIController
     public function store(SubjectCreate $req)
     {
         $data = $req->all();
-        $data['school_id'] = QS::getSchoolId()[0];
+        $data['school_id'] = QS::getSchoolId();
         $d = $this->my_class->createSubject($data);
 
         return $this->respond(__('msg.store_ok'),$d);

@@ -14,17 +14,17 @@ class ExamRepo
 
     public function all()
     {
-        return Exam::wherein('school_id',QS::getSchoolId())->orderBy('name', 'asc')->orderBy('year', 'desc')->get();
+        return Exam::where(['school_id' => QS::getSchoolId()])->orderBy('name', 'asc')->orderBy('year', 'desc')->get();
     }
 
     public function getExam($data)
     {
-        return Exam::wherein('school_id',QS::getSchoolId())->where($data)->get();
+        return Exam::where(['school_id' => QS::getSchoolId()])->where($data)->get();
     }
 
     public function find($id)
     {
-        return Exam::wherein('school_id',QS::getSchoolId())->find($id);
+        return Exam::where(['school_id' => QS::getSchoolId()])->find($id);
     }
 
     public function create($data)
@@ -49,7 +49,7 @@ class ExamRepo
 
     public function getRecord($data)
     {
-        return ExamRecord::wherein('school_id',QS::getSchoolId())->where($data)->get();
+        return ExamRecord::where(['school_id' => QS::getSchoolId()])->where($data)->get();
     }
 
     public function findRecord($id)
@@ -66,12 +66,12 @@ class ExamRepo
 
     public function allGrades()
     {
-        return Grade::wherein('school_id',QS::getSchoolId())->orderBy('name')->get();
+        return Grade::where(['school_id' => QS::getSchoolId()])->orderBy('name')->get();
     }
 
     public function getGrade($data)
     {
-        return Grade::wherein('school_id',QS::getSchoolId())->where($data)->get();
+        return Grade::where(['school_id' => QS::getSchoolId()])->where($data)->get();
     }
 
     public function findGrade($id)
@@ -113,19 +113,19 @@ class ExamRepo
 
     public function getExamYears($student_id)
     {
-        return Mark::wherein('school_id',QS::getSchoolId())->where('student_id', $student_id)->select('year')->distinct()->get();
+        return Mark::where(['school_id' => QS::getSchoolId()])->where('student_id', $student_id)->select('year')->distinct()->get();
     }
 
     public function getMark($data)
     {
-        return Mark::wherein('school_id',QS::getSchoolId())->where($data)->with('grade')->get();
+        return Mark::where(['school_id' => QS::getSchoolId()])->where($data)->with('grade')->get();
     }
 
     /*********** Skills ***************/
 
     public function getSkill($where)
     {
-        return Skill::wherein('school_id',QS::getSchoolId())->where($where)->orderBy('name')->get();
+        return Skill::where(['school_id' => QS::getSchoolId()])->where($where)->orderBy('name')->get();
     }
 
     public function getSkillByClassType($class_type = NULL, $skill_type = NULL)

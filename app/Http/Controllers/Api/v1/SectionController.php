@@ -40,6 +40,7 @@ class SectionController extends APIController
     public function store(SectionCreate $req)
     {
         $data = $req->all();
+        $data['school_id'] = QS::getSchoolId();
         $this->my_class->createSection($data);
 
         return $this->respond(__('msg.store_ok'),$data);
@@ -48,9 +49,14 @@ class SectionController extends APIController
     public function edit($id)
     {
         $d['s'] = $s = $this->my_class->findSection($id);
+        if(is_null($s)) 
+        { 
+            return $this->respondWithError("Record not found");
+        }
+        
         $d['teachers'] = $this->user->getUserByType('teacher');
 
-        return $this->respond(__('msg.store_ok'),$d);
+        return  $this->respond(__('msg.store_ok'),$d);
     }
 
     public function update(SectionUpdate $req, $id)

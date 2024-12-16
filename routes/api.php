@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\v1\UserController;
 use App\Http\Controllers\Api\v1\MyClassController;
 use App\Http\Controllers\Api\v1\SubjectController;
 use App\Http\Controllers\Api\v1\SectionController;
+use App\Http\Controllers\Api\v1\DormController;
 use App\Http\Controllers\Api\v1\OrganisationController;
 
 
@@ -137,7 +138,7 @@ Route::group(['namespace' => 'Api\V1', 'prefix' => 'v1', 'as' => 'v1.'], functio
             Route::delete('destroy/{class}', [SubjectController::class, 'destroy']);
         });
 
-        /**************Manage Subjects************* */
+        /**************Manage Sections************* */
         Route::group(['prefix' => 'manage_sections'], function(){
             Route::resource('sections', 'SectionController');
 
@@ -148,6 +149,14 @@ Route::group(['namespace' => 'Api\V1', 'prefix' => 'v1', 'as' => 'v1.'], functio
             // Route::put('update/{class}', [SubjectController::class, 'update']);
             // Route::delete('destroy/{class}', [SubjectController::class, 'destroy']);
         });
+
+        /**************Manage Droms************* */
+        Route::group(['prefix' => 'manage_dorms'], function(){
+            Route::resource('dorms', 'DormController');
+
+            // Route::get('get-droms-list/{drom_id}', [DormController::class, 'getDromsList']);
+        });
+        
         
 
         //Susbcription Table

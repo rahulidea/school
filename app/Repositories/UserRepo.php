@@ -29,7 +29,7 @@ class UserRepo {
 
     public function getUserByType($type)
     {
-        return User::where(['user_type' => $type, 'school_id' => QS::getSchoolId()[0]])->orderBy('name', 'asc')->get()->map(function ($user) {
+        return User::where(['user_type' => $type, 'school_id' => QS::getSchoolId()])->orderBy('name', 'asc')->get()->map(function ($user) {
             $user->hashed_id = QS::hash($user->id);
             return $user;
         });
@@ -37,7 +37,7 @@ class UserRepo {
 
     public function getUserByTypeApi($type)
     {
-        return User::where('user_type' , $type)->where('school_id' , QS::getSchoolId()[0])->orderBy('name', 'asc')->get()->map(function ($user) {
+        return User::where('user_type' , $type)->where('school_id' , QS::getSchoolId())->orderBy('name', 'asc')->get()->map(function ($user) {
             $user->hashed_id = QS::hash($user->id);
             return $user;
         });
@@ -73,7 +73,7 @@ class UserRepo {
 
     public function getPTAUsers()
     {
-        return User::where('user_type', '<>', 'student')->wherein('school_id',QS::getSchoolId())->orderBy('name', 'asc')->get();
+        return User::where('user_type', '<>', 'student')->where(['school_id'=> QS::getSchoolId()])->orderBy('name', 'asc')->get();
     }
 
     /********** STAFF RECORD ********/
