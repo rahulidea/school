@@ -10,6 +10,7 @@ use App\Http\Controllers\API\v1\PromotionController;
 use App\Http\Controllers\Api\v1\UserController;
 use App\Http\Controllers\Api\v1\MyClassController;
 use App\Http\Controllers\Api\v1\SubjectController;
+use App\Http\Controllers\Api\v1\SectionController;
 use App\Http\Controllers\Api\v1\OrganisationController;
 
 
@@ -137,10 +138,10 @@ Route::group(['namespace' => 'Api\V1', 'prefix' => 'v1', 'as' => 'v1.'], functio
         });
 
         /**************Manage Subjects************* */
-        Route::group(['prefix' => 'manage'], function(){
+        Route::group(['prefix' => 'manage_sections'], function(){
             Route::resource('sections', 'SectionController');
 
-            // Route::get('show', [SubjectController::class, 'show']);
+            Route::get('getClassSections/{class_id}', [SectionController::class, 'getClassSections']);
             // Route::post('create', [SubjectController::class, 'store']);
             // Route::get('all-subjects/{class_id}', [SubjectController::class, 'allSubjects']);
             // Route::get('{class}/edit', [SubjectController::class, 'edit']);

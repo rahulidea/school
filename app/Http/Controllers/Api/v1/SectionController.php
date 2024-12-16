@@ -25,8 +25,14 @@ class SectionController extends APIController
     public function index()
     {
         $d['my_classes'] = $this->my_class->all();
-        $d['sections'] = $this->my_class->getAllSections();
+        
         $d['teachers'] = $this->user->getUserByType('teacher');
+
+        return $this->respond('success',$d);
+    }
+
+    public function getClassSections($class_id){
+        $d = $this->my_class->getClassSections($class_id);
 
         return $this->respond('success',$d);
     }
