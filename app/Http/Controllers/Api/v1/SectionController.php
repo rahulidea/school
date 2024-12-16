@@ -42,7 +42,7 @@ class SectionController extends APIController
         $data = $req->all();
         $this->my_class->createSection($data);
 
-        return $this->respond(__('msg.store_ok'),$d);
+        return $this->respond(__('msg.store_ok'),$data);
     }
 
     public function edit($id)
@@ -51,8 +51,6 @@ class SectionController extends APIController
         $d['teachers'] = $this->user->getUserByType('teacher');
 
         return $this->respond(__('msg.store_ok'),$d);
-
-        // return is_null($s) ? Qs::goWithDanger('sections.index') :view('pages.support_team.sections.edit', $d);
     }
 
     public function update(SectionUpdate $req, $id)
@@ -60,7 +58,7 @@ class SectionController extends APIController
         $data = $req->only(['name', 'teacher_id']);
         $this->my_class->updateSection($id, $data);
 
-        return Qs::jsonUpdateOk();
+        return $this->respondMessage(__('msg.update_ok'));
     }
 
     public function destroy($id)
