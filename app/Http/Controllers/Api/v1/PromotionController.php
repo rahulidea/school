@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api\v1;
 use App\Http\Controllers\Api\APIController;
 
 use App\Helpers\Qs;
-use App\Http\Controllers\Controller;
 use App\Models\Mark;
 use App\Repositories\MyClassRepo;
 use App\Repositories\StudentRepo;
@@ -50,7 +49,9 @@ class PromotionController extends APIController
 
     public function selector(Request $req)
     {
-        return redirect()->route('students.promotion', [$req->fc, $req->fs, $req->tc, $req->ts]);
+        $data=[$req->fc, $req->fs, $req->tc, $req->ts];   
+        return $this->respond('success',$data);
+        // return redirect()->route('students.promotion', [$req->fc, $req->fs, $req->tc, $req->ts]);
     }
 
     public function promote(Request $req, $fc, $fs, $tc, $ts)
@@ -61,7 +62,7 @@ class PromotionController extends APIController
         $students = $this->student->getRecord(['my_class_id' => $fc, 'section_id' => $fs, 'session' => $oy ])->get()->sortBy('user.name');
 
         if($students->count() < 1){
-            return $this->respondError("Student Record Not Found");
+            return $this->respondWithError("Student Record Not Found");
         }
 
         foreach($students as $st){
@@ -101,9 +102,7 @@ class PromotionController extends APIController
             $this->student->createPromotion($promote);
         }
         
-        return $this->respond('succes',
-            []
-        );
+        return $this->respondMessage('succes');
     }
 
     public function manage()
@@ -136,7 +135,7 @@ class PromotionController extends APIController
           }
         }
 
-        return $this->respond('All promotion delted succesfully',[]);
+        return $this->respondMessage('All promotion delted succesfully');
     }
 
     protected function delete_old_marks($student_id, $year)
@@ -147,6 +146,9 @@ class PromotionController extends APIController
     protected function reset_single($promotion_id)
     {
         $prom = $this->student->findPromotion($promotion_id);
+
+        return $this->respondWithError("Record Not Found");
+
         $data['my_class_id'] = $prom->from_class;
         $data['section_id'] = $prom->from_section;
         $data['session'] = $prom->from_session;

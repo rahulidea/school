@@ -65,8 +65,6 @@ Route::group(['namespace' => 'Api\V1', 'prefix' => 'v1', 'as' => 'v1.'], functio
         /*************** Students *****************/
             
         Route::group(['prefix' => 'students'], function(){
-            
-			Route::get('testr', [PromotionController::class, 'promotion']);
 			Route::post('reset_pass', [StudentController::class, 'reset_pass']);
 			Route::get('graduated', [StudentController::class, 'graduated']);
 			Route::put('not_graduated/{id}', [StudentController::class, 'not_graduated']);
@@ -76,16 +74,6 @@ Route::group(['namespace' => 'Api\V1', 'prefix' => 'v1', 'as' => 'v1.'], functio
             
             Route::get('citys/{state_id}', [StudentController::class, 'citys']);
             Route::get('class_sections/{class_id}', [StudentController::class, 'classSections']);
-
-            Route::get('promotion', 'PromotionController@promotion');
-            /* Promotions */
-            // Route::post('promote_selector', 'PromotionController@selector');
-            Route::get('promotion/manage', 'PromotionController@manage');
-            Route::delete('promotion/reset/{pid}', 'PromotionController@reset');
-            Route::delete('promotion/reset_all', 'PromotionController@reset_all');
-            Route::get('promotion/{fc?}/{fs?}/{tc?}/{ts?}', 'PromotionController@promotion');
-            Route::post('promote/{fc}/{fs}/{tc}/{ts}', 'PromotionController@promote');
-
 
 			Route::get('student_details/{sr_id}', [StudentController::class, 'show']); //delete studentDetails method
 			Route::get('edit/{sr_id}/{is_grad?}', [StudentController::class, 'edit']);
@@ -97,6 +85,17 @@ Route::group(['namespace' => 'Api\V1', 'prefix' => 'v1', 'as' => 'v1.'], functio
             Route::get('view/{sr_id}/{is_grad?}', [StudentController::class, 'show']);
             
 
+            Route::group(['prefix' => 'promotion'], function(){
+                // Route::get('testr', [PromotionController::class, 'promotion']);
+                Route::get('', 'PromotionController@promotion');
+                /* Promotions */
+                // Route::post('promote_selector', 'PromotionController@selector');
+                Route::get('manage', 'PromotionController@manage');
+                Route::delete('reset/{pid}', 'PromotionController@reset');
+                Route::delete('reset_all', 'PromotionController@reset_all');
+                Route::get('{fc?}/{fs?}/{tc?}/{ts?}', 'PromotionController@promotion');
+                Route::post('{fc}/{fs}/{tc}/{ts}', 'PromotionController@promote');
+            });
 
         });
         /*************** Users *****************/
