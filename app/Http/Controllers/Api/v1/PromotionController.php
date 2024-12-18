@@ -40,7 +40,7 @@ class PromotionController extends APIController
             $d['students'] = $sts = $this->student->getRecord(['my_class_id' => $fc, 'section_id' => $fs, 'session' => $d['old_year']])->get();
 
             if($sts->count() < 1){
-                return $this->respondError("Student Record Not Found");
+                return $this->respondWithError("Student Record Not Found");
             }
         }
         $data = $d;
