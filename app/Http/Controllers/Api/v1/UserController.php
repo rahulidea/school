@@ -65,6 +65,8 @@ class UserController extends APIController
 
 
     public function get_usersByTypes(Request $req){
+        $school_id = $req->header('school_id');
+        dd($school_id);
         $d = $this->user->getUserByTypeApi($req->type);
         return $this->respond('success',$d);
     }
@@ -90,7 +92,8 @@ class UserController extends APIController
         $data['user_type'] = $user_type;
         $data['photo'] = Qs::getDefaultUserImage();
         $data['code'] = strtoupper(Str::random(10));
-        
+        $data['organisation_id'] = Qs::getOrganisationId();
+
         $user_is_staff = in_array($user_type, Qs::getStaff());
         $user_is_teamSA = in_array($user_type, Qs::getTeamSA());
 

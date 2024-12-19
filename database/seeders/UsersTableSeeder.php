@@ -25,18 +25,18 @@ class UsersTableSeeder extends Seeder
 
     protected function createNewUsers()
     {
-        $password = Hash::make('cj'); // Default user password
+        $password = Hash::make('@Qwerty123'); // Default user password
 
         $d = [
 
             [
-                'name' => 'CJ Inspired',
-                'email' => 'cj@cj.com',
-                'username' => 'cj',
+                'name' => 'Anand',
+                'email' => 'anandkumara30@gmail.com',
+                'username' => 'anand',
                 'password' => $password,
                 'user_type' => 'super_admin',
-                'organisation_id' => 3,
-                'school_id' => 6,
+                'organisation_id' => 2,
+                'school_id' => 2,
                 'code' => strtoupper(Str::random(10)),
                 'remember_token' => Str::random(10),
             ],

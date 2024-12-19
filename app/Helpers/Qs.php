@@ -390,4 +390,8 @@ class Qs
     public static function getSchool(){
         return Qs::userIsAdmin() ? School::all()->where('id', Auth::user()->school_id)->values(): School::all()->where('organisation_id', Auth::user()->organisation_id)->values();
     }
+
+    public static function getOrganisationId(){
+        return Auth::user()->organisation_id;
+    }
 }
