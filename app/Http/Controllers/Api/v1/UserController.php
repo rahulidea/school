@@ -41,7 +41,7 @@ class UserController extends APIController
 
         $d['user_types'] = Qs::userIsAdmin() ? $ut2 : $ut;
         $d['states'] = $this->loc->getStates();
-        // $d['users'] = $this->user->getPTAUsers();
+        $d['schools'] = Qs::getSchool();
         $d['nationals'] = $this->loc->getAllNationals();
         $d['blood_groups'] = $this->user->getBloodGroups();
 

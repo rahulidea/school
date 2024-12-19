@@ -106,18 +106,19 @@ class StudentController extends APIController
             }
             
             if(!$data['sr']){
-                return $this->respondError("Student Record Not Found");
+                return $this->respondWithError("Student Record Not Found");
             }
 
             $data['sections'] = $this->my_class->getClassSections($data['sr']->my_class_id);
+            $data['hashed_id'] = Qs::hash($sr_id);
         }
 
+        $data['schools'] = Qs::getSchool();
         $data['my_classes'] = $this->my_class->getAllWithSection();
         $data['parents'] = $this->user->getUserByType('parent');
         $data['dorms'] = $this->student->getAllDorms();
         $data['states'] = $this->loc->getStates();
         $data['nationals'] = $this->loc->getAllNationals();
-        $data['hashed_id'] = Qs::hash($sr_id);
         $data['blood_groups']=BloodGroup::all();
         return $this->respond('Record Found',$data);
         
@@ -228,16 +229,12 @@ class StudentController extends APIController
         return $this->respond('Record Found', $data);
     }
 
-    public function reset_pass(Request $req)
+    public function reset_pass($st_id)
     {
-        // Redirect if Making Changes to Head of Super Admins
-        if(Qs::headSA($req->user_id)){
-            return $this->respondError(__('msg.denied'));
-        }
-
-        $data['password'] = Hash::make('user');
-        $this->user->update($req->user_id, $data);
-        return $this->respond('Password Updated', []);
+        $st_id = Qs::decodeHash($st_id);
+        $data['password'] = Hash::make('student');
+        $this->user->update($st_id, $data);
+        return $this->respondMessage(__('msg.p_reset'));
     }
 
     public function destroy($st_id, $is_grad=0)
