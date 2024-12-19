@@ -59,15 +59,24 @@ class UserController extends APIController
         $ut = $this->user->getAllTypes();
         $ut2 = $ut->where('level', '>', 2);
 
-        $d = Qs::userIsAdmin() ? $ut2 : $ut;
+        $d['user_types'] = Qs::userIsAdmin() ? $ut2 : $ut;
+        $d['schools'] = Qs::getSchool();
         return $this->respond('success',$d);
     }
 
 
     public function get_usersByTypes(Request $req){
         $school_id = $req->header('school_id');
-        dd($school_id);
-        $d = $this->user->getUserByTypeApi($req->type);
+        
+        if(is_null($school_id)){
+            return $this->throwValidation("School id is required",400);
+        }
+
+        $d = $this->user->getUserByType($req->type);
+
+        if($school_id)
+            $d = $d->where('school_id', $school_id);
+
         return $this->respond('success',$d);
     }
 
