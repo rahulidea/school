@@ -67,10 +67,6 @@ class UserController extends APIController
 
     public function get_usersByTypes(Request $req){
         $school_id = $req->header('school_id');
-        
-        if(is_null($school_id)){
-            return $this->throwValidation("School id is required",400);
-        }
 
         $d = $this->user->getUserByType($req->type);
 

@@ -71,5 +71,6 @@ class Kernel extends HttpKernel
         'examIsLocked' => \App\Http\Middleware\Custom\ExamIsLocked::class,
         'my_parent' => \App\Http\Middleware\Custom\MyParent::class,
         'check.subscription' => \App\Http\Middleware\CheckSubscriptionId::class,
+        'check.school.id' => \App\Http\Middleware\CheckSchoolId::class,
     ];
 }
