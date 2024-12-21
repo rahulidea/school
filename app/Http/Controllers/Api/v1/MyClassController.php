@@ -49,6 +49,7 @@ class MyClassController extends APIController
             // Create Default Section
             $s =['my_class_id' => $mc->id,
                 'name' => 'A',
+                'school_id' => $school_id,
                 'active' => 1,
                 'teacher_id' => NULL,
             ];
@@ -73,10 +74,11 @@ class MyClassController extends APIController
         
         $c = $this->my_class->find($id)->where('school_id', $school_id);
 
-        if($school_id){
-            $c =  $c->where('school_id', $school_id)->first();
-        }
-            
+        if($school_id)
+            $c =  $c->where('school_id', $school_id)->get();
+
+
+        // dd($c->toSql());
 
         $d['my_class'] = $c;
         $d['schools'] = Qs::getSchool();
