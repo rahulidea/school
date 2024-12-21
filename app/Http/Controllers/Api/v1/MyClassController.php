@@ -25,8 +25,15 @@ class MyClassController extends APIController
 
     public function show()
     {
-        $d['my_classes'] = $this->my_class->all();
+        $school_id = request()->header('school_id');
+        
+        $mc = $this->my_class->all();
+
+        $mc = $mc->where('school_id', $school_id);//->get();
+
+        $d['my_classes'] = $mc;
         $d['class_types'] = $this->my_class->getTypes();
+        $d['schools'] = Qs::getSchool();
 
         return $this->respond('success',$d);
     }
@@ -34,7 +41,7 @@ class MyClassController extends APIController
     public function store(ClassCreate $req)
     {
         $data = $req->all();
-        $data['school_id'] = QS::getSchoolId()[0];
+        $data['school_id'] = $school_id = request()->header('school_id');
 
         try{
             $mc = $this->my_class->create($data);
@@ -58,8 +65,20 @@ class MyClassController extends APIController
 
     public function edit($id)
     {
-        $d['c'] = $c = $this->my_class->find($id);
+        $school_id = request()->header('school_id');
+        
+        if(is_null($school_id)){
+            return $this->throwValidation("School id is required",400);
+        }
+        
+        $c = $this->my_class->find($id);
 
+        if($school_id)
+            $c =  $c->where('school_id', $school_id)->first();
+
+        $d['my_class'] = $c;
+        $d['schools'] = Qs::getSchool();
+        
         return $this->respond('success',$d);
     }
 

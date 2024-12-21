@@ -13,7 +13,7 @@ class MyClassRepo
 
     public function all()
     {
-        return MyClass::wherein('school_id', QS::getSchoolId())->orderBy('name', 'asc')->with('class_type')->get();//->toSql();
+        return MyClass::orderBy('name', 'asc')->with('class_type')->get();//->toSql();
     }
 
     public function getAllWithSection()
@@ -28,7 +28,7 @@ class MyClassRepo
 
     public function find($id)
     {
-        return MyClass::wherein('school_id', QS::getSchoolId())->find($id);
+        return MyClass::find($id);
     }
 
     public function create($data)
