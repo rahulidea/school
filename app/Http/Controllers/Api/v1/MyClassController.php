@@ -74,7 +74,10 @@ class MyClassController extends APIController
         $c = $this->my_class->find($id);
 
         if($school_id)
-            $c =  $c->where('school_id', $school_id)->first();
+            $c =  $c->where('school_id', $school_id)->get();
+
+
+            dd($c->toSql());
 
         $d['my_class'] = $c;
         $d['schools'] = Qs::getSchool();

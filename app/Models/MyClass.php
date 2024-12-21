@@ -6,7 +6,7 @@ use Eloquent;
 
 class MyClass extends Eloquent
 {
-    protected $fillable = ['name', 'class_type_id'];
+    protected $fillable = ['name', 'school_id', 'class_type_id'];
 
     public function section()
     {
