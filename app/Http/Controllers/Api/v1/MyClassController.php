@@ -77,7 +77,7 @@ class MyClassController extends APIController
             $c =  $c->where('school_id', $school_id)->get();
 
 
-            dd($c->toSql());
+        // dd($c->toSql());
 
         $d['my_class'] = $c;
         $d['schools'] = Qs::getSchool();
