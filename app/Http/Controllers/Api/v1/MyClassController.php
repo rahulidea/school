@@ -49,6 +49,7 @@ class MyClassController extends APIController
             // Create Default Section
             $s =['my_class_id' => $mc->id,
                 'name' => 'A',
+                'school_id' => $school_id,
                 'active' => 1,
                 'teacher_id' => NULL,
             ];
