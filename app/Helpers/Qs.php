@@ -8,6 +8,7 @@ use App\Models\Subject;
 use App\Models\School;
 use Hashids\Hashids;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Request;
 
 class Qs
 {
@@ -383,6 +384,7 @@ class Qs
     }
 
     public static function getSchoolId(){
+    //    return Qs::getHeaderSchoolId();
         $school_id = Qs::userIsSuperAdmin() ? School::where('organisation_id', Auth::user()->organisation_id)->pluck('id')->toArray() : (array) Auth::user()->school_id;
         return $school_id;
     }
@@ -391,7 +393,14 @@ class Qs
         return Qs::userIsAdmin() ? School::all()->where('id', Auth::user()->school_id)->values(): School::all()->where('organisation_id', Auth::user()->organisation_id)->values();
     }
 
+    public static function getHeaderSchoolId()
+    {
+        $hscId =  Request::header('school_id');
+        $school_id = Qs::userIsSuperAdmin() ? (($hscId)?explode(',', $hscId):School::where('organisation_id', Auth::user()->organisation_id)->pluck('id')->toArray()) : (array) Auth::user()->school_id;
+        return $school_id;
+    }
+
     public static function getOrganisationId(){
         return Auth::user()->organisation_id;
-    }
+    }    
 }

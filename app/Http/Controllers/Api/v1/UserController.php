@@ -70,8 +70,8 @@ class UserController extends APIController
 
         $d = $this->user->getUserByType($req->type);
 
-        if($school_id)
-            $d = $d->where('school_id', $school_id);
+        // if($school_id)
+        //     $d = $d->where('school_id', $school_id);
 
         return $this->respond('success',$d);
     }

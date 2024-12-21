@@ -71,10 +71,12 @@ class MyClassController extends APIController
             return $this->throwValidation("School id is required",400);
         }
         
-        $c = $this->my_class->find($id);
+        $c = $this->my_class->find($id)->where('school_id', $school_id);
 
-        if($school_id)
+        if($school_id){
             $c =  $c->where('school_id', $school_id)->first();
+        }
+            
 
         $d['my_class'] = $c;
         $d['schools'] = Qs::getSchool();
