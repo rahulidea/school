@@ -114,6 +114,7 @@ class PromotionController extends APIController
         $data['promotions'] = $this->student->getAllPromotions();
         $data['old_year'] = Qs::getCurrentSession();
         $data['new_year'] = Qs::getNextSession();
+        $data['schools'] = Qs::getSchool();
 
         return $this->respond('success',$data);
     }
@@ -121,6 +122,7 @@ class PromotionController extends APIController
     public function reset($promotion_id)
     {
         $data = $this->reset_single($promotion_id);
+
         return $this->respond('success',$data);
     }
 
@@ -150,8 +152,6 @@ class PromotionController extends APIController
     protected function reset_single($promotion_id)
     {
         $prom = $this->student->findPromotion($promotion_id);
-
-        return $this->respondWithError("Record Not Found");
 
         $data['my_class_id'] = $prom->from_class;
         $data['section_id'] = $prom->from_section;
