@@ -42,7 +42,7 @@ class PromotionController extends Controller
                 return redirect()->route('students.promotion')->with('flash_success', __('msg.nstp'));
             }
         }
-// dd($d);
+
         return view('pages.support_team.students.promotion.index', $d);
     }
 
