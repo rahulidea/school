@@ -399,9 +399,6 @@ class Qs
     public static function getHeaderSchoolId()
     {   
         $hscId =  Request::header('school_id');
-        if(is_null($hscId));{
-            return "";
-        }
         $school_id = Qs::userIsSuperAdmin() ? (($hscId)?explode(',', $hscId):School::where('organisation_id', Auth::user()->organisation_id)->pluck('id')->toArray()) : (array) Auth::user()->school_id;
         return $school_id;
     }
