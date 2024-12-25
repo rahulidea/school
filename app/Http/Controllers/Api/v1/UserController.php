@@ -83,7 +83,7 @@ class UserController extends APIController
             return $this->respondWithError(__('msg.denied'));
         }
 
-        $data['password'] = Hash::make('user');
+        $data['password'] = Hash::make('User@123');
         $this->user->update($id, $data);
         return $this->respondMessage(__('msg.pu_reset'));
     }

@@ -53,6 +53,12 @@ Route::group(['namespace' => 'Api\V1', 'prefix' => 'v1', 'as' => 'v1.'], functio
         // Route::post('password/email', 'ForgotPasswordController@sendResetLinkEmail');
     });
 
+    Route::group(['middleware' => ['auth:api']], function () {
+        Route::get('/user', function(Request $request) {
+            return $request->user();
+        });
+    });
+
     Route::group(['middleware' => ['auth:api', 'check.school.id']], function () {
             Route::post('userHome', 'UserHomeController@userHome');
             Route::get('get-schools', 'UserHomeController@getSchools');
@@ -165,16 +171,15 @@ Route::group(['namespace' => 'Api\V1', 'prefix' => 'v1', 'as' => 'v1.'], functio
         //Susbcription Table
         // 1 - Free // 2 - Gold // 3 - Diamond    
         Route::middleware('check.subscription:2,3')->group(function(){
-            Route::get('/user', function(Request $request) {
-                $userRepo = new UserRepo();
-                return $userRepo->getAll();
-            });
+            // Route::get('/user', function(Request $request) {
+            //     $userRepo = new UserRepo();
+            //     return $userRepo->getAll();
+            // });
 
 
-            Route::get('/user', function(Request $request) {
-                //$request->attributes->set('allowedPlans', [2, 3, 4, 5, 6]);
-                return $request->user();
-            });
+            // Route::get('/user', function(Request $request) {
+            //     return $request->user();
+            // });
 
             Route::get('/another-protected-route', function() {
                 return "This route is protected by both auth and subscription check";

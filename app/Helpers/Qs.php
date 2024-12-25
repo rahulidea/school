@@ -262,7 +262,11 @@ class Qs
 
     public static function getSetting($type)
     {
-        return Setting::where('type', $type)->first()->description;
+        $data = Setting::where('type', $type)->wherein('school_id', QS::getHeaderSchoolId())->first();//->description;
+        if(is_null($data)){
+            return null;
+        }
+        return $data->description;
     }
 
     public static function getCurrentSession()
@@ -384,7 +388,6 @@ class Qs
     }
 
     public static function getSchoolId(){
-    //    return Qs::getHeaderSchoolId();
         $school_id = Qs::userIsSuperAdmin() ? School::where('organisation_id', Auth::user()->organisation_id)->pluck('id')->toArray() : (array) Auth::user()->school_id;
         return $school_id;
     }
@@ -394,8 +397,11 @@ class Qs
     }
 
     public static function getHeaderSchoolId()
-    {
+    {   
         $hscId =  Request::header('school_id');
+        if(is_null($hscId));{
+            return "";
+        }
         $school_id = Qs::userIsSuperAdmin() ? (($hscId)?explode(',', $hscId):School::where('organisation_id', Auth::user()->organisation_id)->pluck('id')->toArray()) : (array) Auth::user()->school_id;
         return $school_id;
     }
@@ -403,4 +409,9 @@ class Qs
     public static function getOrganisationId(){
         return Auth::user()->organisation_id;
     }    
+
+
+    public static function getSchoolName($id){
+        return School::find($id)->name;
+    }
 }
