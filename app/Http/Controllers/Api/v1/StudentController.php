@@ -48,7 +48,7 @@ class StudentController extends APIController
     public function listClass()
     {
         $data['class'] = $mc = $this->my_class->all();
-       
+        $data['schools'] = Qs::getSchool();
         return $this->respond('success',$data);
     }
 
@@ -58,7 +58,7 @@ class StudentController extends APIController
         // $data['my_class'] = $mc = $this->my_class->getMC(['id' => $class_id])->first();
         $data['students'] = $this->student->findStudentsByClass($class_id);
         $data['sections'] = $this->my_class->getClassSections($class_id);
-
+        $data['class'] = $mc = $this->my_class->all();
 
         return $this->respond('succes',
             $data

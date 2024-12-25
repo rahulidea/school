@@ -25,10 +25,13 @@ class PromotionController extends APIController
     public function promotion($fc = NULL, $fs = NULL, $tc = NULL, $ts = NULL)
     {
         $d['old_year'] = $old_yr = Qs::getSetting('current_session');
+        if($old_yr){
         $old_yr = explode('-', $old_yr);
         $d['new_year'] = ++$old_yr[0].'-'.++$old_yr[1];
+        }
         $d['my_classes'] = $this->my_class->all();
         $d['sections'] = $this->my_class->getAllSections();
+        $d['schools'] = Qs::getSchool();
         $d['selected'] = false;
         
         if($fc && $fs && $tc && $ts){
@@ -97,6 +100,7 @@ class PromotionController extends APIController
             $promote['from_session'] = $oy;
             $promote['to_session'] = $ny;
             $promote['status'] = $p;
+            $promote['school_id'] = QS::getHeaderSchoolId()[0];
 
         //    dd($d, $promote);
             $this->student->createPromotion($promote);

@@ -9,6 +9,7 @@ use App\Http\Requests\MyClass\ClassUpdate;
 use App\Repositories\MyClassRepo;
 use App\Repositories\UserRepo;
 use Throwable;
+use Illuminate\Database\QueryException;
 
 class MyClassController extends APIController
 {
@@ -29,8 +30,6 @@ class MyClassController extends APIController
         
         $mc = $this->my_class->all();
 
-        $mc = $mc->where('school_id', $school_id);//->get();
-
         $d['my_classes'] = $mc;
         $d['class_types'] = $this->my_class->getTypes();
         $d['schools'] = Qs::getSchool();
@@ -41,7 +40,7 @@ class MyClassController extends APIController
     public function store(ClassCreate $req)
     {
         $data = $req->all();
-        $data['school_id'] = $school_id = request()->header('school_id');
+        $data['school_id'] = $school_id = QS::getHeaderSchoolId()[0];
 
         try{
             $mc = $this->my_class->create($data);
@@ -57,30 +56,21 @@ class MyClassController extends APIController
             $this->my_class->createSection($s);
 
             return $this->respond(__('msg.store_ok'),$mc);
-        } catch (Throwable $e) {
+        }  catch (Throwable $e) {
+            $error_code = $e->errorInfo[1];
             $this->setStatusCode(500);
-            return $this->respondWithError($e->getMessage());
+            if($error_code == 1062){
+                return $this->respondWithError('Duplicate entry : '.$this->my_class->getTypesName($data['class_type_id']).'-'.$data['name']);
+            }else{
+                return $this->respondWithError($e->getMessage());
+            }
         }
         // return Qs::jsonStoreOk();
     }
 
     public function edit($id)
     {
-        $school_id = request()->header('school_id');
-        
-        if(is_null($school_id)){
-            return $this->throwValidation("School id is required",400);
-        }
-        
-        $c = $this->my_class->find($id)->where('school_id', $school_id);
-
-        if($school_id)
-            $c =  $c->where('school_id', $school_id)->get();
-
-
-        // dd($c->toSql());
-
-        $d['my_class'] = $c;
+        $d['my_class'] = $c = $this->my_class->find($id);
         $d['schools'] = Qs::getSchool();
         
         return $this->respond('success',$d);
