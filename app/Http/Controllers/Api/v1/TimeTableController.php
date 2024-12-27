@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Http\Controllers\SupportTeam;
+namespace App\Http\Controllers\Api\v1;
+
+use App\Http\Controllers\Api\APIController;
 
 use App\Helpers\Qs;
 use App\Http\Requests\TimeTable\TSRequest;
@@ -13,7 +15,7 @@ use App\Repositories\TimeTableRepo;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class TimeTableController extends Controller
+class TimeTableController extends APIController
 {
     protected $tt, $my_class, $exam, $year;
 
@@ -33,8 +35,7 @@ class TimeTableController extends Controller
         $d['my_classes'] = $this->my_class->all();
         $d['tt_records'] = $this->tt->getAllRecords();
         $d['schools'] = Qs::getSchool();
-
-        return view('pages.support_team.timetables.index', $d);
+        return $this->respond('success',$d);
     }
 
     public function manage($ttr_id)
@@ -52,7 +53,7 @@ class TimeTableController extends Controller
         }
 
         $d['tts'] = $this->tt->getTimeTable(['ttr_id' => $ttr_id]);        
-        return view('pages.support_team.timetables.manage', $d);
+        return $this->respond('success',$d);
     }
 
     public function store(TTRequest $req)
@@ -65,7 +66,7 @@ class TimeTableController extends Controller
 
         $this->tt->create($data);
 
-        return Qs::jsonStoreOk();
+        return $this->respondMessage(__('msg.store_ok'));
     }
 
     public function update(TTRequest $req, $tt_id)
@@ -78,14 +79,14 @@ class TimeTableController extends Controller
 
         $this->tt->update($tt_id, $data);
 
-        return back()->with('flash_success', __('msg.update_ok'));
+        return $this->respondMessage(__('msg.update_ok'));
 
     }
 
     public function delete($tt_id)
     {
         $this->tt->delete($tt_id);
-        return back()->with('flash_success', __('msg.delete_ok'));
+        return $this->respondMessage(__('msg.delete_ok'));
     }
 
     /*********** TIME SLOTS *************/
@@ -104,7 +105,7 @@ class TimeTableController extends Controller
         }
 
         $this->tt->createTimeSlot($data);
-        return Qs::jsonStoreOk();
+        return $this->respondMessage(__('msg.store_ok'));
     }
 
     public function use_time_slot(Request $req, $ttr_id)
@@ -120,14 +121,14 @@ class TimeTableController extends Controller
             $this->tt->createTimeSlot($ts);
         }
 
-        return redirect()->route('ttr.manage', $ttr_id)->with('flash_success', __('msg.update_ok'));
-
+        // return redirect()->route('ttr.manage', $ttr_id)->with('flash_success', __('msg.update_ok'));
+        return $this->respondMessage(__('msg.update_ok'));
     }
 
     public function edit_time_slot($ts_id)
     {
         $d['tms'] = $this->tt->findTimeSlot($ts_id);
-        return view('pages.support_team.timetables.time_slots.edit', $d);
+        return $this->respond('success',$d);
     }
 
     public function update_time_slot(TSRequest $req, $ts_id)
@@ -144,13 +145,14 @@ class TimeTableController extends Controller
         }
 
         $this->tt->updateTimeSlot($ts_id, $data);
-        return redirect()->route('ttr.manage', $req->ttr_id)->with('flash_success', __('msg.update_ok'));
+        // return redirect()->route('ttr.manage', $req->ttr_id)->with('flash_success', __('msg.update_ok'));
+        return $this->respondMessage(__('msg.update_ok'));
     }
 
     public function delete_time_slot($ts_id)
     {
         $this->tt->deleteTimeSlot($ts_id);
-        return back()->with('flash_success', __('msg.delete_ok'));
+        return $this->respondMessage(__('msg.delete_ok'));
     }
 
 
@@ -163,7 +165,7 @@ class TimeTableController extends Controller
         $d['my_classes'] = $this->my_class->all();
         $d['schools'] = Qs::getSchool();
 
-        return view('pages.support_team.timetables.edit', $d);
+        return $this->respond('success',$d);
     }
 
     public function show_record($ttr_id)
@@ -196,7 +198,7 @@ class TimeTableController extends Controller
 
         $d['d_time'] = collect($d_time);
 
-        return view('pages.support_team.timetables.show', $d);
+        return $this->respond('success',$d);
     }
     public function print_record($ttr_id)
     {
@@ -231,18 +233,18 @@ class TimeTableController extends Controller
             return [$s->type => $s->description];
         });
 
-        return view('pages.support_team.timetables.print', $d);
+        return $this->respond('success',$d);
     }
 
     public function store_record(TTRecordRequest $req)
     {   
+        $this->year = Qs::getCurrentSession();
+
         $data = $req->all();
-        // $data['year'] = $this->year;
-        $data['year'] = Qs::getCurrentSession();
-        // dd($data);
+        $data['year'] = $this->year;
         $this->tt->createRecord($data);
 
-        return Qs::jsonStoreOk();
+        return $this->respondMessage(__('msg.store_ok'));
     }
 
     public function update_record(TTRecordRequest $req, $id)
@@ -250,12 +252,12 @@ class TimeTableController extends Controller
         $data = $req->all();
         $this->tt->updateRecord($id, $data);
 
-        return Qs::jsonUpdateOk();
+        return $this->respondMessage(__('msg.update_ok'));
     }
 
     public function delete_record($ttr_id)
     {
         $this->tt->deleteRecord($ttr_id);
-        return back()->with('flash_success', __('msg.delete_ok'));
+        return $this->respondMessage(__('msg.delete_ok'));
     }
 }

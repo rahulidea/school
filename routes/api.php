@@ -149,23 +149,54 @@ Route::group(['namespace' => 'Api\V1', 'prefix' => 'v1', 'as' => 'v1.'], functio
             Route::delete('destroy/{class}', [SubjectController::class, 'destroy']);
         });
 
-        /**************Manage Subjects************* */
+        /**************Manage Sections************* */
         Route::group(['prefix' => 'manage_sections'], function(){
             Route::resource('sections', 'SectionController');
 
             Route::get('getClassSections/{class_id}', [SectionController::class, 'getClassSections']);
-            // Route::post('create', [SubjectController::class, 'store']);
-            // Route::get('all-subjects/{class_id}', [SubjectController::class, 'allSubjects']);
-            // Route::get('{class}/edit', [SubjectController::class, 'edit']);
-            // Route::put('update/{class}', [SubjectController::class, 'update']);
-            // Route::delete('destroy/{class}', [SubjectController::class, 'destroy']);
+            
         });
         
         /**************Manage Droms************* */
         Route::group(['prefix' => 'manage_dorms'], function(){
             Route::resource('dorms', 'DormController');
-        
-             // Route::get('get-droms-list/{drom_id}', [DormController::class, 'getDromsList']);
+        });
+
+         /*************** TimeTables *****************/
+         Route::group(['prefix' => 'timetables'], function(){
+            Route::get('/', 'TimeTableController@index')->name('tt.index');
+
+            Route::group(['middleware' => 'teamSA'], function() {
+                Route::post('/', 'TimeTableController@store')->name('tt.store');
+                Route::put('/{tt}', 'TimeTableController@update')->name('tt.update');
+                Route::delete('/{tt}', 'TimeTableController@delete')->name('tt.delete');
+            });
+
+            /*************** TimeTable Records *****************/
+            Route::group(['prefix' => 'records'], function(){
+
+                Route::group(['middleware' => 'teamSA'], function(){
+                    Route::get('manage/{ttr}', 'TimeTableController@manage')->name('ttr.manage');
+                    Route::post('/', 'TimeTableController@store_record')->name('ttr.store');
+                    Route::get('edit/{ttr}', 'TimeTableController@edit_record')->name('ttr.edit');
+                    Route::put('/{ttr}', 'TimeTableController@update_record')->name('ttr.update');
+                });
+
+                Route::get('show/{ttr}', 'TimeTableController@show_record')->name('ttr.show');
+                Route::get('print/{ttr}', 'TimeTableController@print_record')->name('ttr.print');
+                Route::delete('/{ttr}', 'TimeTableController@delete_record')->name('ttr.destroy');
+
+            });
+
+            /*************** Time Slots *****************/
+            Route::group(['prefix' => 'time_slots', 'middleware' => 'teamSA'], function(){
+                Route::post('/', 'TimeTableController@store_time_slot')->name('ts.store');
+                Route::post('/use/{ttr}', 'TimeTableController@use_time_slot')->name('ts.use');
+                Route::get('edit/{ts}', 'TimeTableController@edit_time_slot')->name('ts.edit');
+                Route::delete('/{ts}', 'TimeTableController@delete_time_slot')->name('ts.destroy');
+                Route::put('/{ts}', 'TimeTableController@update_time_slot')->name('ts.update');
+            });
+
         });
 
         //Susbcription Table
@@ -185,6 +216,8 @@ Route::group(['namespace' => 'Api\V1', 'prefix' => 'v1', 'as' => 'v1.'], functio
                 return "This route is protected by both auth and subscription check";
             });
         });
+
+
         // Route that not required subscription check
         Route::get('/test3', [OrganisationController::class, 'index']);
         Route::get('/org/{org_id?}', [OrganisationController::class, 'index']);
