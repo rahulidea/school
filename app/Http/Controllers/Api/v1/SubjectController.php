@@ -26,7 +26,7 @@ class SubjectController extends APIController
     {
         $d['my_classes'] = $this->my_class->all();
         $d['teachers'] = $this->user->getUserByType('teacher');
-        // $d['subjects'] = $this->my_class->getAllSubjects();
+        $d['schools'] = Qs::getSchool();
         
         return $this->respond('success',$d);
     }
@@ -41,7 +41,7 @@ class SubjectController extends APIController
     public function store(SubjectCreate $req)
     {
         $data = $req->all();
-        $data['school_id'] = QS::getSchoolId()[0];
+        $data['school_id'] = QS::getHeaderSchoolId()[0];
         $d = $this->my_class->createSubject($data);
 
         return $this->respond(__('msg.store_ok'),$d);

@@ -22,11 +22,13 @@ class TimeTableController extends Controller
         $this->tt = $tt;
         $this->my_class = $mc;
         $this->exam = $exam;
-        $this->year = Qs::getCurrentSession();
+        
     }
 
     public function index()
     {
+        $this->year = Qs::getCurrentSession();
+        
         $d['exams'] = $this->exam->getExam(['year' => $this->year]);
         $d['my_classes'] = $this->my_class->all();
         $d['tt_records'] = $this->tt->getAllRecords();

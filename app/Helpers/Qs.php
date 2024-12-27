@@ -261,8 +261,9 @@ class Qs
     }
 
     public static function getSetting($type)
-    {
+    { 
         $data = Setting::where('type', $type)->wherein('school_id', QS::getHeaderSchoolId())->first();//->description;
+       
         if(is_null($data)){
             return null;
         }

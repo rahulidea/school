@@ -20,6 +20,7 @@ class MyClassController extends Controller
 
         $this->my_class = $my_class;
         $this->user = $user;
+
     }
 
     public function index()

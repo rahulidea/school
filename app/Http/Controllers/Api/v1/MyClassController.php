@@ -22,6 +22,7 @@ class MyClassController extends APIController
         
         $this->my_class = $my_class;
         $this->user = $user;
+
     }
 
     public function show()
