@@ -15,9 +15,16 @@ class StudentRepo {
         return $this->activeStudents()->where(['my_class_id' => $class_id])->wherein('school_id', QS::getHeaderSchoolId())->with(['my_class', 'user'])->get();
     }
 
-    public function activeStudents()
+    public function activeStudents($isGred=false)
     {
-        return StudentRecord::where(['grad' => 0]);
+        
+        if($isGred){
+            $grad = 1;
+        } else {
+            $grad = 0;
+        }
+        
+        return StudentRecord::where(['grad' => $grad]);
     }
 
     public function gradStudents()
@@ -50,7 +57,12 @@ class StudentRepo {
         return StudentRecord::where($where)->update($data);
     }
 
-    public function getRecord(array $data)
+    public function getRecord(array $data, $isGred=false)
+    {
+        return $this->activeStudents($isGred)->where($data)->with('user');
+    }
+
+    public function getRecordOld(array $data)
     {
         return $this->activeStudents()->where($data)->with('user');
     }
@@ -65,9 +77,9 @@ class StudentRepo {
         return $this->activeStudents()->whereIn('user_id', $ids)->with('user');
     }
 
-    public function findByUserId($st_id)
+    public function findByUserId($st_id, $isGred=false)
     {
-        return $this->getRecord(['user_id' => $st_id]);
+        return $this->getRecord(['user_id' => $st_id], $isGred);
     }
 
     public function getAll()

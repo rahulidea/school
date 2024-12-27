@@ -125,7 +125,7 @@ class StudentRecordController extends Controller
      
         if(!$sr_id){return Qs::goWithDanger();}
 
-        $data['sr'] = $this->student->getRecord(['id' => $sr_id])->first();
+        $data['sr'] = $this->student->getRecord(['id' => $sr_id],true)->first();
 
         /* Prevent Other Students/Parents from viewing Profile of others */
         if(Auth::user()->id != $data['sr']->user_id && !Qs::userIsTeamSAT() && !Qs::userIsMyChild($data['sr']->user_id, Auth::user()->id)){
@@ -141,7 +141,9 @@ class StudentRecordController extends Controller
         if(!$sr_id){return Qs::goWithDanger();}
         if(Qs::userIsSuperAdmin())
             $data['schools'] = $this->school->getAll()->where('organisation_id', Auth::user()->organisation_id);
-        $data['sr'] = $this->student->findByUserId($sr_id)->first();
+        $data['sr'] = $this->student->findByUserId($sr_id, true)->first();
+
+
         $data['my_classes'] = $this->my_class->all();
         $data['parents'] = $this->user->getUserByType('parent');
         $data['dorms'] = $this->student->getAllDorms();
