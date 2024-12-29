@@ -239,7 +239,7 @@ class TimeTableController extends Controller
         $data = $req->all();
         // $data['year'] = $this->year;
         $data['year'] = Qs::getCurrentSession();
-        // dd($data);
+        
         $this->tt->createRecord($data);
 
         return Qs::jsonStoreOk();

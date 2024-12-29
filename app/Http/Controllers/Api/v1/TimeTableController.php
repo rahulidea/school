@@ -33,8 +33,14 @@ class TimeTableController extends APIController
         
         $d['exams'] = $this->exam->getExam(['year' => $this->year]);
         $d['my_classes'] = $this->my_class->all();
-        $d['tt_records'] = $this->tt->getAllRecords();
         $d['schools'] = Qs::getSchool();
+        return $this->respond('success',$d);
+    }
+
+    public function time_table_by_class($class_id)
+    {   
+        $d = $this->tt->getTTRByClassIDs($class_id);
+
         return $this->respond('success',$d);
     }
 
@@ -195,6 +201,10 @@ class TimeTableController extends APIController
                 $d_time[] = ['day' => $day, 'time' => $tm->full, 'subject' => $tts->where('ts_id', $tm->id)->where($d_date, $day)->first()->subject->name ?? NULL ];
             }
         }
+
+        // foreach($d_time as $data){
+        //     $d_time[] =  $data->where('day', $data->day);
+        // }
 
         $d['d_time'] = collect($d_time);
 

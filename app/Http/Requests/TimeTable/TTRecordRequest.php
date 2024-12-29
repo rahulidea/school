@@ -25,7 +25,7 @@ class TTRecordRequest extends FormRequest
                 'school_id' => 'required',
             ];
         }
-
+        
         return [
             'name' => 'required|string|min:3|unique:time_table_records,name,'.$this->ttr,
             'my_class_id' => 'required',

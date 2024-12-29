@@ -32,7 +32,7 @@
                                 <td><strong>{{ $day }}</strong></td>
                                 @endif
                                 @foreach($d_time->where('day', $day) as $dt)
-                                <td>{{ $dt['subject'] }}</td>
+                                <td>A-{{ $dt['subject'] }}</td>
                                 @endforeach
                             </tr>
                         @endforeach

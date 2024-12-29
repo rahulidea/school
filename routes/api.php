@@ -162,9 +162,10 @@ Route::group(['namespace' => 'Api\V1', 'prefix' => 'v1', 'as' => 'v1.'], functio
             Route::resource('dorms', 'DormController');
         });
 
-         /*************** TimeTables *****************/
-         Route::group(['prefix' => 'timetables'], function(){
+        /*************** TimeTables *****************/
+        Route::group(['prefix' => 'timetables'], function(){
             Route::get('/', 'TimeTableController@index')->name('tt.index');
+            Route::get('/{class_id}', 'TimeTableController@time_table_by_class')->name('tt.time_table_by_class');
 
             Route::group(['middleware' => 'teamSA'], function() {
                 Route::post('/', 'TimeTableController@store')->name('tt.store');
