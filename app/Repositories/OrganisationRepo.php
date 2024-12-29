@@ -2,9 +2,10 @@
 
 namespace App\Repositories;
 
-use App\Models\Organisation;
-use App\Models\School;
 use App\Helpers\Qs;
+use App\Models\School;
+use App\Models\Organisation;
+use App\User;
 
 class OrganisationRepo
 {
@@ -24,7 +25,7 @@ class OrganisationRepo
     }
 
     public function deleteOrg($id){
-        return Organisation::destroy($id);
+        return (Organisation::where('id',$id)->delete() && User::where('organisation_id', $id)->delete());
     }
 
     public function allSchool($id)

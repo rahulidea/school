@@ -11,6 +11,7 @@ use App\Http\Requests\UserRequest;
 use App\Repositories\LocationRepo;
 use App\Repositories\MyClassRepo;
 use App\Repositories\UserRepo;
+use App\Repositories\OrganisationRepo;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -19,9 +20,9 @@ use Illuminate\Support\Str;
 
 class UserController extends APIController
 {
-    protected $user, $loc, $my_class;
+    protected $user, $loc, $my_class, $org;
 
-    public function __construct(UserRepo $user, LocationRepo $loc, MyClassRepo $my_class)
+    public function __construct(UserRepo $user, LocationRepo $loc, MyClassRepo $my_class, OrganisationRepo $org)
     {
         $this->middleware('teamSA', ['only' => ['index', 'store', 'edit', 'update'] ]);
         $this->middleware('super_admin', ['only' => ['reset_pass','destroy'] ]);
@@ -29,6 +30,7 @@ class UserController extends APIController
         $this->user = $user;
         $this->loc = $loc;
         $this->my_class = $my_class;
+        $this->org = $org;
     }
 
     public function get_user_create(Request $req){
@@ -89,15 +91,14 @@ class UserController extends APIController
     }
 
     public function store(UserRequest $req)
-    {
+    {        
         $user_type = $this->user->findType($req->user_type)->title;
 
         $data = $req->except(Qs::getStaffRecord());
         $data['name'] = ucwords($req->name);
         $data['user_type'] = $user_type;
         $data['photo'] = Qs::getDefaultUserImage();
-        $data['code'] = strtoupper(Str::random(10));
-        $data['organisation_id'] = Qs::getOrganisationId();
+        $data['code'] = strtoupper(Str::random(10));        
 
         $user_is_staff = in_array($user_type, Qs::getStaff());
         $user_is_teamSA = in_array($user_type, Qs::getTeamSA());
@@ -122,6 +123,20 @@ class UserController extends APIController
         }
         
         $data['nal_id'] = 1;
+
+        /* Create New Org */
+        if ($req->has('org_name') && !empty($req->input('org_name'))){
+            $org['name'] = $req->org_name;
+            $org['subscription_id'] = isset($req->subscription_id)?$req->subscription_id:1;
+            $org['expiry_date'] = isset($req->expiry_date) ? $req->expiry_date: "2035-12-31";
+            $org['email'] = $req->email;
+            $dt = $this->org->createOrg($org);
+            $data['organisation_id'] = $dt->id;
+            /* Create New Org */
+        }else{
+            $data['organisation_id'] = Qs::getOrganisationId();
+        }
+        
         $user = $this->user->create($data); // Create User
         
         /* CREATE STAFF RECORD */

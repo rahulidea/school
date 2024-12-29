@@ -48,7 +48,7 @@ class AttendanceController extends APIController
         foreach ($request->attendances as $attendance) {
             $attendanceData[] = [
                 'student_id' => $attendance['student_id'],
-                'class_id' => $attendance['class_id'],
+                'my_classes' => $attendance['class_id'],
                 'section_id' => $attendance['section_id'],
                 'attendee' => $attendance['attendee'],
                 'date' => $attendance['date'],

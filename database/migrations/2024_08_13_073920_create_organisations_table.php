@@ -16,8 +16,10 @@ class CreateOrganisationsTable extends Migration
         Schema::create('organisations', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('email', 100)->unique()->nullable();
             $table->foreignId('subscription_id')->nullable();
             $table->date('expiry_date');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

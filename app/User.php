@@ -3,23 +3,25 @@
 namespace App;
 
 use App\Helpers\Qs;
-use App\Models\BloodGroup;
 use App\Models\Lga;
+use App\Models\State;
+use App\Models\UserType;
+use App\Models\BloodGroup;
 use App\Models\Nationality;
 use App\Models\StaffRecord;
-use App\Models\State;
-use App\Models\StudentRecord;
 use App\Models\Organisation;
-use App\Models\UserType;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Foundation\Auth\User as Authenticatable;
+use App\Models\StudentRecord;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
+    use SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -31,7 +33,7 @@ class User extends Authenticatable
     ];
 
     protected $appends = ['hashed_id'];
-
+    
     /**
      * The attributes that should be hidden for arrays.
      *

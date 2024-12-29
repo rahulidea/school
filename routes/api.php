@@ -191,6 +191,7 @@ Route::group(['namespace' => 'Api\V1', 'prefix' => 'v1', 'as' => 'v1.'], functio
         Route::post('/org', [OrganisationController::class, 'store']);
         Route::put('/org/{org_id}', [OrganisationController::class, 'update']);
         Route::delete('/org/delete/{org_id}', [OrganisationController::class, 'deleteOrg']);
+        Route::post('/org/save_org', [UserController::class, 'store']);
 
         Route::get('/school/{school_id?}', [OrganisationController::class, 'school_index']);
         Route::post('/school', [OrganisationController::class, 'school_store']);
