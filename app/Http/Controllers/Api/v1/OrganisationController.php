@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers\Api\v1;
 
+use Carbon\Carbon;
 use App\Helpers\Qs;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Repositories\UserRepo;
 use App\Http\Controllers\Controller;
 use App\Repositories\OrganisationRepo;
 use Illuminate\Support\Facades\Validator;
-use App\Http\Controllers\Api\APIController; 
-use Illuminate\Support\Str;
+use App\Http\Controllers\Api\APIController;
+use Illuminate\Support\Facades\Hash;
 
 class OrganisationController extends APIController
 {
@@ -105,6 +107,10 @@ class OrganisationController extends APIController
     public function school_store(Request $request)
     {
         $validator = Validator::make($request->all(), [
+            'name' => 'required|string|min:6|max:150',
+            'password' => 'nullable|string|min:3|max:50',
+            'email' => 'sometimes|nullable|email|max:100|unique:users',
+            'phone' => 'required|nullable|string|min:6|max:20',
             'school_name' => 'required|string|max:255',
             // 'organisation_id' => 'exists:organisations,id',
         ]);
@@ -118,10 +124,9 @@ class OrganisationController extends APIController
         if($data['default_org_school']){
             $org_request = new Request([
                 'name'   => $data['school_name'],
-                'subscription_id' => "3",
-                'expiry_date' => "2026-09-30"
+                'subscription_id' => ($request->filled('subscription_id'))?$request->subscription_id:"3",
+                'expiry_date' => $request->filled('expiry_date') ? $request->expiry_date : Carbon::now()->addYear()->toDateString(),
             ]);
-           
             $org_data = $this->store_org($org_request);
         }
        
@@ -134,7 +139,7 @@ class OrganisationController extends APIController
             $user_request = new Request([
                 'name'   => $data['name'],
                 'email' => $data['email'],
-                'password' => $data['password'],
+                'password' => Hash::make($data['password']),
                 'user_type' => "5",
                 'organisation_id' => $org_data->id,
                 'phone' => $data['phone'],
