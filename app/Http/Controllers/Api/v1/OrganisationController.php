@@ -140,7 +140,7 @@ class OrganisationController extends APIController
                 'name'   => $data['name'],
                 'email' => $data['email'],
                 'password' => Hash::make($data['password']),
-                'user_type' => "5",
+                'user_type' => "super_admin",
                 'organisation_id' => $org_data->id,
                 'phone' => $data['phone'],
                 'school_id' => $school->id,
