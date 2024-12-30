@@ -15,14 +15,11 @@ class CreateAttendancesTable extends Migration
     {
         Schema::create('attendances', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('school_id')->nullable();
-            $table->unsignedInteger('student_id');
-            $table->foreign('student_id')->references('id')->on('student_records')->onDelete('cascade');
-            $table->unsignedInteger('my_classes');
-            $table->foreign('my_classes')->references('id')->on('my_classes')->onDelete('cascade');
-            $table->unsignedInteger('section_id');
-            $table->foreign('section_id')->references('id')->on('sections')->onDelete('cascade');
-            $table->string('attendee'); // Add this line
+            $table->foreignId('school_id')->nullable()->constrained()->onDelete('set null');  // Assuming you want school_id as a foreign key
+            $table->foreignId('student_id')->constrained('student_records')->onDelete('cascade'); // Changed to foreignId
+            $table->foreignId('my_classes')->constrained('my_classes')->onDelete('cascade'); // Changed to foreignId
+            $table->foreignId('section_id')->constrained('sections')->onDelete('cascade'); // Changed to foreignId
+            $table->string('attendee'); // Add this line, no changes here unless it's related to another model
             $table->date('date');
             $table->enum('status', ['present', 'absent', 'late', 'excused']);
             $table->timestamps();
