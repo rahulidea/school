@@ -14,9 +14,10 @@ class CreateAttendancesTable extends Migration
     public function up()
     {
         Schema::create('attendances', function (Blueprint $table) {
-            $table->id();  // Primary key, automatically unsignedBigInteger
+            $table->id(); // Creates the primary key as unsignedBigInteger
             $table->foreignId('school_id')->nullable()->constrained()->onDelete('set null');
-            $table->foreignId('student_id')->constrained('students')->onDelete('cascade');  // Ensure foreign key references 'students.id'
+            $table->unsignedInteger('student_id'); // Use unsignedInteger instead of foreignId to match students.id
+            $table->foreign('student_id')->references('id')->on('students')->onDelete('cascade'); // Correct foreign key definition
             $table->foreignId('my_classes')->constrained('my_classes')->onDelete('cascade');
             $table->foreignId('section_id')->constrained('sections')->onDelete('cascade');
             $table->string('attendee');
