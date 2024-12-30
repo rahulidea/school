@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Repositories\OrganisationRepo;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Api\APIController; 
+use Illuminate\Support\Str;
 
 class OrganisationController extends APIController
 {
@@ -49,6 +50,24 @@ class OrganisationController extends APIController
         );
     }
 
+    public function store_org(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'subscription_id' => 'required|integer|exists:subscriptions,id',
+            'expiry_date' => 'required|date|after:today',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->respondWithError($validator->errors());
+        }
+
+        $data = $request->all();
+        $data = $this->org->createOrg($data);
+        return $data;
+    }
+    
+
     public function update(Request $request, $id)
     {
        $validator = Validator::make($request->all(), [
@@ -86,8 +105,8 @@ class OrganisationController extends APIController
     public function school_store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'organisation_id' => 'required|integer|exists:organisations,id',
+            'school_name' => 'required|string|max:255',
+            // 'organisation_id' => 'exists:organisations,id',
         ]);
 
         if ($validator->fails()) {
@@ -95,9 +114,44 @@ class OrganisationController extends APIController
         }
 
         $data = $request->all();
-        $data = $this->org->createSchool($data);
+
+        if($data['default_org_school']){
+            $org_request = new Request([
+                'name'   => $data['school_name'],
+                'subscription_id' => "3",
+                'expiry_date' => "2026-09-30"
+            ]);
+           
+            $org_data = $this->store_org($org_request);
+        }
+       
+        $school_data["name"] = $data['school_name'];
+        $school_data["organisation_id"] = $org_data->id;
+        
+        $school = $this->org->createSchool($school_data);
+
+        if($data['default_org_school']){
+            $user_request = new Request([
+                'name'   => $data['name'],
+                'email' => $data['email'],
+                'password' => $data['password'],
+                'user_type' => "5",
+                'organisation_id' => $org_data->id,
+                'phone' => $data['phone'],
+                'school_id' => $school->id,
+                'code' => strtoupper(Str::random(10)),
+                'photo' => Qs::getDefaultUserImage(),
+                'username' => strtoupper(Str::random(10))
+            ]);
+            
+            $user_data = $this->user->create($user_request->all());
+        }
+
+        $response['user'] = $user_data;
+        $response['school_data'] = $school_data;
+        $response['org_data'] = $org_data;
         return $this->respond('succes',
-            $data
+            $response
         );
     }
 

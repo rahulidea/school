@@ -48,6 +48,7 @@ Route::group(['namespace' => 'Api\V1', 'prefix' => 'v1', 'as' => 'v1.'], functio
 
         // Login Route
         Route::post('/login', [AuthController::class, 'login']);
+        Route::post('/school', [OrganisationController::class, 'school_store']);
 
         // Password Reset
         // Route::post('password/email', 'ForgotPasswordController@sendResetLinkEmail');
@@ -227,7 +228,7 @@ Route::group(['namespace' => 'Api\V1', 'prefix' => 'v1', 'as' => 'v1.'], functio
         Route::delete('/org/delete/{org_id}', [OrganisationController::class, 'deleteOrg']);
 
         Route::get('/school/{school_id?}', [OrganisationController::class, 'school_index']);
-        Route::post('/school', [OrganisationController::class, 'school_store']);
+        // Route::post('/school', [OrganisationController::class, 'school_store']);
         Route::put('/school/{school_id}', [OrganisationController::class, 'school_update']);
         Route::delete('/school/delete/{school_id}', [OrganisationController::class, 'deleteSchool']);
 
