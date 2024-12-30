@@ -14,17 +14,15 @@ class CreateAttendancesTable extends Migration
     public function up()
     {
         Schema::create('attendances', function (Blueprint $table) {
-            $table->id(); // This will create an auto-incrementing unsignedBigInteger as the primary key
-            $table->foreignId('school_id')->nullable()->constrained()->onDelete('set null');
-            
-            // Use unsignedInteger for student_id to match the increments() type in the students table
+            $table->id();
+            $table->foreignId('school_id')->nullable();
             $table->unsignedInteger('student_id');
-            $table->foreign('student_id')->references('id')->on('students')->onDelete('cascade'); // Ensure referencing the correct table and column
-
-            $table->foreignId('my_classes')->constrained('my_classes')->onDelete('cascade');
-            $table->foreignId('section_id')->constrained('sections')->onDelete('cascade');
-            
-            $table->string('attendee');
+            $table->foreign('student_id')->references('id')->on('student_records')->onDelete('cascade');
+            $table->unsignedInteger('my_classes');
+            $table->foreign('my_classes')->references('id')->on('my_classes')->onDelete('cascade');
+            $table->unsignedInteger('section_id');
+            $table->foreign('section_id')->references('id')->on('sections')->onDelete('cascade');
+            $table->string('attendee'); // Add this line
             $table->date('date');
             $table->enum('status', ['present', 'absent', 'late', 'excused']);
             $table->timestamps();
