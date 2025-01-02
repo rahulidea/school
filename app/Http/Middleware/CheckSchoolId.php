@@ -16,13 +16,8 @@ class CheckSchoolId
      */
     public function handle(Request $request, Closure $next)
     {
-        // Set CORS headers for testing (this will apply to all incoming requests)
-    header('Access-Control-Allow-Origin: *');  // Allow all origins (for testing only)
-    header('Access-Control-Allow-Headers: *');  // Allow necessary headers including 'school_id'
-    header('Access-Control-Allow-Methods: *');  // Allow certain HTTP methods
-
-    // Check for 'school_id' header
-    dd($request->headers->keys());  // For debugging purposes
+        dd($request->all());
+    //    if (!$request->hasHeader('school_id') || !$request->header('school_id')) {
         if (!$request->hasHeader('school_id') || !$request->header('school_id')) {
             return response()->json([
                 'status' => false,
