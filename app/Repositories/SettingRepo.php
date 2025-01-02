@@ -7,9 +7,9 @@ use App\Models\Setting;
 
 class SettingRepo
 {
-    public function update($type, $desc)
+    public function update($type, $desc, $school_id)
     {
-        return Setting::where('type', $type)->update(['description' => $desc]);
+        return Setting::where('type', $type)->where('school_id',$school_id)->update(['description' => $desc]);
     }
 
     public function getSetting($type)

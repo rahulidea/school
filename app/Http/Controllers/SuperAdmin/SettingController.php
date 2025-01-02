@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\SuperAdmin;
 
 use App\Helpers\Qs;
-use App\Http\Controllers\Controller;
-use App\Http\Requests\SettingUpdate;
+use App\Models\Setting;
 use App\Repositories\MyClassRepo;
 use App\Repositories\SettingRepo;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\SettingUpdate;
+use Illuminate\Support\Facades\Auth;
 
 class SettingController extends Controller
 {
@@ -18,13 +20,21 @@ class SettingController extends Controller
         $this->my_class = $my_class;
     }
 
-    public function index()
-    {
-         $s = $this->setting->all();
+    public function index($school_id = null)
+    {         
+        if($school_id){
+            $s = Setting::where('school_id', $school_id)->get();
+            $selected_school = $school_id;
+        }else{
+            $s = $this->setting->all();
+            $school_id = Auth::user()->school_id;
+        }
          $d['class_types'] = $this->my_class->getTypes();
          $d['s'] = $s->flatMap(function($s){
             return [$s->type => $s->description];
         });
+        $d['schools'] = Qs::getSchool();
+        $d['school_id'] = $school_id;
         return view('pages.super_admin.settings', $d);
     }
 
@@ -35,7 +45,7 @@ class SettingController extends Controller
         $keys = array_keys($sets);
         $values = array_values($sets);
         for($i=0; $i<count($sets); $i++){
-            $this->setting->update($keys[$i], $values[$i]);
+            $this->setting->update($keys[$i], $values[$i], $req->school_id);
         }
 
         if($req->hasFile('logo')) {
