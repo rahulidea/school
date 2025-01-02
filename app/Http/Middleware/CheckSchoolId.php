@@ -18,8 +18,8 @@ class CheckSchoolId
     {
         // Set CORS headers for testing (this will apply to all incoming requests)
     header('Access-Control-Allow-Origin: *');  // Allow all origins (for testing only)
-    header('Access-Control-Allow-Headers: Content-Type, X-Auth-Token, Authorization, school_id');  // Allow necessary headers including 'school_id'
-    header('Access-Control-Allow-Methods: GET, POST, PUT');  // Allow certain HTTP methods
+    header('Access-Control-Allow-Headers: *');  // Allow necessary headers including 'school_id'
+    header('Access-Control-Allow-Methods: *');  // Allow certain HTTP methods
 
     // Check for 'school_id' header
     dd($request->headers->keys());  // For debugging purposes
