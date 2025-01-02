@@ -16,8 +16,6 @@ class CheckSchoolId
      */
     public function handle(Request $request, Closure $next)
     {
-        dd($request->all());
-    //    if (!$request->hasHeader('school_id') || !$request->header('school_id')) {
         if (!$request->hasHeader('school_id') || !$request->header('school_id')) {
             return response()->json([
                 'status' => false,
