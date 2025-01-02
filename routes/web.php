@@ -24,7 +24,7 @@ Route::group(['middleware' => 'auth'], function () {
     });
 
     /*************** Support Team *****************/
-    Route::group(['namespace' => 'SupportTeam',], function(){
+    Route::group(['namespace' => 'SupportTeam','middleware' => ['check.school.field']], function(){
 
         /*************** Students *****************/
         Route::group(['prefix' => 'students'], function(){
@@ -161,11 +161,11 @@ Route::group(['middleware' => 'auth'], function () {
 });
 
 /************************ SUPER ADMIN ****************************/
-Route::group(['namespace' => 'SuperAdmin','middleware' => 'super_admin', 'prefix' => 'super_admin'], function(){
+Route::group(['namespace' => 'SuperAdmin','middleware' => ['super_admin'], 'prefix' => 'super_admin'], function(){
 
-    Route::get('/settings', 'SettingController@index')->name('settings');
+    Route::get('/settings/{school_id?}', 'SettingController@index')->name('settings');
     Route::put('/settings', 'SettingController@update')->name('settings.update');
-
+    //  'check.school.field'
 });
 
 /************************ PARENT ****************************/
