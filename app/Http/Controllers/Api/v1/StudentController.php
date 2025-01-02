@@ -47,6 +47,7 @@ class StudentController extends APIController
 
     public function listClass()
     {
+        return "test";
         $data['class'] = $mc = $this->my_class->all();
         $data['schools'] = Qs::getSchool();
         return $this->respond('success',$data);
