@@ -201,6 +201,15 @@ Route::group(['namespace' => 'Api\V1', 'prefix' => 'v1', 'as' => 'v1.'], functio
 
         });
 
+        /************** Manage Exams ************* */
+        Route::group(['prefix' => 'manage_exams'], function(){
+            Route::resource('/', 'ExamController');
+            Route::get('edit/{e_id}', 'ExamController@edit');
+            Route::delete('/{e_id}', 'ExamController@destroy');
+            Route::put('/{e_id}', 'ExamController@update');
+            
+        });
+
         //Susbcription Table
         // 1 - Free // 2 - Gold // 3 - Diamond    
         Route::middleware('check.subscription:2,3')->group(function(){
@@ -219,6 +228,7 @@ Route::group(['namespace' => 'Api\V1', 'prefix' => 'v1', 'as' => 'v1.'], functio
             });
         });
 
+        
 
         // Route that not required subscription check
         Route::get('/test3', [OrganisationController::class, 'index']);
