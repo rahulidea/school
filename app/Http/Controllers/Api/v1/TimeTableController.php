@@ -52,7 +52,7 @@ class TimeTableController extends APIController
         $d['ts_existing'] = $this->tt->getExistingTS($ttr_id);
         $d['subjects'] = $this->my_class->getSubject(['my_class_id' => $ttr->my_class_id])->get();
         $d['my_class'] = $this->my_class->find($ttr->my_class_id);
-
+        $d['schools'] = Qs::getSchool();
         if($ttr->exam_id){
             $d['exam_id'] = $ttr->exam_id;
             $d['exam'] = $this->exam->find($ttr->exam_id);
@@ -69,7 +69,8 @@ class TimeTableController extends APIController
         $d_date = $req->exam_date ?? $req->day;
         $data['timestamp_from'] = strtotime($d_date.' '.$tms->time_from);
         $data['timestamp_to'] = strtotime($d_date.' '.$tms->time_to);
-
+        $data['school_id'] = QS::getHeaderSchoolId()[0];
+        
         $this->tt->create($data);
 
         return $this->respondMessage(__('msg.store_ok'));
@@ -105,6 +106,7 @@ class TimeTableController extends APIController
         $data['timestamp_from'] = strtotime($tf);
         $data['timestamp_to'] = strtotime($tt);
         $data['full'] = $tf.' - '.$tt;
+        $data['school_id'] = QS::getHeaderSchoolId()[0];
 
         if($tf == $tt){
             return response()->json(['msg' => __('msg.invalid_time_slot'), 'ok' => FALSE]);
