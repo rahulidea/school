@@ -24,7 +24,7 @@ class PaymentController extends Controller
     {
         $this->my_class = $my_class;
         $this->pay = $pay;
-        $this->year = Qs::getCurrentSession();
+        //$this->year = Qs::getCurrentSession();
         $this->student = $student;
 
         $this->middleware('teamAccount');
@@ -136,6 +136,8 @@ class PaymentController extends Controller
             'amt_paid' => 'required|numeric'
         ], [], ['amt_paid' => 'Amount Paid']);
 
+        $this->year = Qs::getCurrentSession();
+
         $pr = $this->pay->findRecord($pr_id);
         $payment = $this->pay->find($pr->payment_id);
         $d['amt_paid'] = $amt_p = $pr->amt_paid + $req->amt_paid;
@@ -177,6 +179,7 @@ class PaymentController extends Controller
         ], [], ['my_class_id' => 'Class']);
 
         $wh['my_class_id'] = $class_id = $req->my_class_id;
+        $this->year = Qs::getCurrentSession();
 
         $pay1 = $this->pay->getPayment(['my_class_id' => $class_id, 'year' => $this->year])->get();
         $pay2 = $this->pay->getGeneralPayment(['year' => $this->year])->get();
@@ -201,6 +204,8 @@ class PaymentController extends Controller
 
     public function store(PaymentCreate $req)
     {
+        $this->year = Qs::getCurrentSession();
+        
         $data = $req->all();
         $data['year'] = $this->year;
         $data['ref_no'] = Pay::genRefCode();
