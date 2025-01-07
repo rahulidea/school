@@ -26,10 +26,12 @@ class ExamController extends APIController
         $this->exam = $exam;
     }
 
-    public function index()
+    public function index(Request $req)
     {
-        $d = $this->exam->all();
+        $d['exam_list'] = $this->exam->all($req->school_id);
+        $d['schools'] = Qs::getSchool();
         return $this->respond('success',$d);
+        
     }
 
     // public function store(ExamCreate $req)

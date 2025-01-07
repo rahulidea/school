@@ -12,9 +12,16 @@ use App\Helpers\Qs;
 class ExamRepo
 {
 
-    public function all()
+    public function all($school_id=null)
     {
-        return Exam::wherein('school_id',QS::getSchoolId())->orderBy('name', 'asc')->orderBy('year', 'desc')->get();
+        if(is_null($school_id))
+        {
+            return Exam::wherein('school_id',QS::getSchoolId())->orderBy('name', 'asc')->orderBy('year', 'desc')->get();
+        }
+        else
+        {
+            return Exam::where('school_id',$school_id)->orderBy('name', 'asc')->orderBy('year', 'desc')->get();
+        }
     }
 
     public function getExam($data)
