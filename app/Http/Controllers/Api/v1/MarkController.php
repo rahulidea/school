@@ -1,6 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\SupportTeam;
+
+namespace App\Http\Controllers\Api\v1;
+
+use App\Http\Controllers\Api\APIController;
 
 use App\Helpers\Qs;
 use App\Helpers\Mk;
@@ -15,7 +18,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
-class MarkController extends Controller
+class MarkController extends APIController
 {
     protected $my_class, $exam, $student, $year, $user, $mark;
 
@@ -25,23 +28,20 @@ class MarkController extends Controller
         $this->mark =  $mark;
         $this->student =  $student;
         $this->my_class =  $my_class;
-        // $this->year =  Qs::getSetting('current_session');
+        $this->year =  Qs::getSetting('current_session');
 
        // $this->middleware('teamSAT', ['except' => ['show', 'year_selected', 'year_selector', 'print_view'] ]);
     }
 
     public function index()
     {
-        
-        $this->year =  Qs::getSetting('current_session');
-
         $d['exams'] = $this->exam->getExam(['year' => $this->year]);
         $d['my_classes'] = $this->my_class->all();
         $d['sections'] = $this->my_class->getAllSections();
         $d['subjects'] = $this->my_class->getAllSubjects();
         $d['selected'] = false;
 
-        return view('pages.support_team.marks.index', $d);
+        return $this->respond('success',$d);
     }
 
     public function year_selector($student_id)
@@ -56,7 +56,8 @@ class MarkController extends Controller
         }
 
         $student_id = Qs::hash($student_id);
-        return redirect()->route('marks.show', [$student_id, $req->year]);
+        return $this->respond('success',[$student_id, $req->year]);
+        // return redirect()->route('marks.show', [$student_id, $req->year]);
     }
 
     public function show($student_id, $year)
@@ -142,19 +143,16 @@ class MarkController extends Controller
 
     public function selector(MarkSelector $req)
     {
-        $this->year =  Qs::getSetting('current_session');
-
         $data = $req->only(['exam_id', 'my_class_id', 'section_id', 'subject_id']);
         $d2 = $req->only(['exam_id', 'my_class_id', 'section_id']);
         $d = $req->only(['my_class_id', 'section_id']);
         $d['session'] = $data['year'] = $d2['year'] = $this->year;
 
         $students = $this->student->getRecord($d)->get();
-        
         if($students->count() < 1){
             return back()->with('pop_error', __('msg.rnf'));
         }
-        
+
         foreach ($students as $s){
             $data['student_id'] = $d2['student_id'] = $s->user_id;
             $this->exam->createMark($data);
@@ -166,8 +164,6 @@ class MarkController extends Controller
 
     public function manage($exam_id, $class_id, $section_id, $subject_id)
     {
-        $this->year =  Qs::getSetting('current_session');
-
         $d = ['exam_id' => $exam_id, 'my_class_id' => $class_id, 'section_id' => $section_id, 'subject_id' => $subject_id, 'year' => $this->year];
 
         $d['marks'] = $this->exam->getMark($d);
@@ -191,7 +187,6 @@ class MarkController extends Controller
 
     public function update(Request $req, $exam_id, $class_id, $section_id, $subject_id)
     {
-        $this->year =  Qs::getSetting('current_session');
         $p = ['exam_id' => $exam_id, 'my_class_id' => $class_id, 'section_id' => $section_id, 'subject_id' => $subject_id, 'year' => $this->year];
 
         $d = $d3 = $all_st_ids = [];
@@ -269,8 +264,6 @@ class MarkController extends Controller
 
     public function batch_fix()
     {
-        $this->year =  Qs::getSetting('current_session');
-
         $d['exams'] = $this->exam->getExam(['year' => $this->year]);
         $d['my_classes'] = $this->my_class->all();
         $d['sections'] = $this->my_class->getAllSections();
@@ -281,8 +274,6 @@ class MarkController extends Controller
 
     public function batch_update(Request $req): \Illuminate\Http\JsonResponse
     {
-        $this->year =  Qs::getSetting('current_session');
-
         $exam_id = $req->exam_id;
         $class_id = $req->my_class_id;
         $section_id = $req->section_id;
@@ -378,8 +369,6 @@ class MarkController extends Controller
 
     public function tabulation($exam_id = NULL, $class_id = NULL, $section_id = NULL)
     {
-        $this->year =  Qs::getSetting('current_session');
-
         $d['my_classes'] = $this->my_class->all();
         $d['exams'] = $this->exam->getExam(['year' => $this->year]);
         $d['selected'] = FALSE;
@@ -420,8 +409,6 @@ class MarkController extends Controller
 
     public function print_tabulation($exam_id, $class_id, $section_id)
     {
-        $this->year =  Qs::getSetting('current_session');
-
         $wh = ['my_class_id' => $class_id, 'section_id' => $section_id, 'exam_id' => $exam_id, 'year' => $this->year];
 
         $sub_ids = $this->mark->getSubjectIDs($wh);

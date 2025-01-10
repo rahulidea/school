@@ -30,6 +30,7 @@ class ExamController extends APIController
     {
         $d['exam_list'] = $this->exam->all($req->school_id);
         $d['schools'] = Qs::getSchool();
+        $d['terms'] = ['First Term','Second Term','Third Term'];
         return $this->respond('success',$d);
         
     }
@@ -62,6 +63,8 @@ class ExamController extends APIController
                 
                 // Return a error response
                 return $this->respondInternalError('Duplicate entry');
+            }else{
+                return $this->respondInternalError($error_message);
             }
         }
         catch (Throwable $e) {
