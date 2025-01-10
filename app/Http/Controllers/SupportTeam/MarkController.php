@@ -160,7 +160,7 @@ class MarkController extends Controller
             $this->exam->createMark($data);
             $this->exam->createRecord($d2);
         }
-
+        
         return redirect()->route('marks.manage', [$req->exam_id, $req->my_class_id, $req->section_id, $req->subject_id]);
     }
 

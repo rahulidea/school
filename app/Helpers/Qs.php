@@ -388,7 +388,10 @@ class Qs
         return response()->json($msg, $status_code, $headers);
     }
 
-    public static function getSchoolId(){
+    public static function getSchoolId($school_id="5"){
+        if(!is_null($school_id)){
+            return array($school_id);
+        }
         $school_id = Qs::userIsSuperAdmin() ? School::where('organisation_id', Auth::user()->organisation_id)->pluck('id')->toArray() : (array) Auth::user()->school_id;
         return $school_id;
     }
@@ -399,6 +402,7 @@ class Qs
 
     public static function getHeaderSchoolId()
     {   
+        
         $hscId =  Request::header('school_id');
         $school_id = Qs::userIsSuperAdmin() ? (($hscId)?explode(',', $hscId):School::where('organisation_id', Auth::user()->organisation_id)->pluck('id')->toArray()) : (array) Auth::user()->school_id;
         return $school_id;

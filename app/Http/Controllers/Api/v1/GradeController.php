@@ -28,7 +28,9 @@ class GradeController extends APIController
 
     public function index(Request $req)
     {
-         $d['grades'] = $this->exam->allGrades($req->school_id);
+        //$req->school_id
+        
+         $d['grades'] = $this->exam->allGrades();
          $d['class_types'] = $this->my_class->getTypes();
          $d['schools'] = Qs::getSchool();
 
