@@ -14,6 +14,16 @@
             <div class="row">
                 <div class="col-md-6 border-right-2 border-right-blue-400">
                         <div class="form-group row">
+                            <label class="col-lg-3 col-form-label font-weight-semibold" for="user_type"> Select School: <span class="text-danger">*</span></label>
+                            <div class="col-lg-9">
+                                <select required data-placeholder="Select User" class="form-control select" name="school_id" id="school_id">
+                                @foreach($schools as $school)
+                                    <option {{ ($school_id == $school->id) ? 'selected' : '' }} value="{{ $school->id }}">{{ $school->name }}</option>
+                                @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
                             <label class="col-lg-3 col-form-label font-weight-semibold">Name of School <span class="text-danger">*</span></label>
                             <div class="col-lg-9">
                                 <input name="system_name" value="{{ $s['system_name'] }}" required type="text" class="form-control" placeholder="Name of School">
@@ -123,5 +133,26 @@
     </div>
 
     {{--Settings Edit Ends--}}
-
+    <script>
+        // function refreshform(param){
+        //     alert("Ram");
+        //     var selectedId = param.value;
+            // var newUrl = window.location.pathname.replace(/\/\d+$/, '/' + selectedId);
+            // alert(newUrl);
+        //     window.history.pushState({}, '', newUrl);
+        // }
+        $(document).ready(function() {
+            $('#school_id').on('change', function() {
+                var selectedId = $(this).val();
+                var currentUrl = window.location.pathname;
+                if (currentUrl.match(/\/\d+$/)) {
+                    var newUrl = currentUrl.replace(/\/\d+$/, '/' + selectedId);
+                }else {
+                    var newUrl = currentUrl + '/' + selectedId;
+                }
+                //    var newUrl = window.location.pathname.replace(/\/\d+$/, '/' + selectedId);
+                window.location.href = newUrl;
+            });
+        });
+    </script>
 @endsection

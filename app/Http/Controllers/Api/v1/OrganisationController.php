@@ -4,14 +4,15 @@ namespace App\Http\Controllers\Api\v1;
 
 use Carbon\Carbon;
 use App\Helpers\Qs;
+use App\Models\Setting;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Repositories\UserRepo;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Hash;
 use App\Repositories\OrganisationRepo;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Api\APIController;
-use Illuminate\Support\Facades\Hash;
 
 class OrganisationController extends APIController
 {
@@ -131,7 +132,7 @@ class OrganisationController extends APIController
         }
        
         $school_data["name"] = $data['school_name'];
-        $school_data["organisation_id"] = $org_data->id;
+        $school_data["organisation_id"] = $org_data->id;        
         
         $school = $this->org->createSchool($school_data);
 
@@ -150,8 +151,37 @@ class OrganisationController extends APIController
             ]);
             
             $user_data = $this->user->create($user_request->all());
-        }
 
+            
+                $setting_data["system_name"] = $school->name;
+                $setting_data["current_session"] = ($request->filled('current_session'))?$request->current_session:"2024-2025";
+                $setting_data["system_title"] = $school->name;
+                $setting_data["phone"] = ($request->filled('phone'))?$request->phone:"9999888877";
+                $setting_data["system_email"] = $data['email'];
+                $setting_data["address"] = ($request->filled('address'))?$request->address:"Enter School Address Here";
+                $setting_data["term_ends"] = "";
+                $setting_data["term_begins"] = "";
+                $setting_data["lock_exam"] = "";
+                $setting_data["next_term_fees_c"] = "";
+                $setting_data["next_term_fees_j"] = "";
+                $setting_data["next_term_fees_n"] = "";
+                $setting_data["next_term_fees_pn"] = "";
+                $setting_data["next_term_fees_p"] = "";
+                $setting_data["next_term_fees_s"] = "";
+                $setting_data["logo"] = "";
+                $setting_data["school_id"] = $school->id;
+                
+                foreach($setting_data as $key => $value){
+                    $set_data[] = [
+                        "type" => $key,
+                        "description" => $value,
+                        "school_id" => $school->id
+                    ];
+                }
+           //     dd($set_data);
+                // Setting::where('school_id', $school_id)->get()
+               $sett =  Setting::insert($set_data);
+        }
         $response['user'] = $user_data;
         $response['school_data'] = $school_data;
         $response['org_data'] = $org_data;
