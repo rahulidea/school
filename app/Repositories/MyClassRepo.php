@@ -117,7 +117,7 @@ class MyClassRepo
 
     public function findSubjectByClass($class_id, $order_by = 'name')
     {
-        return $this->getSubject(['my_class_id'=> $class_id])->orderBy($order_by)->get();
+        return $this->getSubject(['my_class_id'=> $class_id])->wherein('school_id',QS::getSchoolId())->orderBy($order_by)->get();
     }
 
     public function findSubjectByTeacher($teacher_id, $order_by = 'name')
