@@ -63,6 +63,7 @@ class PaymentController extends Controller
     public function create()
     {
         $d['my_classes'] = $this->my_class->all();
+        $d['schools'] = Qs::getSchool();
         return view('pages.support_team.payments.create', $d);
     }
 
@@ -217,7 +218,7 @@ class PaymentController extends Controller
     public function edit($id)
     {
         $d['payment'] = $pay = $this->pay->find($id);
-
+        $d['schools'] = Qs::getSchool();
         return is_null($pay) ? Qs::goWithDanger('payments.index') : view('pages.support_team.payments.edit', $d);
     }
 
