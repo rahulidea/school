@@ -6,5 +6,5 @@ use Eloquent;
 
 class Setting extends Eloquent
 {
-    protected $fillable = ['type', 'description'];
+    protected $fillable = ['type', 'description', 'school_id'];
 }

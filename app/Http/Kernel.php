@@ -72,5 +72,6 @@ class Kernel extends HttpKernel
         'my_parent' => \App\Http\Middleware\Custom\MyParent::class,
         'check.subscription' => \App\Http\Middleware\CheckSubscriptionId::class,
         'check.school.id' => \App\Http\Middleware\CheckSchoolId::class,
+        'check.school.field' => \App\Http\Middleware\CheckSchoolFilled::class,
     ];
 }
