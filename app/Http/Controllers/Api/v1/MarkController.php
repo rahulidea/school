@@ -166,7 +166,9 @@ class MarkController extends APIController
             $this->exam->createRecord($d2);
         }
 
-        return redirect()->route('marks.manage', [$req->exam_id, $req->my_class_id, $req->section_id, $req->subject_id]);
+        // return redirect()->route('marks.manage', [$req->exam_id, $req->my_class_id, $req->section_id, $req->subject_id]);
+    
+        return $this->manage($req->exam_id, $req->my_class_id, $req->section_id, $req->subject_id);
     }
 
     public function manage($exam_id, $class_id, $section_id, $subject_id)
@@ -176,8 +178,9 @@ class MarkController extends APIController
         $d = ['exam_id' => $exam_id, 'my_class_id' => $class_id, 'section_id' => $section_id, 'subject_id' => $subject_id, 'year' => $this->year];
 
         $d['marks'] = $this->exam->getMark($d);
+        dd($d['marks']->toArray());
         if($d['marks']->count() < 1){
-            return $this->noStudentRecord();
+            return $this->respondWithError(__('msg.srnf'));
         }
 
         $d['m'] =  $d['marks']->first();
@@ -191,7 +194,10 @@ class MarkController extends APIController
         $d['selected'] = true;
         $d['class_type'] = $this->my_class->findTypeByClass($class_id);
 
-        return view('pages.support_team.marks.manage', $d);
+        $d['schools'] = Qs::getSchool();
+
+        // return view('pages.support_team.marks.manage', $d);
+        return $this->respond('success',$d);
     }
 
     public function update(Request $req, $exam_id, $class_id, $section_id, $subject_id)
@@ -227,7 +233,7 @@ class MarkController extends APIController
                 $d['tex'.$exam->term] = $d['t1'] = $d['t2'] = $d['t3'] = $d['t4'] = $d['tca'] = $d['exm'] = NULL;
             }
 
-         /*   if($exam->term < 3){
+            /*if($exam->term < 3){
                 $grade = $this->mark->getGrade($total, $class_type->id);
             }
 

@@ -24,6 +24,7 @@ class MarkSelector extends FormRequest
             'my_class_id' => 'required|exists:my_classes,id',
             'section_id' => 'required|exists:sections,id',
             'subject_id' => 'required|exists:subjects,id',
+            'school_id' => 'required|exists:schools,id',
         ];
     }
 
