@@ -13,22 +13,22 @@ class MyClassRepo
 
     public function all()
     {
-        return MyClass::wherein('school_id', QS::getHeaderSchoolId())->orderBy('name', 'asc')->with('class_type')->get();//->toSql();
+        return MyClass::wherein('school_id', QS::getSchoolId())->orderBy('name', 'asc')->with('class_type')->get();//->toSql();
     }
 
     public function getAllWithSection()
     {
-        return MyClass::wherein('school_id', QS::getHeaderSchoolId())->orderBy('name', 'asc')->with(['class_type','section'])->get();
+        return MyClass::wherein('school_id', QS::getSchoolId())->orderBy('name', 'asc')->with(['class_type','section'])->get();
     }
 
     public function getMC($data)
     {
-        return MyClass::wherein('school_id', QS::getHeaderSchoolId())->where($data)->with('section');
+        return MyClass::wherein('school_id', QS::getSchoolId())->where($data)->with('section');
     }
 
     public function find($id)
     {
-        return MyClass::wherein('school_id', QS::getHeaderSchoolId())->find($id);
+        return MyClass::wherein('school_id', QS::getSchoolId())->find($id);
     }
 
     public function create($data)
@@ -95,12 +95,12 @@ class MyClassRepo
 
     public function getAllSections()
     {
-        return Section::wherein('school_id',QS::getHeaderSchoolId())->orderBy('name', 'asc')->with(['my_class', 'teacher'])->get();
+        return Section::wherein('school_id',QS::getSchoolId())->orderBy('name', 'asc')->with(['my_class', 'teacher'])->get();
     }
 
     public function getClassSections($class_id)
     {
-        return Section::where(['my_class_id' => $class_id])->wherein('school_id',QS::getHeaderSchoolId())->orderBy('name', 'asc')->with(['my_class', 'teacher'])->get();
+        return Section::where(['my_class_id' => $class_id])->wherein('school_id',QS::getSchoolId())->orderBy('name', 'asc')->with(['my_class', 'teacher'])->get();
     }
 
     /************* Subject *******************/
@@ -117,7 +117,7 @@ class MyClassRepo
 
     public function findSubjectByClass($class_id, $order_by = 'name')
     {
-        return $this->getSubject(['my_class_id'=> $class_id])->orderBy($order_by)->get();
+        return $this->getSubject(['my_class_id'=> $class_id])->wherein('school_id',QS::getSchoolId())->orderBy($order_by)->get();
     }
 
     public function findSubjectByTeacher($teacher_id, $order_by = 'name')
@@ -147,7 +147,7 @@ class MyClassRepo
 
     public function getAllSubjects()
     {
-        return Subject::wherein('school_id',QS::getHeaderSchoolId())->orderBy('name', 'asc')->with(['my_class', 'teacher'])->get();
+        return Subject::wherein('school_id',QS::getSchoolId())->orderBy('name', 'asc')->with(['my_class', 'teacher'])->get();
     }
 
     public function allSubjectByClass($class_id, $order_by = 'name')

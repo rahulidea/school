@@ -66,7 +66,7 @@ class ExamRepo
 
     public function allGrades()
     {
-        return Grade::wherein('school_id',QS::getSchoolId())->orderBy('name')->get();
+        return Grade::wherein('school_id',QS::getSchoolId())->with('class_type')->orderBy('name')->get();
     }
 
     public function getGrade($data)

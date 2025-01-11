@@ -18,6 +18,7 @@ class ExamCreate extends FormRequest
         return [
             'name' => 'required|string',
             'term' => 'required|numeric',
+            'school_id' => 'required|numeric',
         ];
     }
 
