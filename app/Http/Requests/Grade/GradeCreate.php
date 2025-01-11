@@ -23,6 +23,7 @@ class GradeCreate extends FormRequest
             'name' => 'required|string',
             'mark_from' => 'required|numeric',
             'mark_to' => 'required|numeric',
+            // 'school_id' => 'required|numeric',
         ];
     }
 

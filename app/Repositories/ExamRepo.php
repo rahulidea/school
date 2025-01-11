@@ -12,16 +12,9 @@ use App\Helpers\Qs;
 class ExamRepo
 {
 
-    public function all($school_id=null)
+    public function all()
     {
-        if(is_null($school_id))
-        {
-            return Exam::wherein('school_id',QS::getSchoolId())->orderBy('name', 'asc')->orderBy('year', 'desc')->get();
-        }
-        else
-        {
-            return Exam::where('school_id',$school_id)->orderBy('name', 'asc')->orderBy('year', 'desc')->get();
-        }
+        return Exam::wherein('school_id',QS::getSchoolId())->orderBy('name', 'asc')->orderBy('year', 'desc')->get();
     }
 
     public function getExam($data)
@@ -73,7 +66,7 @@ class ExamRepo
 
     public function allGrades()
     {
-        return Grade::wherein('school_id',QS::getSchoolId())->orderBy('name')->get();
+        return Grade::wherein('school_id',QS::getSchoolId())->with('class_type')->orderBy('name')->get();
     }
 
     public function getGrade($data)
