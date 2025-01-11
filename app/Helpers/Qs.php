@@ -388,11 +388,13 @@ class Qs
         return response()->json($msg, $status_code, $headers);
     }
 
-    public static function getSchoolId($school_id="5"){
-        if(!is_null($school_id)){
-            return array($school_id);
+    public static function getSchoolId(){
+        $value = session('school_id', 0);
+        if($value != '0'){
+            $school_id = array($value);
+        }else{
+            $school_id = Qs::userIsSuperAdmin() ? School::where('organisation_id', Auth::user()->organisation_id)->pluck('id')->toArray() : (array) Auth::user()->school_id;
         }
-        $school_id = Qs::userIsSuperAdmin() ? School::where('organisation_id', Auth::user()->organisation_id)->pluck('id')->toArray() : (array) Auth::user()->school_id;
         return $school_id;
     }
 

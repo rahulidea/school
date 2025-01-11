@@ -16,7 +16,7 @@ class CheckSchoolId
      */
     public function handle(Request $request, Closure $next)
     {
-        if (!$request->hasHeader('school_id') || !$request->header('school_id')) {
+        if (!$request->filled('school_id')) {
             return response()->json([
                 'status' => false,
                 'error' => [
@@ -25,7 +25,7 @@ class CheckSchoolId
                 ]
             ], 400);
         }
-    
+        session(['school_id' => $request->input('school_id')]);
         return $next($request);
     }
 }

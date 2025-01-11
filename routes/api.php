@@ -203,8 +203,11 @@ Route::group(['namespace' => 'Api\V1', 'prefix' => 'v1', 'as' => 'v1.'], functio
         });
 
         /************** Manage Exams ************* */
-        Route::resource('manage_exams', 'ExamController');
-        Route::resource('grades', 'GradeController');
+        
+        Route::group(['middleware' => 'check.school.id'], function(){
+            Route::resource('manage_exams', 'ExamController');
+            Route::resource('grades', 'GradeController');
+        });
         
         /*************** Marks *****************/
         Route::group(['prefix' => 'marks'], function(){
