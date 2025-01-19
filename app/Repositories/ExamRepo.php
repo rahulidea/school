@@ -118,7 +118,7 @@ class ExamRepo
 
     public function getMark($data)
     {
-        return Mark::wherein('school_id',QS::getSchoolId())->where($data)->with('grade')->get();
+        return Mark::wherein('school_id',QS::getSchoolId())->where($data)->with(['grade','user.student_record'])->get();
     }
 
     /*********** Skills ***************/
@@ -130,6 +130,7 @@ class ExamRepo
 
     public function getSkillByClassType($class_type = NULL, $skill_type = NULL)
     {
+        
         return ($skill_type)
             ? $this->getSkill(['class_type' => $class_type, 'skill_type' => $skill_type])
             : $this->getSkill(['class_type' => $class_type]);

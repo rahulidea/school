@@ -63,7 +63,6 @@ class APIController extends Controller
             'message' => $msg,
             'data' => $data,
         ];
-
         return response()->json($response, $this->getStatusCode(), $headers);
     }
     

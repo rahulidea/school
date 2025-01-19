@@ -57,7 +57,7 @@ class MarkController extends APIController
     public function year_selected(Request $req, $student_id)
     {
         if(!$this->verifyStudentExamYear($student_id, $req->year)){
-            return $this->noStudentRecord();
+            return $this->respondWithError(__('msg.srnf'));
         }
 
         $student_id = Qs::hash($student_id);
@@ -67,9 +67,10 @@ class MarkController extends APIController
 
     public function show($student_id, $year)
     {
+
         /* Prevent Other Students/Parents from viewing Result of others */
         if(Auth::user()->id != $student_id && !Qs::userIsTeamSAT() && !Qs::userIsMyChild($student_id, Auth::user()->id)){
-            return redirect(route('dashboard'))->with('pop_error', __('msg.denied'));
+            return $this->respondWithError(__('msg.denied'));
         }
 
         if(Mk::examIsLocked() && !Qs::userIsTeamSA()){
@@ -81,7 +82,7 @@ class MarkController extends APIController
         }
 
         if(!$this->verifyStudentExamYear($student_id, $year)){
-            return $this->noStudentRecord();
+            return $this->respondWithError(__('msg.srnf'));
         }
 
         $wh = ['student_id' => $student_id, 'year' => $year ];
@@ -95,17 +96,19 @@ class MarkController extends APIController
         $d['year'] = $year;
         $d['student_id'] = $student_id;
         $d['skills'] = $this->exam->getSkillByClassType() ?: NULL;
-        //$d['ct'] = $d['class_type']->code;
-        //$d['mark_type'] = Qs::getMarkType($d['ct']);
-
-        return view('pages.support_team.marks.show.index', $d);
+        
+        $d['ct'] = $d['class_type']->code;
+        $d['mark_type'] = Qs::getMarkType($d['ct']);
+       
+        // return view('pages.support_team.marks.show.index', $d);
+        return $this->respond('success',$d);
     }
 
     public function print_view($student_id, $exam_id, $year)
     {
         /* Prevent Other Students/Parents from viewing Result of others */
         if(Auth::user()->id != $student_id && !Qs::userIsTeamSA() && !Qs::userIsMyChild($student_id, Auth::user()->id)){
-            return redirect(route('dashboard'))->with('pop_error', __('msg.denied'));
+            return $this->respondWithError(__('msg.denied'));
         }
 
         if(Mk::examIsLocked() && !Qs::userIsTeamSA()){
@@ -117,7 +120,7 @@ class MarkController extends APIController
         }
 
         if(!$this->verifyStudentExamYear($student_id, $year)){
-            return $this->noStudentRecord();
+            return $this->respondWithError(__('msg.srnf'));
         }
 
         $wh = ['student_id' => $student_id, 'exam_id' => $exam_id, 'year' => $year ];
@@ -142,8 +145,8 @@ class MarkController extends APIController
         });
 
         //$d['mark_type'] = Qs::getMarkType($ct);
-
-        return view('pages.support_team.marks.print.index', $d);
+        return $this->respond('success',$d);
+        // return view('pages.support_team.marks.print.index', $d);
     }
 
     public function selector(MarkSelector $req)
@@ -178,7 +181,7 @@ class MarkController extends APIController
         $d = ['exam_id' => $exam_id, 'my_class_id' => $class_id, 'section_id' => $section_id, 'subject_id' => $subject_id, 'year' => $this->year];
 
         $d['marks'] = $this->exam->getMark($d);
-        dd($d['marks']->toArray());
+
         if($d['marks']->count() < 1){
             return $this->respondWithError(__('msg.srnf'));
         }
@@ -276,7 +279,8 @@ class MarkController extends APIController
         }
         /*Exam Record End*/
 
-       return Qs::jsonUpdateOk();
+        return $this->respondMessage(__('msg.update_ok'));
+       
     }
 
     public function batch_fix()
@@ -288,7 +292,8 @@ class MarkController extends APIController
         $d['sections'] = $this->my_class->getAllSections();
         $d['selected'] = false;
 
-        return view('pages.support_team.marks.batch_fix', $d);
+        return $this->respond('success',$d);
+        // return view('pages.support_team.marks.batch_fix', $d);
     }
 
     public function batch_update(Request $req): \Illuminate\Http\JsonResponse
@@ -341,7 +346,7 @@ class MarkController extends APIController
 
         /** END Exam Record Update END **/
 
-        return Qs::jsonUpdateOk();
+        return $this->respondMessage(__('msg.update_ok'));
     }
 
     public function comment_update(Request $req, $exr_id)
@@ -349,7 +354,8 @@ class MarkController extends APIController
         $d = Qs::userIsTeamSA() ? $req->only(['t_comment', 'p_comment']) : $req->only(['t_comment']);
 
         $this->exam->updateRecord(['id' => $exr_id], $d);
-        return Qs::jsonUpdateOk();
+
+        return $this->respondMessage(__('msg.update_ok'));
     }
 
     public function skills_update(Request $req, $skill, $exr_id)
@@ -361,12 +367,13 @@ class MarkController extends APIController
         }
 
         $this->exam->updateRecord(['id' => $exr_id], $d);
-        return Qs::jsonUpdateOk();
+        return $this->respondMessage(__('msg.update_ok'));
     }
 
     public function bulk($class_id = NULL, $section_id = NULL)
     {
         $d['my_classes'] = $this->my_class->all();
+        $d['schools'] = Qs::getSchool();
         $d['selected'] = false;
 
         if($class_id && $section_id){
@@ -380,12 +387,13 @@ class MarkController extends APIController
             $d['section_id'] = $section_id;
         }
 
-        return view('pages.support_team.marks.bulk', $d);
+        return $this->respond('success',$d);
     }
 
     public function bulk_select(Request $req)
     {
-        return redirect()->route('marks.bulk', [$req->my_class_id, $req->section_id]);
+        // return redirect()->route('marks.bulk', [$req->my_class_id, $req->section_id]);
+        return $this->bulk($req->my_class_id, $req->section_id);
     }
 
     public function tabulation($exam_id = NULL, $class_id = NULL, $section_id = NULL)
@@ -404,7 +412,7 @@ class MarkController extends APIController
             $st_ids = $this->mark->getStudentIDs($wh);
 
             if(count($sub_ids) < 1 OR count($st_ids) < 1) {
-                return Qs::goWithDanger('marks.tabulation', __('msg.srnf'));
+                return $this->respondWithError(__('msg.srnf'));
             }
 
             $d['subjects'] = $this->my_class->getSubjectsByIDs($sub_ids);
@@ -426,12 +434,17 @@ class MarkController extends APIController
             //$d['class_type'] = $this->my_class->findTypeByClass($mc->id);
             //$d['ct'] = $ct = $d['class_type']->code;
         }
-
-        return view('pages.support_team.marks.tabulation.index', $d);
+        return $this->respond('success',$d);
+        // return view('pages.support_team.marks.tabulation.index', $d);
     }
 
-    public function print_tabulation($exam_id, $class_id, $section_id)
+    public function print_tabulation(Request $req)
     {
+
+        $exam_id = $req->exam_id;
+        $class_id=$req->class_id;
+        $section_id=$req->section_id;
+
         $this->year =  Qs::getSetting('current_session');
 
         $wh = ['my_class_id' => $class_id, 'section_id' => $section_id, 'exam_id' => $exam_id, 'year' => $this->year];
@@ -440,7 +453,7 @@ class MarkController extends APIController
         $st_ids = $this->mark->getStudentIDs($wh);
 
         if(count($sub_ids) < 1 OR count($st_ids) < 1) {
-            return Qs::goWithDanger('marks.tabulation', __('msg.srnf'));
+            return $this->respondWithError(__('msg.srnf'));
         }
 
         $d['subjects'] = $this->my_class->getSubjectsByIDs($sub_ids);
@@ -463,12 +476,13 @@ class MarkController extends APIController
         //$d['class_type'] = $this->my_class->findTypeByClass($mc->id);
         //$d['ct'] = $ct = $d['class_type']->code;
 
-        return view('pages.support_team.marks.tabulation.print', $d);
+        return $this->respond('success',$d);
+        // return view('pages.support_team.marks.tabulation.print', $d);
     }
 
     public function tabulation_select(Request $req)
     {
-        return redirect()->route('marks.tabulation', [$req->exam_id, $req->my_class_id, $req->section_id]);
+       return $this->tabulation($req->exam_id, $req->my_class_id, $req->section_id);
     }
 
     protected function verifyStudentExamYear($student_id, $year = null)
@@ -479,12 +493,14 @@ class MarkController extends APIController
         if(!$year){
             if($student_exists && $years->count() > 0)
             {
-                $d =['years' => $years, 'student_id' => Qs::hash($student_id)];
+                // $d['years']= $years;
+                // $d['student_id']=Qs::hash($student_id);
 
-                return view('pages.support_team.marks.select_year', $d);
+                return $this->respond('success',$years);
+                // return view('pages.support_team.marks.select_year', $d);
             }
 
-            return $this->noStudentRecord();
+            return $this->respondWithError(__('msg.srnf'));
         }
 
         return ($student_exists && $years->contains('year', $year)) ? true  : false;

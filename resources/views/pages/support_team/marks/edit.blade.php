@@ -18,7 +18,7 @@
                 <td>{{ $mk->user->name }} </td>
                 <td>{{ $mk->user->student_record->adm_no }}</td>
 
-{{--                CA AND EXAMS --}}
+                {{--  CA AND EXAMS --}}
                 <td><input title="1ST CA" min="1" max="20" class="text-center" name="t1_{{ $mk->id }}" value="{{ $mk->t1 }}" type="number"></td>
                 <td><input title="2ND CA" min="1" max="20" class="text-center" name="t2_{{ $mk->id }}" value="{{ $mk->t2 }}" type="number"></td>
                 <td><input title="EXAM" min="1" max="60" class="text-center" name="exm_{{ $mk->id }}" value="{{ $mk->exm }}" type="number"></td>

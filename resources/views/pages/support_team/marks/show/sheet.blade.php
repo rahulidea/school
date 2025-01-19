@@ -41,11 +41,11 @@
 
                 {{--3rd Term--}}
                 {{-- @if($ex->term == 3)
-                     <td>{{ $mk->tex3 ?: '-' }}</td>
-                     <td>{{ Mk::getSubTotalTerm($student_id, $sub->id, 1, $mk->my_class_id, $year) }}</td>
-                     <td>{{ Mk::getSubTotalTerm($student_id, $sub->id, 2, $mk->my_class_id, $year) }}</td>
-                     <td>{{ $mk->cum ?: '-' }}</td>
-                     <td>{{ $mk->cum_ave ?: '-' }}</td>
+                     <td>{{ $mk->tex3 ?: '-' }}-1</td>
+                     <td>{{ Mk::getSubTotalTerm($student_id, $sub->id, 1, $mk->my_class_id, $year) }}-2</td>
+                     <td>{{ Mk::getSubTotalTerm($student_id, $sub->id, 2, $mk->my_class_id, $year) }}-3</td>
+                     <td>{{ $mk->cum ?: '-' }}-4</td>
+                     <td>{{ $mk->cum_ave ?: '-' }}-5</td>
                  @endif--}}
 
                 {{--Grade, Subject Position & Remarks--}}
