@@ -210,7 +210,7 @@ Route::group(['namespace' => 'Api\V1', 'prefix' => 'v1', 'as' => 'v1.'], functio
         });
         
         /*************** Marks *****************/
-        Route::group(['prefix' => 'marks'], function(){
+        Route::group(['prefix' => 'marks', 'middleware' => 'check.school.id'], function(){
 
             // FOR teamSA
             Route::group(['middleware' => 'teamSA'], function(){
@@ -218,7 +218,7 @@ Route::group(['namespace' => 'Api\V1', 'prefix' => 'v1', 'as' => 'v1.'], functio
                 Route::put('batch_update', 'MarkController@batch_update')->name('marks.batch_update');
                 Route::get('tabulation/{exam?}/{class?}/{sec_id?}', 'MarkController@tabulation')->name('marks.tabulation');
                 Route::post('tabulation', 'MarkController@tabulation_select')->name('marks.tabulation_select');
-                Route::get('tabulation/print/{exam}/{class}/{sec_id}', 'MarkController@print_tabulation')->name('marks.print_tabulation');
+                Route::post('tabulation/print', 'MarkController@print_tabulation')->name('marks.print_tabulation');
             });
 
             // FOR teamSAT

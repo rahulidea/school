@@ -16,7 +16,7 @@
                                 <select data-placeholder="Select" name="af[]" id="af" class="form-control select">
                                     <option value=""></option>
                                     @for($i=1; $i<=5; $i++)
-                                        <option {{ $exr->af && explode(',', $exr->af)[$loop->index] == $i ? 'selected' : '' }} value="{{ $i }}">{{ $i }}</option>
+                                        <option {{ $exr->af && explode('_',explode(',', $exr->af)[$loop->index])[1] == $i ? 'selected' : '' }} value="{{ $i }}">{{ $i }}</option>
                                     @endfor
                                 </select>
 
@@ -24,7 +24,7 @@
                         </div>
                     @endforeach
 
-
+                    
 
                     <div class="text-right">
                         <button type="submit" class="btn btn-primary">Submit form <i class="icon-paperplane ml-2"></i></button>
@@ -51,7 +51,7 @@
                                 <select data-placeholder="Select" name="ps[]" id="ps" class="form-control select">
                                     <option value=""></option>
                                     @for($i=1; $i<=5; $i++)
-                                        <option {{ $exr->ps && explode(',', $exr->ps)[$loop->index] == $i ? 'selected' : '' }} value="{{ $i }}">{{ $i }}</option>
+                                        <option {{ $exr->ps && explode('_', explode(',', $exr->ps)[$loop->index])[1] == $i ? 'selected' : '' }} value="{{ $i }}">{{ $i }}</option>
                                     @endfor
                                 </select>
                             </div>
