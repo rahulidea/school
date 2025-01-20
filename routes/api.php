@@ -240,6 +240,22 @@ Route::group(['namespace' => 'Api\V1', 'prefix' => 'v1', 'as' => 'v1.'], functio
 
         });
 
+        /*************** Payments *****************/
+        Route::group(['prefix' => 'manage_payments', 'middleware' => 'check.school.id'], function(){
+
+            Route::resource('payments', 'PaymentController');
+            Route::post('payments/store', 'PaymentController@store')->name('payments.store');
+
+            Route::get('manage/{class_id?}', 'PaymentController@manage')->name('payments.manage');
+            Route::get('invoice/{id}/{year?}', 'PaymentController@invoice')->name('payments.invoice');
+            Route::get('receipts/{id}', 'PaymentController@receipts')->name('payments.receipts');
+            Route::get('pdf_receipts/{id}', 'PaymentController@pdf_receipts')->name('payments.pdf_receipts');
+            Route::post('select_year', 'PaymentController@select_year')->name('payments.select_year');
+            Route::post('select_class', 'PaymentController@select_class')->name('payments.select_class');
+            Route::delete('reset_record/{id}', 'PaymentController@reset_record')->name('payments.reset_record');
+            Route::post('pay_now/{id}', 'PaymentController@pay_now')->name('payments.pay_now');
+        });
+
 
         //Susbcription Table
         // 1 - Free // 2 - Gold // 3 - Diamond    

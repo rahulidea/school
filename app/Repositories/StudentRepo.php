@@ -50,9 +50,14 @@ class StudentRepo {
         return StudentRecord::where($where)->update($data);
     }
 
-    public function getRecord(array $data)
+    public function getRecordWithStudentRecord(array $data)
     {
         return $this->activeStudents()->where($data)->with('user.student_record');
+    }
+
+    public function getRecord(array $data)
+    {
+        return $this->activeStudents()->where($data)->with('user');
     }
 
     public function getRecordWithClass(array $data)
