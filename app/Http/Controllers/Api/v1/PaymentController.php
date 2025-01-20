@@ -166,12 +166,10 @@ class PaymentController extends APIController
         if($class_id){
             $d['students'] = $st = $this->student->getRecord(['my_class_id' => $class_id])
             ->get()
-            ->sortBy('user.name')->flatMap(function($s){
-                $year = Pay::getYears($s->user_id);
-                
-                $data["s"] = $s;
-                $data["y"]=$year;
-               return $data;
+            ->sortBy('user.name')->map(function($s){                
+                 $year = Pay::getYears($s->user_id);
+                 $s['y'] = $year->values()->toArray();
+                 return $s;
             });
             
             
