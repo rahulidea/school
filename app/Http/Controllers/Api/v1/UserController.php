@@ -3,19 +3,20 @@
 namespace App\Http\Controllers\Api\v1;
 
 
-use App\Http\Controllers\Api\APIController;
-use Illuminate\Http\Request;
 use Validator;
 use App\Helpers\Qs;
+use App\Models\Setting;
+use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use App\Repositories\UserRepo;
+use App\Repositories\MyClassRepo;
 use App\Http\Requests\UserRequest;
 use App\Repositories\LocationRepo;
-use App\Repositories\MyClassRepo;
-use App\Repositories\UserRepo;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
+use App\Http\Controllers\Api\APIController;
 
 class UserController extends APIController
 {
@@ -229,6 +230,18 @@ class UserController extends APIController
     {
         $subjects = $this->my_class->findSubjectByTeacher($user->id);
         return ($subjects->count() > 0) ? true : false;
+    }
+
+    public function getUser(Request $request){    
+        $user = $request->user();
+        $user->is_setting_done = true;
+        $schoolSetting = Setting::where('school_id',$user->school_id)->whereIn('type', $request->check_fields)->get();
+        foreach ($schoolSetting as $setting) {
+            if (empty($setting->description)) {
+                $user->is_setting_done = false;
+            }
+        }
+        return $user;
     }
 
 }

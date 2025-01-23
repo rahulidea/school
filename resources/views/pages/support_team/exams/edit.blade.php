@@ -13,6 +13,17 @@
                 <div class="col-md-6">
                     <form method="post" action="{{ route('exams.update', $ex->id) }}">
                         @csrf @method('PUT')
+                        <div class="form-group  row">
+                            <label class="col-lg-3 col-form-label font-weight-semibold" for="user_type"> Select School: <span class="text-danger">*</span></label>
+                            <div class="col-lg-9">
+                                <select required data-placeholder="Select User" class="form-control select" name="school_id" id="school_id">
+                                @foreach($schools as $school)
+                                    <option {{ (old('school_id', $ex->school_id) == $school->id) ? 'selected' : '' }} value="{{ $school->id }}">{{ $school->name }}</option>
+                                @endforeach
+                                </select>
+                            </div>
+                        </div>
+
                         <div class="form-group row">
                             <label class="col-lg-3 col-form-label font-weight-semibold">Name <span class="text-danger">*</span></label>
                             <div class="col-lg-9">

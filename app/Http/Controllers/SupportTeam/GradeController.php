@@ -7,6 +7,7 @@ use App\Http\Requests\Grade\GradeUpdate;
 use App\Repositories\ExamRepo;
 use App\Http\Controllers\Controller;
 use App\Repositories\MyClassRepo;
+use App\Helpers\Qs;
 
 class GradeController extends Controller
 {
@@ -25,6 +26,7 @@ class GradeController extends Controller
     {
          $d['grades'] = $this->exam->allGrades();
          $d['class_types'] = $this->my_class->getTypes();
+         $d['schools'] = Qs::getSchool();
         return view('pages.support_team.grades.index', $d);
     }
 
@@ -40,6 +42,7 @@ class GradeController extends Controller
     {
         $d['class_types'] = $this->my_class->getTypes();
         $d['gr'] = $this->exam->findGrade($id);
+        $d['schools'] = Qs::getSchool();
         return view('pages.support_team.grades.edit', $d);
     }
 

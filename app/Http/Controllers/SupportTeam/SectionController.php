@@ -24,6 +24,7 @@ class SectionController extends Controller
 
     public function index()
     {
+        $d['schools'] = Qs::getSchool();
         $d['my_classes'] = $this->my_class->all();
         $d['sections'] = $this->my_class->getAllSections();
         $d['teachers'] = $this->user->getUserByType('teacher');
@@ -41,6 +42,7 @@ class SectionController extends Controller
 
     public function edit($id)
     {
+        $d['schools'] = Qs::getSchool();
         $d['s'] = $s = $this->my_class->findSection($id);
         $d['teachers'] = $this->user->getUserByType('teacher');
 
@@ -49,7 +51,7 @@ class SectionController extends Controller
 
     public function update(SectionUpdate $req, $id)
     {
-        $data = $req->only(['name', 'teacher_id']);
+        $data = $req->only(['name', 'teacher_id', 'school_id']);
         $this->my_class->updateSection($id, $data);
 
         return Qs::jsonUpdateOk();

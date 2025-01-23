@@ -24,6 +24,7 @@ class SubjectController extends Controller
 
     public function index()
     {
+        $d['schools'] = Qs::getSchool();
         $d['my_classes'] = $this->my_class->all();
         $d['teachers'] = $this->user->getUserByType('teacher');
         $d['subjects'] = $this->my_class->getAllSubjects();
@@ -41,6 +42,7 @@ class SubjectController extends Controller
 
     public function edit($id)
     {
+        $d['schools'] = Qs::getSchool();
         $d['s'] = $sub = $this->my_class->findSubject($id);
         $d['my_classes'] = $this->my_class->all();
         $d['teachers'] = $this->user->getUserByType('teacher');

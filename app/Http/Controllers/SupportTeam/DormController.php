@@ -22,13 +22,14 @@ class DormController extends Controller
 
     public function index()
     {
+        $d['schools'] = Qs::getSchool();
         $d['dorms'] = $this->dorm->getAll();
         return view('pages.support_team.dorms.index', $d);
     }
 
     public function store(DormCreate $req)
     {
-        $data = $req->only(['name', 'description']);
+        $data = $req->only(['name', 'description', 'school_id']);
         $this->dorm->create($data);
 
         return Qs::jsonStoreOk();
@@ -37,6 +38,7 @@ class DormController extends Controller
     public function edit($id)
     {
         $d['dorm'] = $dorm = $this->dorm->find($id);
+        $d['schools'] = Qs::getSchool();
 
         return !is_null($dorm) ? view('pages.support_team.dorms.edit', $d)
             : Qs::goWithDanger('dorms.index');
@@ -44,7 +46,7 @@ class DormController extends Controller
 
     public function update(DormUpdate $req, $id)
     {
-        $data = $req->only(['name', 'description']);
+        $data = $req->only(['name', 'description', 'school_id']);
         $this->dorm->update($id, $data);
 
         return Qs::jsonUpdateOk();

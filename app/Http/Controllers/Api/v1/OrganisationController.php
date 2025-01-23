@@ -129,10 +129,13 @@ class OrganisationController extends APIController
                 'expiry_date' => $request->filled('expiry_date') ? $request->expiry_date : Carbon::now()->addYear()->toDateString(),
             ]);
             $org_data = $this->store_org($org_request);
+            $school_data["organisation_id"] = $org_data->id;  
+        }else{
+            $school_data["organisation_id"] = $data['organisation_id'];  
         }
        
         $school_data["name"] = $data['school_name'];
-        $school_data["organisation_id"] = $org_data->id;        
+              
         
         $school = $this->org->createSchool($school_data);
 

@@ -25,6 +25,7 @@ class MyClassController extends Controller
 
     public function index()
     {
+        $d['schools'] = Qs::getSchool();
         $d['my_classes'] = $this->my_class->all();
         $d['class_types'] = $this->my_class->getTypes();
 
@@ -34,8 +35,6 @@ class MyClassController extends Controller
     public function store(ClassCreate $req)
     {
         $data = $req->all();
-        $data['school_id'] = QS::getSchoolId()[0];
-
         $mc = $this->my_class->create($data);
 
         // Create Default Section
@@ -53,13 +52,14 @@ class MyClassController extends Controller
     public function edit($id)
     {
         $d['c'] = $c = $this->my_class->find($id);
+        $d['schools'] = Qs::getSchool();
 
         return is_null($c) ? Qs::goWithDanger('classes.index') : view('pages.support_team.classes.edit', $d) ;
     }
 
     public function update(ClassUpdate $req, $id)
     {
-        $data = $req->only(['name']);
+        $data = $req->only(['name', 'school_id']);
         $this->my_class->update($id, $data);
 
         return Qs::jsonUpdateOk();

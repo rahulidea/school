@@ -21,13 +21,14 @@ class ExamController extends Controller
 
     public function index()
     {
+        $d['schools'] = Qs::getSchool();
         $d['exams'] = $this->exam->all();
         return view('pages.support_team.exams.index', $d);
     }
 
     public function store(ExamCreate $req)
     {
-        $data = $req->only(['name', 'term']);
+        $data = $req->only(['name', 'term', 'school_id']);
         $data['year'] = Qs::getSetting('current_session');
 
         $this->exam->create($data);
@@ -36,13 +37,14 @@ class ExamController extends Controller
 
     public function edit($id)
     {
+        $d['schools'] = Qs::getSchool();
         $d['ex'] = $this->exam->find($id);
         return view('pages.support_team.exams.edit', $d);
     }
 
     public function update(ExamUpdate $req, $id)
     {
-        $data = $req->only(['name', 'term']);
+        $data = $req->only(['name', 'term', 'school_id']);
 
         $this->exam->update($id, $data);
         return back()->with('flash_success', __('msg.update_ok'));

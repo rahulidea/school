@@ -55,9 +55,7 @@ Route::group(['namespace' => 'Api\V1', 'prefix' => 'v1', 'as' => 'v1.'], functio
     });
 
     Route::group(['middleware' => ['auth:api']], function () {
-        Route::get('/user', function(Request $request) {
-            return $request->user();
-        });
+        Route::post('/user', [UserController::class, 'getUser']);
     });
 
     // , 'check.school.id'

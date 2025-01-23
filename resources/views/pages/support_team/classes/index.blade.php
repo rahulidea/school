@@ -74,6 +74,18 @@
                         <div class="col-md-6">
                             <form class="ajax-store" method="post" action="{{ route('classes.store') }}">
                                 @csrf
+                                
+                                <div class="form-group  row">
+                                    <label class="col-lg-3 col-form-label font-weight-semibold" for="user_type"> Select School: <span class="text-danger">*</span></label>
+                                    <div class="col-lg-9">
+                                        <select required data-placeholder="Select User" class="form-control select" name="school_id" id="school_id">
+                                        @foreach($schools as $ut)
+                                            <option value="{{ $ut->id }}">{{ $ut->name }}</option>
+                                        @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                
                                 <div class="form-group row">
                                     <label class="col-lg-3 col-form-label font-weight-semibold">Name <span class="text-danger">*</span></label>
                                     <div class="col-lg-9">
