@@ -17,7 +17,7 @@ class PaymentRepo
 
     public function getPayment($data)
     {
-        return Payment::where($data)->with('my_class');
+        return Payment::wherein('school_id', QS::getSchoolId())->where($data)->with('my_class');
     }
 
     public function getGeneralPayment($data)
@@ -32,7 +32,7 @@ class PaymentRepo
 
     public function getPaymentYears()
     {
-        return Payment::select('year')->distinct()->get();
+        return Payment::wherein('school_id', QS::getSchoolId())->select('year')->distinct()->get();
     }
 
     public function find($id)

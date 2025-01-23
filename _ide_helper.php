@@ -4,7 +4,7 @@
 
 /**
  * A helper file for Laravel, to provide autocomplete information to your IDE
- * Generated for Laravel 8.83.27.
+ * Generated for Laravel 8.83.29.
  *
  * This file should not be included in your code, only analyzed by your IDE!
  *
@@ -712,7 +712,7 @@
          * @param int $code
          * @param string $message
          * @param array $headers
-         * @return \Illuminate\Foundation\never 
+         * @return never 
          * @throws \Symfony\Component\HttpKernel\Exception\HttpException
          * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
          * @static 
@@ -1173,7 +1173,7 @@
          * Resolve all of the bindings for a given tag.
          *
          * @param string $tag
-         * @return \Illuminate\Container\iterable 
+         * @return iterable 
          * @static 
          */ 
         public static function tagged($tag)
@@ -3503,10 +3503,10 @@
                     /**
          * Obtains multiple cache items by their unique keys.
          *
-         * @return \Illuminate\Cache\iterable 
-         * @param \Psr\SimpleCache\iterable $keys A list of keys that can obtained in a single operation.
+         * @return iterable 
+         * @param iterable $keys A list of keys that can obtained in a single operation.
          * @param mixed $default Default value to return for keys that do not exist.
-         * @return \Psr\SimpleCache\iterable A list of key => value pairs. Cache keys that do not exist or are stale will have $default as value.
+         * @return iterable A list of key => value pairs. Cache keys that do not exist or are stale will have $default as value.
          * @throws \Psr\SimpleCache\InvalidArgumentException
          *   MUST be thrown if $keys is neither an array nor a Traversable,
          *   or if any of the $keys are not a legal value.
@@ -3580,7 +3580,7 @@
          * Persists a set of key => value pairs in the cache, with an optional TTL.
          *
          * @return bool 
-         * @param \Psr\SimpleCache\iterable $values A list of key => value pairs for a multiple-set operation.
+         * @param iterable $values A list of key => value pairs for a multiple-set operation.
          * @param null|int|\DateInterval $ttl Optional. The TTL value of this item. If no value is sent and
          *                                       the driver supports TTL then the library may set a default value
          *                                       for it or let the driver take care of that.
@@ -3719,7 +3719,7 @@
          * Deletes multiple cache items in a single operation.
          *
          * @return bool 
-         * @param \Psr\SimpleCache\iterable $keys A list of string-based keys to be deleted.
+         * @param iterable $keys A list of string-based keys to be deleted.
          * @return bool True if the items were successfully removed. False if there was an error.
          * @throws \Psr\SimpleCache\InvalidArgumentException
          *   MUST be thrown if $keys is neither an array nor a Traversable,
@@ -6587,7 +6587,7 @@
                     /**
          * Determine if all of the given abilities should be granted for the current user.
          *
-         * @param \Illuminate\Auth\Access\iterable|string $abilities
+         * @param iterable|string $abilities
          * @param array|mixed $arguments
          * @return bool 
          * @static 
@@ -6600,7 +6600,7 @@
                     /**
          * Determine if any one of the given abilities should be granted for the current user.
          *
-         * @param \Illuminate\Auth\Access\iterable|string $abilities
+         * @param iterable|string $abilities
          * @param array|mixed $arguments
          * @return bool 
          * @static 
@@ -6613,7 +6613,7 @@
                     /**
          * Determine if all of the given abilities should be denied for the current user.
          *
-         * @param \Illuminate\Auth\Access\iterable|string $abilities
+         * @param iterable|string $abilities
          * @param array|mixed $arguments
          * @return bool 
          * @static 
@@ -9596,6 +9596,7 @@
          * @param array $server The server parameters ($_SERVER)
          * @param string|resource|null $content The raw body data
          * @return static 
+         * @throws BadRequestException When the URI is invalid
          * @static 
          */ 
         public static function create($uri, $method = 'GET', $parameters = [], $cookies = [], $files = [], $server = [], $content = null)
@@ -9765,7 +9766,7 @@
          * 
          *
          * @internal 
-         * @param \Symfony\Component\HttpFoundation\callable():  SessionInterface $factory
+         * @param callable():  SessionInterface $factory
          * @static 
          */ 
         public static function setSessionFactory($factory)
@@ -15523,12 +15524,12 @@
      
 }
 
-        namespace Barryvdh\DomPDF { 
+        namespace Barryvdh\DomPDF\Facade { 
             /**
      * 
      *
      */ 
-        class Facade {
+        class Pdf {
                     /**
          * Get the DomPDF instance
          *
@@ -15543,9 +15544,7 @@
                     /**
          * Set the paper size (default A4)
          *
-         * @param string $paper
-         * @param string $orientation
-         * @return \Barryvdh\DomPDF\PDF 
+         * @param string|array<string> $paper
          * @static 
          */ 
         public static function setPaper($paper, $orientation = 'portrait')
@@ -15556,8 +15555,6 @@
                     /**
          * Show or hide warnings
          *
-         * @param bool $warnings
-         * @return \Barryvdh\DomPDF\PDF 
          * @static 
          */ 
         public static function setWarnings($warnings)
@@ -15568,9 +15565,7 @@
                     /**
          * Load a HTML string
          *
-         * @param string $string
-         * @param string $encoding Not used yet
-         * @return static 
+         * @param string|null $encoding Not used yet
          * @static 
          */ 
         public static function loadHTML($string, $encoding = null)
@@ -15581,8 +15576,6 @@
                     /**
          * Load a HTML file
          *
-         * @param string $file
-         * @return static 
          * @static 
          */ 
         public static function loadFile($file)
@@ -15593,7 +15586,7 @@
                     /**
          * Add metadata info
          *
-         * @param array $info
+         * @param array<string, string> $info
          * @return static 
          * @static 
          */ 
@@ -15605,11 +15598,9 @@
                     /**
          * Load a View and convert to HTML
          *
-         * @param string $view
-         * @param array $data
-         * @param array $mergeData
-         * @param string $encoding Not used yet
-         * @return static 
+         * @param array<string, mixed> $data
+         * @param array<string, mixed> $mergeData
+         * @param string|null $encoding Not used yet
          * @static 
          */ 
         public static function loadView($view, $data = [], $mergeData = [], $encoding = null)
@@ -15620,8 +15611,7 @@
                     /**
          * Set/Change an option in DomPdf
          *
-         * @param array $options
-         * @return static 
+         * @param array<string, mixed> $options
          * @static 
          */ 
         public static function setOptions($options)
@@ -15631,20 +15621,24 @@
         }
                     /**
          * Output the PDF as a string.
+         * 
+         * The options parameter controls the output. Accepted options are:
+         * 
+         * 'compress' = > 1 or 0 - apply content stream compression, this is
+         *    on (1) by default
          *
+         * @param array<string, int> $options
          * @return string The rendered PDF as string
          * @static 
          */ 
-        public static function output()
+        public static function output($options = [])
         {
                         /** @var \Barryvdh\DomPDF\PDF $instance */
-                        return $instance->output();
+                        return $instance->output($options);
         }
                     /**
          * Save the PDF to a file
          *
-         * @param $filename
-         * @return static 
          * @static 
          */ 
         public static function save($filename)
@@ -15655,8 +15649,6 @@
                     /**
          * Make the PDF downloadable by the user
          *
-         * @param string $filename
-         * @return \Illuminate\Http\Response 
          * @static 
          */ 
         public static function download($filename = 'document.pdf')
@@ -15667,8 +15659,6 @@
                     /**
          * Return a response with the PDF to show in the browser
          *
-         * @param string $filename
-         * @return \Illuminate\Http\Response 
          * @static 
          */ 
         public static function stream($filename = 'document.pdf')
@@ -15677,14 +15667,25 @@
                         return $instance->stream($filename);
         }
                     /**
-         * 
+         * Render the PDF
          *
          * @static 
          */ 
-        public static function setEncryption($password)
+        public static function render()
         {
                         /** @var \Barryvdh\DomPDF\PDF $instance */
-                        return $instance->setEncryption($password);
+                        return $instance->render();
+        }
+                    /**
+         * 
+         *
+         * @param array<string> $pc
+         * @static 
+         */ 
+        public static function setEncryption($password, $ownerpassword = '', $pc = [])
+        {
+                        /** @var \Barryvdh\DomPDF\PDF $instance */
+                        return $instance->setEncryption($password, $ownerpassword, $pc);
         }
          
     }
@@ -15986,7 +15987,7 @@
                     /**
          * Returns an array of all data collectors
          *
-         * @return \DebugBar\array[DataCollectorInterface] 
+         * @return array[DataCollectorInterface] 
          * @static 
          */ 
         public static function getCollectors()
@@ -20064,7 +20065,7 @@ namespace  {
                 /**
              * Die and dump the current SQL and bindings.
              *
-             * @return \Illuminate\Database\Query\never 
+             * @return never 
              * @static 
              */ 
             public static function dd()
@@ -20158,7 +20159,7 @@ namespace  {
             class URL extends \Illuminate\Support\Facades\URL {}
             class Validator extends \Illuminate\Support\Facades\Validator {}
             class View extends \Illuminate\Support\Facades\View {}
-            class PDF extends \Barryvdh\DomPDF\Facade {}
+            class PDF extends \Barryvdh\DomPDF\Facade\Pdf {}
             class Qs extends \App\Helpers\Qs {}
             class Mk extends \App\Helpers\Mk {}
             class Pay extends \App\Helpers\Pay {}

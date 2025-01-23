@@ -102,6 +102,7 @@ class PaymentController extends Controller
 
     public function pdf_receipts($pr_id)
     {
+       
         if(!$pr_id) {return Qs::goWithDanger();}
 
         try {
@@ -109,6 +110,7 @@ class PaymentController extends Controller
         } catch (ModelNotFoundException $ex) {
             return back()->with('flash_danger', __('msg.rnf'));
         }
+        
         $d['receipts'] = $pr->receipt;
         $d['payment'] = $pr->payment;
         $d['sr'] = $sr =$this->student->findByUserId($pr->student_id)->first();
@@ -120,7 +122,7 @@ class PaymentController extends Controller
 
         return PDF::loadView('pages.support_team.payments.receipt', $d)->download($pdf_name);
 
-        //return $this->downloadReceipt('pages.support_team.payments.receipt', $d, $pdf_name);
+        // return $this->downloadReceipt('pages.support_team.payments.receipt', $d, $pdf_name);
     }
 
     protected function downloadReceipt($page, $data, $name = NULL){
