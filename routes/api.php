@@ -243,8 +243,9 @@ Route::group(['namespace' => 'Api\V1', 'prefix' => 'v1', 'as' => 'v1.'], functio
         /*************** Payments *****************/
         Route::group(['prefix' => 'manage_payments', 'middleware' => 'check.school.id'], function(){
 
-        //    Route::resource('payments', 'PaymentController');
-            Route::post('payments/store', 'PaymentController@store')->name('payments.store');
+           Route::resource('payments', 'PaymentController');
+           Route::post('payments/store', 'PaymentController@store')->name('payments.store');
+           Route::post('payments/show', 'PaymentController@show')->name('payments.store');
 
             Route::get('manage/{class_id?}', 'PaymentController@manage')->name('payments.manage');
             Route::get('invoice/{id}/{year?}', 'PaymentController@invoice')->name('payments.invoice');

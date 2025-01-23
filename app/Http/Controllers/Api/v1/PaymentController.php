@@ -36,14 +36,18 @@ class PaymentController extends APIController
     {
         $d['selected'] = false;
         $d['years'] = $this->pay->getPaymentYears();
-
+        $d['schools'] = Qs::getSchool();
+        
         return $this->respond('success',$d);
     }
 
-    public function show($year)
+    public function show(Request $req)
     {
-        $d['payments'] = $p = $this->pay->getPayment(['year' => $year])->get();
-
+        if($req->class_id){
+            $d['payments'] = $p = $this->pay->getPayment(['year' => $req->year, 'my_class_id' => $req->class_id])->get();
+        }else{
+            $d['payments'] = $p = $this->pay->getPayment(['year' => $req->year])->get();
+        }
         if(($p->count() < 1)){
             return Qs::goWithDanger('payments.index');
         }
@@ -51,7 +55,8 @@ class PaymentController extends APIController
         $d['selected'] = true;
         $d['my_classes'] = $this->my_class->all();
         $d['years'] = $this->pay->getPaymentYears();
-        $d['year'] = $year;
+        $d['year'] = $req->year;
+        $d['schools'] = Qs::getSchool();
 
         return $this->respond('success',$d);
 
@@ -59,7 +64,8 @@ class PaymentController extends APIController
 
     public function select_year(Request $req)
     {
-        return Qs::goToRoute(['payments.show', $req->year]);
+        return $this->respond('success',$req->year);
+        // return Qs::goToRoute(['payments.show', $req->year]);
     }
 
     public function create(Request $req)
@@ -80,7 +86,8 @@ class PaymentController extends APIController
         $d['uncleared'] = $pr->where('paid', 0);
         $d['cleared'] = $pr->where('paid', 1);
 
-        return view('pages.support_team.payments.invoice', $d);
+        return $this->respond('success',$d);
+        // return view('pages.support_team.payments.invoice', $d);
     }
 
     public function receipts($pr_id)
@@ -99,11 +106,13 @@ class PaymentController extends APIController
             return [$s->type => $s->description];
         });
 
-        return view('pages.support_team.payments.receipt', $d);
+        return $this->respond('success',$d);
+        // return view('pages.support_team.payments.receipt', $d);
     }
 
     public function pdf_receipts($pr_id)
     {
+        
         if(!$pr_id) {return Qs::goWithDanger();}
 
         try {
@@ -155,7 +164,7 @@ class PaymentController extends APIController
         $d2['year'] = $this->year;
 
         $this->pay->createReceipt($d2);
-        return Qs::jsonUpdateOk();
+        return $this->respondMessage(__('msg.update_ok'));
     }
 
     public function manage($class_id = NULL)
@@ -168,14 +177,15 @@ class PaymentController extends APIController
             ->get()
             ->sortBy('user.name')->map(function($s){                
                  $year = Pay::getYears($s->user_id);
-                 $s['y'] = $year->values()->toArray();
+                 $s['years'] = $year->values()->toArray();
                  return $s;
             });
             
             
             // $d['students'] = $st = $this->student->getRecord(['my_class_id' => $class_id])->get()->sortBy('user.name');
             if($st->count() < 1){
-                return Qs::goWithDanger('payments.manage');
+                return $this->respondWithError(__('msg.rnf'));
+                // return Qs::goWithDanger('payments.manage');
             }
             $d['selected'] = true;
             $d['my_class_id'] = $class_id;
@@ -210,8 +220,8 @@ class PaymentController extends APIController
                 }
             }
         }
-
-        return Qs::goToRoute(['payments.manage', $class_id]);
+        return $this->respond('success',$class_id);
+        // return Qs::goToRoute(['payments.manage', $class_id]);
     }
 
     public function store(PaymentCreate $req)
@@ -239,7 +249,7 @@ class PaymentController extends APIController
         $data = $req->all();
         $this->pay->update($id, $data);
 
-        return Qs::jsonUpdateOk();
+        return $this->respondMessage(__('msg.update_ok'));
     }
 
     public function destroy($id)
@@ -247,7 +257,6 @@ class PaymentController extends APIController
         $this->pay->find($id)->delete();
 
         return $this->respondMessage(__('msg.del_ok'));
-        return Qs::deleteOk('payments.index');
     }
 
     public function reset_record($id)
@@ -256,6 +265,7 @@ class PaymentController extends APIController
         $this->pay->updateRecord($id, $pr);
         $this->pay->deleteReceipts(['pr_id' => $id]);
 
-        return back()->with('flash_success', __('msg.update_ok'));
+
+        return $this->respondMessage(__('msg.update_ok'));
     }
 }
