@@ -235,13 +235,48 @@ class UserController extends APIController
     public function getUser(Request $request){    
         $user = $request->user();
         $user->is_setting_done = true;
-        $schoolSetting = Setting::where('school_id',$user->school_id)->whereIn('type', $request->check_fields)->get();
-        foreach ($schoolSetting as $setting) {
-            if (empty($setting->description)) {
-                $user->is_setting_done = false;
-            }
+        
+        $check_fields = array("system_name", "phone", "address");
+        if($request->check_fields){
+            $check_fields = $request->check_fields;
         }
+        
+        // $schoolSetting = Setting::where('school_id',$user->school_id)->whereIn('type', $check_fields)->get();
+        // foreach ($schoolSetting as $setting) {
+        //     if (empty($setting->description)) {
+        //         $user->is_setting_done = false;
+        //     }
+        // }
+
+        $user->is_setting_done = $this->checkSettingIsDone($check_fields,$user->school_id);
+
         return $user;
     }
+
+    public function checkSetting(Request $request){
+        $user = $request->user();
+        
+        $check_fields = array("system_name", "phone", "address");
+        if($request->check_fields){
+            $check_fields = $request->check_fields;
+        }
+
+        $data['is_setting_done'] = $this->checkSettingIsDone($check_fields,$user->school_id);
+
+        return $this->respond("Success", $data);
+    }
+
+    public function checkSettingIsDone($check_fields,$school_id){    
+        $isSettingDone = true;
+        $schoolSetting = Setting::where('school_id',$school_id)->whereIn('type', $check_fields)->get();
+        foreach ($schoolSetting as $setting) {
+            if (empty($setting->description)) {
+                $isSettingDone = false;
+            }
+        }
+        return $isSettingDone;
+    }
+
+    
 
 }

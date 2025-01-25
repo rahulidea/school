@@ -56,6 +56,7 @@ Route::group(['namespace' => 'Api\V1', 'prefix' => 'v1', 'as' => 'v1.'], functio
 
     Route::group(['middleware' => ['auth:api']], function () {
         Route::post('/user', [UserController::class, 'getUser']);
+        Route::post('/checkSetting', [UserController::class, 'checkSetting']);
     });
 
     // , 'check.school.id'

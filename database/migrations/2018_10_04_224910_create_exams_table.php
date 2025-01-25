@@ -23,7 +23,7 @@ class CreateExamsTable extends Migration
         });
 
         Schema::table('exams', function (Blueprint $table) {
-            $table->unique(['term', 'year']);
+            $table->unique(['term', 'year','school_id']);
         });
     }
 
