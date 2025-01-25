@@ -84,7 +84,7 @@ class PaymentController extends APIController
         $d['sr'] = $this->student->findByUserId($st_id)->first();
         $pr = $inv->get();
         $d['uncleared'] = $pr->where('paid', 0);
-        $d['cleared'] = $pr->where('paid', 1);
+        $d['cleared'] = $cl=$pr->where('paid', 1);
 
         return $this->respond('success',$d);
         // return view('pages.support_team.payments.invoice', $d);
@@ -142,20 +142,23 @@ class PaymentController extends APIController
         return PDF::loadHTML($html)->download($name);
     }
 
-    public function pay_now(Request $req, $pr_id)
+    public function pay_now(Request $req)
     {
+        $pr_id = $req->pr_id;
+        
         $this->validate($req, [
             'amt_paid' => 'required|numeric'
         ], [], ['amt_paid' => 'Amount Paid']);
 
         $this->year = Qs::getCurrentSession();
-
+        
         $pr = $this->pay->findRecord($pr_id);
+        
         $payment = $this->pay->find($pr->payment_id);
         $d['amt_paid'] = $amt_p = $pr->amt_paid + $req->amt_paid;
         $d['balance'] = $bal = $payment->amount - $amt_p;
         $d['paid'] = $bal < 1 ? 1 : 0;
-
+        
         $this->pay->updateRecord($pr_id, $d);
 
         $d2['amt_paid'] = $req->amt_paid;
@@ -171,7 +174,8 @@ class PaymentController extends APIController
     {
         $d['my_classes'] = $this->my_class->all();
         $d['selected'] = false;
-
+        $d['schools'] = Qs::getSchool();
+        
         if($class_id){
             $d['students'] = $st = $this->student->getRecord(['my_class_id' => $class_id])
             ->get()
