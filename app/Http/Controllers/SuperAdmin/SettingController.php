@@ -26,8 +26,10 @@ class SettingController extends Controller
             $s = Setting::where('school_id', $school_id)->get();
             $selected_school = $school_id;
         }else{
-            $s = $this->setting->all();
+            // $s = $this->setting->all();
             $school_id = Auth::user()->school_id;
+            $s = Setting::where('school_id', $school_id)->get();
+            
         }
          $d['class_types'] = $this->my_class->getTypes();
          $d['s'] = $s->flatMap(function($s){
@@ -35,6 +37,7 @@ class SettingController extends Controller
         });
         $d['schools'] = Qs::getSchool();
         $d['school_id'] = $school_id;
+        
         return view('pages.super_admin.settings', $d);
     }
 
@@ -54,7 +57,7 @@ class SettingController extends Controller
             $f['name'] = 'logo.' . $f['ext'];
             $f['path'] = $logo->storeAs(Qs::getPublicUploadPath(), $f['name']);
             $logo_path = asset('storage/' . $f['path']);
-            $this->setting->update('logo', $logo_path);
+            $this->setting->update('logo', $logo_path, $req->school_id);
         }
 
         return back()->with('flash_success', __('msg.update_ok'));

@@ -256,7 +256,13 @@ Route::group(['namespace' => 'Api\V1', 'prefix' => 'v1', 'as' => 'v1.'], functio
             // Route::post('pay_now/{id}', 'PaymentController@pay_now')->name('payments.pay_now');
             Route::post('pay_now', 'PaymentController@pay_now')->name('payments.pay_now');
         });
+        Route::group(['prefix' => 'super_admin', 'middleware' => ['super_admin', 'check.school.id']], function(){
 
+            Route::post('/settings', 'SettingController@index')->name('settings');
+            Route::post('/edit_school', 'SettingController@edit')->name('edit');
+            Route::put('/settings', 'SettingController@update')->name('settings.update');
+            //  'check.school.field'
+        });
 
         //Susbcription Table
         // 1 - Free // 2 - Gold // 3 - Diamond    

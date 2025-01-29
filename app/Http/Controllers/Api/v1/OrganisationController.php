@@ -156,11 +156,11 @@ class OrganisationController extends APIController
             $user_data = $this->user->create($user_request->all());
 
             
-                $setting_data["system_name"] = $school->name;
+                $setting_data["school_name"] = $school->name;
                 $setting_data["current_session"] = ($request->filled('current_session'))?$request->current_session:"2024-2025";
-                $setting_data["system_title"] = $school->name;
+                $setting_data["school_title"] = $school->name;
                 $setting_data["phone"] = ($request->filled('phone'))?$request->phone:"9999888877";
-                $setting_data["system_email"] = $data['email'];
+                $setting_data["school_email"] = $data['email'];
                 $setting_data["address"] = ($request->filled('address'))?$request->address:"Enter School Address Here";
                 $setting_data["term_ends"] = "";
                 $setting_data["term_begins"] = "";

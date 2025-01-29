@@ -26,7 +26,7 @@
                         <div class="form-group row">
                             <label class="col-lg-3 col-form-label font-weight-semibold">Name of School <span class="text-danger">*</span></label>
                             <div class="col-lg-9">
-                                <input name="system_name" value="{{ $s['system_name'] }}" required type="text" class="form-control" placeholder="Name of School">
+                                <input name="school_name" value="{{ $s['school_name'] }}" required type="text" class="form-control" placeholder="Name of School">
                             </div>
                         </div>
                         <div class="form-group row">
@@ -41,9 +41,9 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-lg-3 col-form-label font-weight-semibold">School Acronym</label>
+                            <label class="col-lg-3 col-form-label font-weight-semibold">School Title</label>
                             <div class="col-lg-9">
-                                <input name="system_title" value="{{ $s['system_title'] }}" type="text" class="form-control" placeholder="School Acronym">
+                                <input name="school_title" value="{{ $s['school_title'] }}" type="text" class="form-control" placeholder="School Acronym">
                             </div>
                         </div>
                         <div class="form-group row">
@@ -55,7 +55,7 @@
                         <div class="form-group row">
                             <label class="col-lg-3 col-form-label font-weight-semibold">School Email</label>
                             <div class="col-lg-9">
-                                <input name="system_email" value="{{ $s['system_email'] }}" type="email" class="form-control" placeholder="School Email">
+                                <input name="school_email" value="{{ $s['school_email'] }}" type="email" class="form-control" placeholder="School Email">
                             </div>
                         </div>
                         <div class="form-group row">

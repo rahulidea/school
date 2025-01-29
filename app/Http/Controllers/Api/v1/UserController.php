@@ -266,9 +266,9 @@ class UserController extends APIController
         return $this->respond("Success", $data);
     }
 
-    public function checkSettingIsDone($check_fields,$school_id){    
+    public function checkSettingIsDone($check_fields, $school_id){    
         $isSettingDone = true;
-        $schoolSetting = Setting::where('school_id',$school_id)->whereIn('type', $check_fields)->get();
+        $schoolSetting = Setting::where('school_id', $school_id)->whereIn('type', $check_fields)->get();
         foreach ($schoolSetting as $setting) {
             if (empty($setting->description)) {
                 $isSettingDone = false;
