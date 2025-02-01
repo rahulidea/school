@@ -54,20 +54,12 @@ Route::group(['namespace' => 'Api\V1', 'prefix' => 'v1', 'as' => 'v1.'], functio
         // Route::post('password/email', 'ForgotPasswordController@sendResetLinkEmail');
     });
 
-    Route::group(['middleware' => ['auth:api']], function () {
-        Route::post('/user', [UserController::class, 'getUser']);
-        Route::post('/checkSetting', [UserController::class, 'checkSetting']);
-    });
-
     // , 'check.school.id'
-    Route::group(['middleware' => ['auth:api']], function () {
-            Route::post('userHome', 'UserHomeController@userHome');
-            Route::get('get-schools', 'UserHomeController@getSchools');
-
-            Route::post('sendPusgNotification', [StudentController::class, 'sendPusgNotification']);
-
-
-            Route::post('logout', 'AuthController@logout');
+    Route::group(['middleware' => ['auth:api','check.school.id']], function () {
+        Route::post('userHome', 'UserHomeController@userHome');
+        Route::get('get-schools', 'UserHomeController@getSchools');
+        Route::post('sendPusgNotification', [StudentController::class, 'sendPusgNotification']);
+        Route::post('logout', 'AuthController@logout');
         
         /************************ AJAX ****************************/
         Route::group(['prefix' => 'ajax'], function() {
@@ -113,6 +105,8 @@ Route::group(['namespace' => 'Api\V1', 'prefix' => 'v1', 'as' => 'v1.'], functio
         });
         /*************** Users *****************/
         Route::group(['prefix' => 'user'], function(){
+            Route::post('/', [UserController::class, 'getUser']);
+            Route::post('/checkSetting', [UserController::class, 'checkSetting']);
             Route::post('get_user_create', [UserController::class, 'get_user_create']);
             Route::get('get_user_types', [UserController::class, 'get_user_types']);
             Route::post('get_users_by_types', [UserController::class, 'get_usersByTypes']);
@@ -202,14 +196,11 @@ Route::group(['namespace' => 'Api\V1', 'prefix' => 'v1', 'as' => 'v1.'], functio
         });
 
         /************** Manage Exams ************* */
-        
-        Route::group(['middleware' => 'check.school.id'], function(){
-            Route::resource('manage_exams', 'ExamController');
-            Route::resource('grades', 'GradeController');
-        });
+        Route::resource('manage_exams', 'ExamController');
+        Route::resource('grades', 'GradeController');
         
         /*************** Marks *****************/
-        Route::group(['prefix' => 'marks', 'middleware' => 'check.school.id'], function(){
+        Route::group(['prefix' => 'marks'], function(){
 
             // FOR teamSA
             Route::group(['middleware' => 'teamSA'], function(){
@@ -240,7 +231,7 @@ Route::group(['namespace' => 'Api\V1', 'prefix' => 'v1', 'as' => 'v1.'], functio
         });
 
         /*************** Payments *****************/
-        Route::group(['prefix' => 'manage_payments', 'middleware' => 'check.school.id'], function(){
+        Route::group(['prefix' => 'manage_payments'], function(){
 
            Route::resource('payments', 'PaymentController');
            Route::post('payments/store', 'PaymentController@store')->name('payments.store');
@@ -256,7 +247,7 @@ Route::group(['namespace' => 'Api\V1', 'prefix' => 'v1', 'as' => 'v1.'], functio
             // Route::post('pay_now/{id}', 'PaymentController@pay_now')->name('payments.pay_now');
             Route::post('pay_now', 'PaymentController@pay_now')->name('payments.pay_now');
         });
-        Route::group(['prefix' => 'super_admin', 'middleware' => ['super_admin', 'check.school.id']], function(){
+        Route::group(['prefix' => 'super_admin', 'middleware' => ['super_admin']], function(){
 
             Route::post('/settings', 'SettingController@index')->name('settings');
             Route::post('/edit_school', 'SettingController@edit')->name('edit');

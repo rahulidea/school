@@ -23,7 +23,7 @@ class SettingController extends APIController
     }
 
     public function index(Request $req)
-    {         
+    {
         if($req->school_id){
             $s = Setting::where('school_id', $req->school_id)->get();
             $selected_school = $req->school_id;
@@ -91,7 +91,12 @@ class SettingController extends APIController
             $this->setting->update('logo', $logo_path, $req->school_id);
         }
 
+        $check_fields = QS::getDefaultSettingsCheck();
+        $d['is_setting_done'] = QS::checkSettingIsDone($check_fields,$req->school_id);
+
+
         // return back()->with('flash_success', __('msg.update_ok'));
-        return $this->respondMessage(__('msg.update_ok'));
+        // return $this->respondMessage(__('msg.update_ok'));
+        return $this->respond(__('msg.update_ok'),$d);
     }
 }

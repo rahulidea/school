@@ -50,13 +50,6 @@ class UserController extends APIController
     }
 
     public function get_user_types(Request $req){
-
-        // $ut = $this->user->getAllTypes();//->whereIn('level', $req->type);
-        // if(!Qs::userIsAdmin()){
-        //     $ut = $ut->where('level','>', 1);
-        // }
-
-
         $ut = $this->user->getAllTypes();
         $ut2 = $ut->where('level', '>', 2);
 
@@ -248,35 +241,20 @@ class UserController extends APIController
         //     }
         // }
 
-        $user->is_setting_done = $this->checkSettingIsDone($check_fields,$user->school_id);
+        $user->is_setting_done = QS::checkSettingIsDone($check_fields,$user->school_id);
 
         return $user;
     }
 
     public function checkSetting(Request $request){
         $user = $request->user();
-        
-        $check_fields = array("system_name", "phone", "address");
+        $check_fields = QS::getDefaultSettingsCheck();
         if($request->check_fields){
             $check_fields = $request->check_fields;
         }
 
-        $data['is_setting_done'] = $this->checkSettingIsDone($check_fields,$user->school_id);
+        $data['is_setting_done'] = QS::checkSettingIsDone($check_fields,$user->school_id);
 
         return $this->respond("Success", $data);
     }
-
-    public function checkSettingIsDone($check_fields, $school_id){    
-        $isSettingDone = true;
-        $schoolSetting = Setting::where('school_id', $school_id)->whereIn('type', $check_fields)->get();
-        foreach ($schoolSetting as $setting) {
-            if (empty($setting->description)) {
-                $isSettingDone = false;
-            }
-        }
-        return $isSettingDone;
-    }
-
-    
-
 }

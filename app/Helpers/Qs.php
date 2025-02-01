@@ -57,6 +57,11 @@ class Qs
                 ';
     }
 
+    public static function getDefaultSettingsCheck()
+    {
+        return ['school_name', 'phone', 'address'];
+    }
+
     public static function getTeamSA()
     {
         return ['admin', 'super_admin'];
@@ -418,4 +423,16 @@ class Qs
     public static function getSchoolName($id){
         return School::find($id)->name;
     }
+
+    public static function checkSettingIsDone($check_fields, $school_id){    
+        $isSettingDone = true;
+        $schoolSetting = Setting::where('school_id', $school_id)->whereIn('type', $check_fields)->get();
+        foreach ($schoolSetting as $setting) {
+            if (empty($setting->description)) {
+                $isSettingDone = false;
+            }
+        }
+        return $isSettingDone;
+    }
+    
 }

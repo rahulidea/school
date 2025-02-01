@@ -16,6 +16,10 @@ class CheckSchoolId
      */
     public function handle(Request $request, Closure $next)
     {
+        if(request()->method() == "DELETE"){
+            return $next($request); 
+        }
+
         if (!$request->filled('school_id')) {
             return response()->json([
                 'status' => false,
