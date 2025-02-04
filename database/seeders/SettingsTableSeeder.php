@@ -37,7 +37,7 @@ class SettingsTableSeeder extends Seeder
             ['type' => 'next_term_fees_c', 'school_id' => '2', 'description' => '160'],
         ];
 
-        DB::table('settings')->insert($data);
+        // DB::table('settings')->insert($data);
 
     }
 }

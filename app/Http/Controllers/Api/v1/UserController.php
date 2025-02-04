@@ -123,6 +123,7 @@ class UserController extends APIController
             $d2 = $req->only(Qs::getStaffRecord());
             $d2['user_id'] = $user->id;
             $d2['code'] = $staff_id;
+            $d2['school_id'] = $req->school_id;
             $this->user->createStaffRecord($d2);
         }
         return $this->respond(__('msg.store_ok'), $user);
@@ -185,9 +186,12 @@ class UserController extends APIController
         }
 
         $data = $this->user->find($user_id);
+ 
+        $state = $this->loc->getStatesName($data->state_id);
+        $lgaName = $this->loc->getLGAsName($data->lga_id);
 
-        $data['state_name'] = $this->loc->getStatesName($data->state_id)->name;
-        $data['lga_name'] = $this->loc->getLGAsName($data->lga_id)->name;
+        $data['state_name'] = ($state) ? $state->name : null ;
+        $data['lga_name'] = ($lgaName) ? $lgaName->name : null;
 
         /* Prevent Other Students from viewing Profile of others*/
         if(Auth::user()->id != $user_id && !Qs::userIsTeamSAT() && !Qs::userIsMyChild(Auth::user()->id, $user_id)){
@@ -225,21 +229,13 @@ class UserController extends APIController
         return ($subjects->count() > 0) ? true : false;
     }
 
-    public function getUser(Request $request){    
+    public function getUserDetails(Request $request){    
         $user = $request->user();
         $user->is_setting_done = true;
-        
-        $check_fields = array("system_name", "phone", "address");
+        $check_fields = array("school_name", "phone", "address");
         if($request->check_fields){
             $check_fields = $request->check_fields;
         }
-        
-        // $schoolSetting = Setting::where('school_id',$user->school_id)->whereIn('type', $check_fields)->get();
-        // foreach ($schoolSetting as $setting) {
-        //     if (empty($setting->description)) {
-        //         $user->is_setting_done = false;
-        //     }
-        // }
 
         $user->is_setting_done = QS::checkSettingIsDone($check_fields,$user->school_id);
 

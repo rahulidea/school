@@ -54,6 +54,10 @@ Route::group(['namespace' => 'Api\V1', 'prefix' => 'v1', 'as' => 'v1.'], functio
         // Route::post('password/email', 'ForgotPasswordController@sendResetLinkEmail');
     });
 
+    Route::group(['prefix' => 'user', 'middleware' => ['auth:api']], function(){
+        Route::post('/get_details', [UserController::class, 'getUserDetails']);    
+    });
+
     // , 'check.school.id'
     Route::group(['middleware' => ['auth:api','check.school.id']], function () {
         Route::post('userHome', 'UserHomeController@userHome');
@@ -105,7 +109,6 @@ Route::group(['namespace' => 'Api\V1', 'prefix' => 'v1', 'as' => 'v1.'], functio
         });
         /*************** Users *****************/
         Route::group(['prefix' => 'user'], function(){
-            Route::post('/', [UserController::class, 'getUser']);
             Route::post('/checkSetting', [UserController::class, 'checkSetting']);
             Route::post('get_user_create', [UserController::class, 'get_user_create']);
             Route::get('get_user_types', [UserController::class, 'get_user_types']);

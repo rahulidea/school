@@ -93,7 +93,7 @@ class StudentController extends APIController
     }
 
     public function edit($sr_id, $is_grad=0)
-    {   
+    {
     //    return State::with(['cities:id,name,state_id'])->get();        
         if($sr_id!=0){
             $sr_id = Qs::decodeHash($sr_id);
