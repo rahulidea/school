@@ -29,11 +29,7 @@ class UserRepo {
 
     public function getUserByType($type)
     {
-        // return User::where(['user_type' => $type])->orderBy('name', 'asc')->get()->map(function ($user) {
-        //     $user->hashed_id = QS::hash($user->id);
-        //     return $user;
-        // });
-        return User::wherein('school_id',QS::getSchoolId())->orderBy('name', 'asc')->get()->map(function ($user) {
+        return User::wherein('user_type', $type)->wherein('school_id',QS::getSchoolId())->orderBy('name', 'asc')->get()->map(function ($user) {
             $user->hashed_id = QS::hash($user->id);
             return $user;
         });
