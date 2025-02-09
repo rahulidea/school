@@ -239,15 +239,17 @@ class StudentController extends APIController
 
     public function destroy($st_id, $is_grad=0)
     {   
-        $st_id = Qs::decodeHash($st_id);     
+        $st_id = Qs::decodeHash($st_id);  
+         
         $sr = $this->student->getRecord(['user_id' => $st_id])->first();
         if($is_grad){
             $sr = $this->student->getGradRecord(['user_id' => $st_id])->first();
         }else{
             $sr = $this->student->getRecord(['user_id' => $st_id])->first();
         }
+        
         if(!$sr){
-            return $this->respondError("Student Record Not Found");
+            return $this->respondWithError("Student Record Not Found");
         }
         $path = Qs::getUploadPath('student').$sr->user->code;
         Storage::exists($path) ? Storage::deleteDirectory($path) : false;
