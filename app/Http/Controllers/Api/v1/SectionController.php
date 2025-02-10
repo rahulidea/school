@@ -26,7 +26,8 @@ class SectionController extends APIController
     {
         $d['my_classes'] = $this->my_class->all();
         $d['schools'] = Qs::getSchool();
-        $d['teachers'] = $this->user->getUserByType('teacher');
+        $userType = array("teacher");
+        $d['teachers'] = $this->user->getUserByType($userType);
 
         return $this->respond('success',$d);
     }
