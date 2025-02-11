@@ -13,7 +13,7 @@ class StudentRecord extends Eloquent
     use HasFactory;
 
     protected $fillable = [
-        'session', 'user_id', 'my_class_id', 'section_id', 'my_parent_id', 'dorm_id', 'dorm_room_no', 'adm_no', 'year_admitted', 'wd', 'wd_date', 'grad', 'grad_date', 'house', 'age', 'school_id'
+        'session', 'user_id', 'my_class_id', 'section_id', 'my_parent_id', 'my_parent_id2', 'dorm_id', 'dorm_room_no', 'adm_no', 'year_admitted', 'wd', 'wd_date', 'grad', 'grad_date', 'house', 'age', 'school_id', 'adhar_card'
     ];
     
     protected $appends = ['hashed_id'];

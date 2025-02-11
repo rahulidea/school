@@ -29,7 +29,8 @@ class UserRepo {
 
     public function getUserByType($type)
     {
-        return User::wherein('user_type', $type)->wherein('school_id',QS::getSchoolId())->orderBy('name', 'asc')->get()->map(function ($user) {
+       $type = is_array($type) ? $type : explode(',', $type);
+       return User::wherein('user_type', $type)->wherein('school_id',QS::getSchoolId())->orderBy('name', 'asc')->get()->map(function ($user) {
             $user->hashed_id = QS::hash($user->id);
             return $user;
         });

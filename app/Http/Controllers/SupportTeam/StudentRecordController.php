@@ -67,6 +67,7 @@ class StudentRecordController extends Controller
         $data['code'] = strtoupper(Str::random(10));
         $data['password'] = Hash::make('student');
         $data['school_id'] = $req->school_id;
+        $data['organisation_id'] = Auth::user()->organisation_id;
         $data['photo'] = Qs::getDefaultUserImage();
         $adm_no = $req->adm_no;
         $data['username'] = strtoupper(Qs::getAppCode().'/'.$ct.'/'.$sr['year_admitted'].'/'.($adm_no ?: mt_rand(1000, 99999)));
@@ -86,7 +87,7 @@ class StudentRecordController extends Controller
         $sr['school_id'] = $user->school_id;
         $sr['session'] = Qs::getSetting('current_session');
 
-        $this->student->createRecord($sr); // Create Student
+        $this->student->createRecord($sr);
         return Qs::jsonStoreOk();
     }
 

@@ -21,6 +21,7 @@ class CreateStudentRecordsTable extends Migration
             $table->unsignedInteger('section_id');
             $table->string('adm_no', 30)->unique()->nullable();
             $table->unsignedInteger('my_parent_id')->nullable();
+            $table->unsignedInteger('my_parent_id2')->nullable();
             $table->unsignedInteger('dorm_id')->nullable();
             $table->string('dorm_room_no')->nullable();
             $table->string('session');
@@ -29,6 +30,7 @@ class CreateStudentRecordsTable extends Migration
             $table->string('year_admitted')->nullable();
             $table->tinyInteger('grad')->default(0);
             $table->string('grad_date')->nullable();
+            $table->string('adhar_card',12)->nullable();
 
             $table->timestamps();
         });

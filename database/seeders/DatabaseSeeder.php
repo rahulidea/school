@@ -23,12 +23,12 @@ class DatabaseSeeder extends Seeder
         $this->call(StatesTableSeeder::class);
         $this->call(LgasTableSeeder::class);
         $this->call(SettingsTableSeeder::class);
-        $this->call(UsersTableSeeder::class);
+    //    $this->call(UsersTableSeeder::class);
         // $this->call(SubjectsTableSeeder::class);
         // $this->call(SectionsTableSeeder::class);
         // $this->call(StudentRecordsTableSeeder::class);
         $this->call(SkillsTableSeeder::class);
         $this->call(SubscriptionSeeder::class);
-        $this->call(OrganisationsSeeder::class);
+    //    $this->call(OrganisationsSeeder::class);
     }
 }

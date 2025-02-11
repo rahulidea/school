@@ -28,7 +28,7 @@ class OrganisationsSeeder extends Seeder
             ['name' => 'Ratan Vidyalay', 'subscription_id' => '2', 'expiry_date' => now()->addYear(),],
             ['name' => 'Krishna Vidya Mandir', 'subscription_id' => '1', 'expiry_date' => now()->addYear(),],
         ];
-        // DB::table('organisations')->insert($data);
+         DB::table('organisations')->insert($data);
 
         $data = [
             ['name' => 'Vidya Niketan East', 'organisation_id' => '1'],
@@ -41,6 +41,6 @@ class OrganisationsSeeder extends Seeder
             ['name' => 'Krishna Vidya Mandir Luxa', 'organisation_id' => '5'],
             ['name' => 'Krishna Vidya Mandir Durgakund', 'organisation_id' => '5'],
         ];
-        // DB::table('schools')->insert($data);
+         DB::table('schools')->insert($data);
     }
 }

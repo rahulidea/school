@@ -114,8 +114,14 @@
                         </div>
                     </div>
                     <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Adhar Card:</label>
+                                <input type="text" name="adhar_card" maxlength="12" placeholder="Adhar Card" class="form-control" oninput="this.value=this.value.replace(/\D/g,'')" value="{{ old('adhar_card') }}">
+                            </div>
+                        </div>
 
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="form-group">
                                 <label for="bg_id">Blood Group: </label>
                                 <select class="select form-control" id="bg_id" name="bg_id" data-fouc data-placeholder="Choose..">
@@ -127,7 +133,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="form-group">
                                 <label class="d-block">Upload Passport Photo:</label>
                                 <input value="{{ old('photo') }}" accept="image/*" type="file" name="photo" class="form-input-styled" data-fouc>
@@ -150,8 +156,8 @@
                                         <option {{ (old('my_class_id') == $c->id ? 'selected' : '') }} value="{{ $c->id }}">{{ $c->name }}</option>
                                         @endforeach
                                 </select>
-                        </div>
                             </div>
+                        </div>
 
                         <div class="col-md-3">
                             <div class="form-group">
@@ -176,6 +182,18 @@
 
                         <div class="col-md-3">
                             <div class="form-group">
+                                <label for="my_parent_id">Parent 2: </label>
+                                <select data-placeholder="Choose..."  name="my_parent_id2" id="my_parent_id2" class="select-search form-control">
+                                    <option  value=""></option>
+                                    @foreach($parents as $p)
+                                        <option {{ (old('my_parent_id2') == Qs::hash($p->id)) ? 'selected' : '' }} value="{{ Qs::hash($p->id) }}">{{ $p->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="form-group">
                                 <label for="year_admitted">Year Admitted: <span class="text-danger">*</span></label>
                                 <select data-placeholder="Choose..." required name="year_admitted" id="year_admitted" class="select-search form-control">
                                     <option value=""></option>
@@ -185,9 +203,7 @@
                                 </select>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="row">
                         <div class="col-md-3">
                             <label for="dorm_id">Dormitory: </label>
                             <select data-placeholder="Choose..."  name="dorm_id" id="dorm_id" class="select-search form-control">
