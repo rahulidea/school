@@ -41,7 +41,7 @@ Route::middleware(['auth:api', 'check.subscription'])->get('/user', function (Re
 
 
 
-Route::group(['namespace' => 'Api\V1', 'prefix' => 'v1', 'as' => 'v1.'], function () {
+Route::group(['namespace' => 'Api\v1', 'prefix' => 'v1', 'as' => 'v1.'], function () {
     Route::group(['middleware' => ['guest']], function () {
         // Registration Route
         Route::post('/register', [AuthController::class, 'register']);
