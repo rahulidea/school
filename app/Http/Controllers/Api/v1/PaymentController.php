@@ -49,7 +49,7 @@ class PaymentController extends APIController
             $d['payments'] = $p = $this->pay->getPayment(['year' => $req->year])->get();
         }
         if(($p->count() < 1)){
-            return Qs::goWithDanger('payments.index');
+            return $this->respondWithError("No Payment");
         }
 
         $d['selected'] = true;

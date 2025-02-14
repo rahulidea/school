@@ -236,9 +236,10 @@ Route::group(['namespace' => 'Api\v1', 'prefix' => 'v1', 'as' => 'v1.'], functio
         /*************** Payments *****************/
         Route::group(['prefix' => 'manage_payments'], function(){
 
-           Route::resource('payments', 'PaymentController');
            Route::post('payments/store', 'PaymentController@store')->name('payments.store');
-           Route::post('payments/show', 'PaymentController@show')->name('payments.store');
+           Route::post('payments/show', 'PaymentController@show')->name('payments.show');
+           Route::resource('payments', 'PaymentController')->except(['store', 'show']);
+           
 
             Route::get('manage/{class_id?}', 'PaymentController@manage')->name('payments.manage');
             Route::get('invoice/{id}/{year?}', 'PaymentController@invoice')->name('payments.invoice');

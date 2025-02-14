@@ -130,6 +130,13 @@ class APIController extends Controller
     {
         return $this->respondError([
             'status' => false,
+            'error' => $message
+        ]);
+    }
+    public function respondWithErrorOriginal($message)
+    {
+        return $this->respondError([
+            'status' => false,
             'error' => [
                 'message' => $message,
                 'status_code' => $this->getStatusCode(),
