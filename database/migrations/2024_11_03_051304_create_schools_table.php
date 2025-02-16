@@ -25,7 +25,9 @@ class CreateSchoolsTable extends Migration
             $table->string('affiliation')->nullable();
             $table->string('accreditation')->nullable();
             $table->string('facility')->nullable();
-            $table->string('aanual_event')->nullable();
+            $table->string('lat')->nullable();
+            $table->string('long')->nullable();
+            $table->string('anual_event')->nullable();
             $table->foreignId('organisation_id')->constrained('organisations')->onDelete('cascade');
             $table->timestamps();
         });

@@ -135,6 +135,18 @@ class OrganisationController extends APIController
         }
        
         $school_data["name"] = $data['school_name'];
+        $school_data["address"] = $request->input('school_address', "");
+        $school_data["email"] = $request->input('school_email', "");
+        $school_data["phone"] = $request->input('school_phone', "");
+        $school_data["website"] = $request->input('school_website', "");
+        $school_data["logo"] = $request->input('school_logo', "");
+        $school_data["medium_of_instruction"] = $request->input('school_medium_of_instruction', "");
+        $school_data["affiliation"] = $request->input('school_affiliation', "");
+        $school_data["accreditation"] = $request->input('school_accreditation', "");
+        $school_data["facility"] = $request->input('school_facility', "");
+        $school_data["lat"] = $request->input('school_lat', "");
+        $school_data["long"] = $request->input('school_long', "");
+        $school_data["anual_event"] = $request->input('school_anual_event', "");
               
         
         $school = $this->org->createSchool($school_data);
@@ -196,17 +208,15 @@ class OrganisationController extends APIController
     public function school_update(Request $request, $id)
     {
        $validator = Validator::make($request->all(), [
-            'name' => 'string|max:255',
-            'organisation_id' => 'required|integer|exists:organisations,id',
+            'name' => 'string|max:255'
         ]);
 
         if ($validator->fails()) {
             return $this->respondWithError($validator->errors());
         }
 
-        $data = $request->only(['name', 'organisation_id']);
+        $data = $request->only(['name', 'address', 'email', 'phone', 'website', 'logo', 'medium_of_instruction', 'affiliation', 'accreditation', 'facility', 'anual_event', 'lat', 'long']);
         $data = $this->org->updateSchool($id, $data);
-
         return $this->respond('School Update successfully',
             $data
         );
