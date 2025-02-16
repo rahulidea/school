@@ -64,4 +64,8 @@ class AjaxController extends APIController
         return $this->respond('success',$d);
     }
 
+    public function citys($state_id){
+        $data['citys'] = $this->loc->getLGAs($state_id);
+        return $this->respond('Record Found', $data);
+    }
 }

@@ -42,8 +42,7 @@ class AuthController extends APIController
         ]);
         
         if ($validator->fails()) {
-            return $this->throwValidation($validation->messages()->first(),422);
-            // return response()->json($validator->errors(), 422);
+            return $this->throwValidation($validator->errors(),422);
         }
         // dd($request);
 
@@ -52,7 +51,8 @@ class AuthController extends APIController
         // dd($adshPass. " >>>> ". $user->password);
 
         if (!$user || !Hash::check($request->password, $user->password)) {
-            return $this->throwValidation("Wrong user name and password",401);
+            $error = array("" => array("Wrong user name and password"));
+            return $this->throwValidation($error,422);
             // return response()->json(['message' => 'Unauthorized'], 401);
         }
 

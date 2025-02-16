@@ -70,6 +70,7 @@ Route::group(['namespace' => 'Api\v1', 'prefix' => 'v1', 'as' => 'v1.'], functio
             Route::get('get_lga/{state_id}', 'AjaxController@get_lga')->name('get_lga');
             Route::get('get_class_sections/{class_id}', 'AjaxController@get_class_sections')->name('get_class_sections');
             Route::get('get_class_subjects/{class_id}', 'AjaxController@get_class_subjects')->name('get_class_subjects');
+            Route::get('citys/{state_id}', 'AjaxController@citys');
         });
         /*************** Students *****************/
             
@@ -81,7 +82,6 @@ Route::group(['namespace' => 'Api\v1', 'prefix' => 'v1', 'as' => 'v1.'], functio
 			Route::get('list/{class_id}', [StudentController::class, 'listByClass'])->middleware('teamSAT');
 			Route::get('section/{section_id}', [StudentController::class, 'listBySection'])->middleware('teamSAT');
             
-            Route::get('citys/{state_id}', [StudentController::class, 'citys']);
             Route::get('class_sections/{class_id}', [StudentController::class, 'classSections']);
 
 			Route::get('student_details/{sr_id}', [StudentController::class, 'show']); //delete studentDetails method

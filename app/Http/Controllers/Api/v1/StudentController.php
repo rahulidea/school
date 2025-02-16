@@ -284,11 +284,6 @@ class StudentController extends APIController
         return $this->respond('Record Found', $data);
     }
 
-    public function citys($state_id){
-        $data['citys'] = $this->loc->getLGAs($state_id);
-        return $this->respond('Record Found', $data);
-    }
-
     public function classSections($class_id){
         $data['sections'] = $this->my_class->getClassSections($class_id);
         return $this->respond('Record Found', $data);

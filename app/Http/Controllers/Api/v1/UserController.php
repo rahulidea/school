@@ -238,8 +238,8 @@ class UserController extends APIController
         }
 
         $user->is_setting_done = QS::checkSettingIsDone($check_fields,$user->school_id);
-
-        return $user;
+        return $this->respond('success',$user);
+        // return $user;
     }
 
     public function checkSetting(Request $request){
