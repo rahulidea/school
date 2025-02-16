@@ -173,7 +173,7 @@ class OrganisationController extends APIController
                 $setting_data["school_title"] = $school->name;
                 $setting_data["phone"] = ($request->filled('phone'))?$request->phone:"9999888877";
                 $setting_data["school_email"] = $data['email'];
-                $setting_data["address"] = ($request->filled('address'))?$request->address:"Enter School Address Here";
+                $setting_data["address"] = ($request->filled('address'))?$request->address:null;
                 $setting_data["term_ends"] = "";
                 $setting_data["term_begins"] = "";
                 $setting_data["lock_exam"] = "";
@@ -212,6 +212,7 @@ class OrganisationController extends APIController
         ]);
 
         if ($validator->fails()) {
+            dd("asdas");
             return $this->respondWithError($validator->errors());
         }
 

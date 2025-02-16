@@ -29,20 +29,21 @@ class UserRepo {
 
     public function getUserByType($type)
     {
-       $type = is_array($type) ? $type : explode(',', $type);
-       return User::wherein('user_type', $type)->wherein('school_id',QS::getSchoolId())->orderBy('name', 'asc')->get()->map(function ($user) {
+        $type = is_array($type) ? $type : explode(',', $type);
+        return User::wherein('user_type', $type)->wherein('school_id',QS::getSchoolId())->orderBy('name', 'asc')->get()->map(function ($user) {
             $user->hashed_id = QS::hash($user->id);
             return $user;
         });
     }
 
-    public function getUserByTypeApi($type)
+    public function getAllUsers()
     {
-        return User::wherein('user_type' , $type)->orderBy('name', 'asc')->get()->map(function ($user) {
+        return User::wherein('school_id',QS::getSchoolId())->orderBy('name', 'asc')->get()->map(function ($user) {
             $user->hashed_id = QS::hash($user->id);
             return $user;
         });
     }
+
 
     public function getAllTypes()
     {

@@ -115,8 +115,9 @@ class StudentController extends APIController
 
         $data['schools'] = Qs::getSchool();
         $data['my_classes'] = $this->my_class->getAllWithSection();
-        $userType = array("parent");
-        $data['parents'] = $this->user->getUserByType($userType);
+        // $userType = array("parent");
+        // $data['parents'] = $this->user->getUserByType($userType);
+        $data['parents'] = $this->user->getAllUsers();
         $data['dorms'] = $this->student->getAllDorms();
         $data['states'] = $this->loc->getStates();
         $data['nationals'] = $this->loc->getAllNationals();
