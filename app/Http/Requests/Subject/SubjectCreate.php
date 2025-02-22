@@ -3,9 +3,9 @@
 namespace App\Http\Requests\Subject;
 
 use App\Helpers\Qs;
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseFormRequestApi;
 
-class SubjectCreate extends FormRequest
+class SubjectCreate extends BaseFormRequestApi
 {
 
     public function authorize()
@@ -23,7 +23,6 @@ class SubjectCreate extends FormRequest
         return [
             'name' => 'required|string|min:3',
             'my_class_id' => 'required',
-            'teacher_id' => 'required',
             'slug' => 'nullable|string|min:3',
         ];
     }
@@ -32,7 +31,7 @@ class SubjectCreate extends FormRequest
     {
         return  [
             'my_class_id' => 'Class',
-            'teacher_id' => 'Teacher',
+        //    'teacher_id' => 'Teacher',
             'slug' => 'Short Name',
         ];
     }
@@ -41,10 +40,12 @@ class SubjectCreate extends FormRequest
     {
         $input = $this->all();
 
-        $input['teacher_id'] = $input['teacher_id'] ? Qs::decodeHash($input['teacher_id']) : NULL;
+        if(isset($input['teacher_id']) && !empty($input['teacher_id']))
+            $input['teacher_id'] = $input['teacher_id'] ? Qs::decodeHash($input['teacher_id']) : NULL;
 
         $this->getInputSource()->replace($input);
 
         return parent::getValidatorInstance();
     }
+    
 }

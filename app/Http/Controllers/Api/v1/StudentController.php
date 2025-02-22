@@ -176,6 +176,8 @@ class StudentController extends APIController
 
         $data['user_type'] = 'student';
         $data['name'] = ucwords($req->name);
+        $data['organisation_id'] = Qs::getOrganisationId();
+        $data['school_id'] = $req->school_id;
         $data['code'] = strtoupper(Str::random(10));
         $data['password'] = Hash::make('student');
         $data['photo'] = Qs::getDefaultUserImage();

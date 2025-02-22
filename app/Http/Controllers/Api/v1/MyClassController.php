@@ -41,7 +41,7 @@ class MyClassController extends APIController
     public function store(ClassCreate $req)
     {
         $data = $req->all();
-        $data['school_id'] = $school_id = QS::getHeaderSchoolId()[0];
+        $data['school_id'] = $school_id = QS::getSchoolId()[0];
 
         try{
             $mc = $this->my_class->create($data);

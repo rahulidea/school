@@ -33,8 +33,7 @@ class SubjectController extends APIController
 
     public function allSubjects($class_id)
     {
-        $d = $this->my_class->allSubjectByClass($class_id);
-        
+        $d = $this->my_class->allSubjectByClass($class_id);        
         return $this->respond('success',$d);
     }
 
@@ -44,7 +43,9 @@ class SubjectController extends APIController
         $data['school_id'] = QS::getHeaderSchoolId()[0];
         $d = $this->my_class->createSubject($data);
 
-        return $this->respond(__('msg.store_ok'),$d);
+        return $this->respond('succes',
+            $d
+        );
     }
 
     public function edit($id)
@@ -56,7 +57,9 @@ class SubjectController extends APIController
         $d['my_classes'] = $this->my_class->all();
         $d['teachers'] = $this->user->getUserByType('teacher');
 
-        return $this->respond(__('msg.store_ok'),$d);
+        return $this->respond('succes',
+            $d
+        );
     }
 
     public function update(SubjectUpdate $req, $id)
@@ -64,12 +67,16 @@ class SubjectController extends APIController
         $data = $req->all();
         $this->my_class->updateSubject($id, $data);
 
-        return $this->respondMessage(__('msg.update_ok'));
+        return $this->respond('succes',
+        __('msg.update_ok')
+        );
     }
 
     public function destroy($id)
     {
         $this->my_class->deleteSubject($id);
-        return $this->respondMessage(__('msg.del_ok'));
+        return $this->respond('succes',
+        __('msg.del_ok')
+        );
     }
 }

@@ -3,9 +3,10 @@
 namespace App\Http\Requests\Subject;
 
 use App\Helpers\Qs;
+use App\Http\Requests\BaseFormRequestApi;
 use Illuminate\Foundation\Http\FormRequest;
 
-class SubjectUpdate extends FormRequest
+class SubjectUpdate extends BaseFormRequestApi
 {
 
     public function authorize()

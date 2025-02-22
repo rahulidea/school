@@ -83,17 +83,17 @@ class TimeTableRepo
 
     public function getAllRecords()
     {
-        return TimeTableRecord::wherein('school_id',QS::getHeaderSchoolId())->orderBy('created_at')->with(['my_class', 'exam'])->get();
+        return TimeTableRecord::wherein('school_id',QS::getSchoolId())->orderBy('created_at')->with(['my_class', 'exam'])->get();
     }
 
     public function getTTRByClassIDs($class_id)
     {
-        return TimeTableRecord::where('my_class_id', $class_id)->wherein('school_id',QS::getHeaderSchoolId())->orderBy('created_at')->with(['my_class', 'exam'])->get();
+        return TimeTableRecord::where('my_class_id', $class_id)->wherein('school_id',QS::getSchoolId())->orderBy('created_at')->with(['my_class', 'exam'])->get();
     }
 
     public function getTTRByIDs($ids)
     {
-        return TimeTableRecord::wherein('school_id',QS::getHeaderSchoolId())->orderBy('name')->whereIn('id', $ids)->get();
+        return TimeTableRecord::wherein('school_id',QS::getSchoolId())->orderBy('name')->whereIn('id', $ids)->get();
     }
 
     public function getRecord($where)
@@ -118,6 +118,6 @@ class TimeTableRepo
 
     public function findRecord($id)
     {
-        return TimeTableRecord::wherein('school_id',QS::getHeaderSchoolId())->findOrFail($id);
+        return TimeTableRecord::wherein('school_id',QS::getSchoolId())->findOrFail($id);
     }
 }

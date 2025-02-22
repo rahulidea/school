@@ -70,14 +70,19 @@ class UserController extends APIController
         return $this->respond('success',$d);
     }
 
-    public function reset_pass($id)
+    public function reset_pass($id, Request $request)
     {
         // Redirect if Making Changes to Head of Super Admins
         if(Qs::headSA($id)){
             return $this->respondWithError(__('msg.denied'));
         }
 
-        $data['password'] = Hash::make('User@123');
+        $user = $this->user->find($id);
+        if (!$user){
+            return $this->respondWithError(__('msg.user_not_found'));
+        }
+
+        $data['password'] = Hash::make($request->password);
         $this->user->update($id, $data);
         return $this->respondMessage(__('msg.pu_reset'));
     }
@@ -148,6 +153,7 @@ class UserController extends APIController
         $data = $req->except(Qs::getStaffRecord());
         $data['name'] = ucwords($req->name);
         $data['user_type'] = $user_type;
+        $data['password'] = Hash::make($req->password);
 
         if($user_is_staff && !$user_is_teamSA){
             $data['username'] = Qs::getAppCode().'/STAFF/'.date('Y/m', strtotime($req->emp_date)).'/'.mt_rand(1000, 9999);

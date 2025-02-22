@@ -12,7 +12,7 @@ class StudentRepo {
 
     public function findStudentsByClass($class_id)
     {
-        return $this->activeStudents()->where(['my_class_id' => $class_id])->wherein('school_id', QS::getHeaderSchoolId())->with(['my_class', 'user'])->get();
+        return $this->activeStudents()->where(['my_class_id' => $class_id])->wherein('school_id', QS::getSchoolId())->with(['my_class', 'user'])->get();
     }
 
     public function activeStudents()
