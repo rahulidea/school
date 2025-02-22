@@ -117,7 +117,8 @@ class StudentController extends APIController
         $data['my_classes'] = $this->my_class->getAllWithSection();
         // $userType = array("parent");
         // $data['parents'] = $this->user->getUserByType($userType);
-        $data['parents'] = $this->user->getAllUsers();
+        $data['parents'] = $this->user->getAllUsersByGender('Male');
+        $data['mother'] = $this->user->getAllUsersByGender('Female');
         $data['dorms'] = $this->student->getAllDorms();
         $data['states'] = $this->loc->getStates();
         $data['nationals'] = $this->loc->getAllNationals();

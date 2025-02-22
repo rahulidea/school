@@ -44,6 +44,13 @@ class UserRepo {
         });
     }
 
+    public function getAllUsersByGender($gender)
+    {
+        return User::where('gender',$gender)->wherein('school_id',QS::getSchoolId())->orderBy('name', 'asc')->get()->map(function ($user) {
+            $user->hashed_id = QS::hash($user->id);
+            return $user;
+        });
+    }
 
     public function getAllTypes()
     {
