@@ -5,7 +5,7 @@ namespace App\Repositories;
 use App\Models\TimeSlot;
 use App\Models\TimeTable;
 use App\Models\TimeTableRecord;
-use App\Helpers\QS;
+use App\Helpers\Qs;
 
 class TimeTableRepo
 {

@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests\TimeTable;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseFormRequestApi;
 
-class TTRequest extends FormRequest
+class TTRequest extends BaseFormRequestApi
 {
 
     public function authorize()

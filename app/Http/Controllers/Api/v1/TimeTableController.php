@@ -78,6 +78,7 @@ class TimeTableController extends APIController
 
     public function update(TTRequest $req, $tt_id)
     {
+        dd("sita ram");
         $data = $req->all();
         $tms = $this->tt->findTimeSlot($req->ts_id);
         $d_date = $req->exam_date ?? $req->day;
@@ -256,20 +257,21 @@ class TimeTableController extends APIController
         $data['year'] = $this->year;
         $this->tt->createRecord($data);
 
-        return $this->respondMessage(__('msg.store_ok'));
+        return $this->respond('success',__('msg.store_ok'));
     }
 
     public function update_record(TTRecordRequest $req, $id)
     {
+        dd("ram");
         $data = $req->all();
         $this->tt->updateRecord($id, $data);
 
-        return $this->respondMessage(__('msg.update_ok'));
+        return $this->respond('success',__('msg.update_ok'));
     }
 
     public function delete_record($ttr_id)
     {
         $this->tt->deleteRecord($ttr_id);
-        return $this->respondMessage(__('msg.delete_ok'));
+        return $this->respond('success',__('msg.delete_ok'));
     }
 }
