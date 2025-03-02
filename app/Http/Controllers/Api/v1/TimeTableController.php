@@ -54,6 +54,7 @@ class TimeTableController extends APIController
         $d['subjects'] = $this->my_class->getSubject(['my_class_id' => $ttr->my_class_id])->get();
         $d['my_class'] = $this->my_class->find($ttr->my_class_id);
         $d['schools'] = Qs::getSchool();
+        $d['sections'] = Section::where('school_id', Qs::getSchoolId())->where('my_class_id', $ttr->my_class_id)->pluck('name','id');
         if($ttr->exam_id){
             $d['exam_id'] = $ttr->exam_id;
             $d['exam'] = $this->exam->find($ttr->exam_id);
@@ -207,16 +208,24 @@ class TimeTableController extends APIController
         foreach ($days as $day) {
             foreach ($tms as $tm) {
                 foreach($sections as $section){ 
-                    $d_time[] = ['section'=>$section, 'day' => $day, 'time' => $tm->full, 'subject' => $tts->where('ts_id', $tm->id)->where($d_date, $day)->first()->subject->name ?? NULL ];
+                    if($tts->where('ts_id', $tm->id)->where($d_date, $day)->where('section_id', $section)->isNotEmpty())
+                        $d_time[] = ['section'=>$section, 'day' => $day, 'time' => $tm->full, 'subject' => $tts->where('ts_id', $tm->id)->where($d_date, $day)->first()->subject->name ?? NULL ];
                 }
             }
         }
+
+        $t_time = [];
+        foreach($tts as $tt_data){
+            $t_time[] = ['section' => $tt_data->section_id, 'day' => $tt_data->day, 'time' => $tms->where('id', $tt_data->ts_id)->first()->full, 'subject' => $tt_data->subject->name];
+        }
+    //    dd($d_time, $t_time);
 
         // foreach($d_time as $data){
         //     $d_time[] =  $data->where('day', $data->day);
         // }
 
         $d['d_time'] = collect($d_time);
+        $d['t_time'] = collect($t_time);
 
         return $this->respond('success',$d);
     }

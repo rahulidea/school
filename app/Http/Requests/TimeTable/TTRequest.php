@@ -24,6 +24,7 @@ class TTRequest extends BaseFormRequestApi
             'subject_id' => 'required|exists:subjects,id',
             'ttr_id' => 'required|exists:time_table_records,id',
             'ts_id' => 'required|exists:time_slots,id',
+            'section_id' => 'required|exists:sections,id'
         ];
     }
 
