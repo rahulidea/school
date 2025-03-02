@@ -4,6 +4,10 @@
         @foreach($tts->chunk(2) as $chunk)
             <div class="row">
                 @foreach($chunk as $tt)
+                @dd($tt)
+                @php
+                    die();
+                @endphp
                     <div class="col-md-6">
                         <div class="card">
                             <div class="card-header header-elements-inline">

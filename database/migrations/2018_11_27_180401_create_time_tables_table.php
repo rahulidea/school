@@ -52,6 +52,8 @@ class CreateTimeTablesTable extends Migration
             $table->unsignedInteger('ts_id');
             $table->foreignId('school_id')->nullable();
             $table->unsignedInteger('subject_id')->nullable();
+            $table->foreignId('section_id')->nullable();
+            $table->unsignedInteger('section_id')->nullable();
             $table->string('exam_date', 50)->nullable();
             $table->string('timestamp_from', 100);
             $table->string('timestamp_to', 100);

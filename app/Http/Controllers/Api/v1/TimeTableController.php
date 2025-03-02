@@ -2,18 +2,19 @@
 
 namespace App\Http\Controllers\Api\v1;
 
-use App\Http\Controllers\Api\APIController;
-
 use App\Helpers\Qs;
-use App\Http\Requests\TimeTable\TSRequest;
-use App\Http\Requests\TimeTable\TTRecordRequest;
-use App\Http\Requests\TimeTable\TTRequest;
+
+use App\Models\Section;
 use App\Models\Setting;
+use Illuminate\Http\Request;
 use App\Repositories\ExamRepo;
 use App\Repositories\MyClassRepo;
 use App\Repositories\TimeTableRepo;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Http\Requests\TimeTable\TSRequest;
+use App\Http\Requests\TimeTable\TTRequest;
+use App\Http\Controllers\Api\APIController;
+use App\Http\Requests\TimeTable\TTRecordRequest;
 
 class TimeTableController extends APIController
 {
@@ -192,16 +193,22 @@ class TimeTableController extends APIController
             $d['exam'] = $this->exam->find($ttr->exam_id);
             $d['days'] = $days = $tts->unique('exam_date')->pluck('exam_date');
             $d_date = 'exam_date';
+            $d['sec'] = ['1' => 'ALL'];
+            $d['sections'] = [1];
         }
 
         else{
             $d['days'] = $days = $tts->unique('day')->pluck('day');
             $d_date = 'day';
+            $d['sections'] = $sections = $tts->unique('section_id')->pluck('section_id');
+            $d['sec'] = Section::where('school_id', Qs::getSchoolId())->where('my_class_id', $ttr->my_class_id)->pluck('name','id');
         }
 
         foreach ($days as $day) {
             foreach ($tms as $tm) {
-                $d_time[] = ['day' => $day, 'time' => $tm->full, 'subject' => $tts->where('ts_id', $tm->id)->where($d_date, $day)->first()->subject->name ?? NULL ];
+                foreach($sections as $section){ 
+                    $d_time[] = ['section'=>$section, 'day' => $day, 'time' => $tm->full, 'subject' => $tts->where('ts_id', $tm->id)->where($d_date, $day)->first()->subject->name ?? NULL ];
+                }
             }
         }
 

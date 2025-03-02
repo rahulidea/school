@@ -11,6 +11,7 @@ use App\Repositories\ExamRepo;
 use App\Repositories\MyClassRepo;
 use App\Repositories\TimeTableRepo;
 use App\Http\Controllers\Controller;
+use App\Models\Section;
 use Illuminate\Http\Request;
 
 class TimeTableController extends Controller
@@ -176,24 +177,31 @@ class TimeTableController extends Controller
         $d['time_slots'] = $tms = $this->tt->getTimeSlotByTTR($ttr_id);
         $d['tts'] = $tts = $this->tt->getTimeTable(['ttr_id' => $ttr_id]);
 
+        
+        
         if($ttr->exam_id){
             $d['exam_id'] = $ttr->exam_id;
             $d['exam'] = $this->exam->find($ttr->exam_id);
             $d['days'] = $days = $tts->unique('exam_date')->pluck('exam_date');
             $d_date = 'exam_date';
+            $d['sec'] = ['1' => 'ALL'];
+            $d['sections'] = [1];
         }
 
         else{
-            $d['days'] = $days = $tts->unique('day')->pluck('day');
+            $d['days'] = $days = $tts->unique('day')->pluck('day');            
             $d_date = 'day';
+            $d['sections'] = $sections = $tts->unique('section_id')->pluck('section_id');
+            $d['sec'] = Section::where('school_id', Qs::getSchoolId())->where('my_class_id', $ttr->my_class_id)->pluck('name','id');
         }
-
+        
         foreach ($days as $day) {
             foreach ($tms as $tm) {
-                $d_time[] = ['day' => $day, 'time' => $tm->full, 'subject' => $tts->where('ts_id', $tm->id)->where($d_date, $day)->first()->subject->name ?? NULL ];
+                   foreach($sections as $section){
+                        $d_time[] = ['section'=>$section, 'day' => $day, 'time' => $tm->full, 'subject' => $tts->where('ts_id', $tm->id)->where($d_date, $day)->first()->subject->name ?? NULL ];        
+                }        
             }
         }
-
         $d['d_time'] = collect($d_time);
 
         return view('pages.support_team.timetables.show', $d);

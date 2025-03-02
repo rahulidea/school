@@ -22,4 +22,8 @@ class TimeTable extends Eloquent
     {
         return $this->belongsTo(Subject::class);
     }
+
+    public function section(){
+        return $this->belongsTo(Section::class);
+    }
 }
