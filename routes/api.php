@@ -145,6 +145,11 @@ Route::group(['namespace' => 'Api\v1', 'prefix' => 'v1', 'as' => 'v1.'], functio
             Route::get('{class}/edit', [SubjectController::class, 'edit']);
             Route::put('update/{class}', [SubjectController::class, 'update']);
             Route::delete('destroy/{class}', [SubjectController::class, 'destroy']);
+
+            Route::get('assign', [SubjectController::class, 'getAssignedDetail']);
+            Route::get('assign-teacher', [SubjectController::class, 'getAssignedTeacher']);
+            Route::post('assign-teacher', [SubjectController::class, 'setAssignedTeacher']);
+
         });
 
         /**************Manage Sections************* */

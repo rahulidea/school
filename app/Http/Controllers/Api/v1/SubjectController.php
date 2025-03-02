@@ -2,12 +2,19 @@
 
 namespace App\Http\Controllers\Api\v1;
 
-use App\Http\Controllers\Api\APIController;
+use App\User;
 use App\Helpers\Qs;
+use App\Models\Subject;
+use Illuminate\Http\Request;
+use App\Repositories\UserRepo;
+use App\Repositories\MyClassRepo;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\Api\APIController;
 use App\Http\Requests\Subject\SubjectCreate;
 use App\Http\Requests\Subject\SubjectUpdate;
-use App\Repositories\MyClassRepo;
-use App\Repositories\UserRepo;
+use App\Models\Section;
+use Exception;
 
 class SubjectController extends APIController
 {
@@ -78,5 +85,55 @@ class SubjectController extends APIController
         return $this->respond('succes',
         __('msg.del_ok')
         );
+    }
+
+    public function getAssignedDetail(){
+        $d['class'] = $this->my_class->getClassSection()->select('id','name')->get();
+        $d['subject'] = Subject::where('school_id', Qs::getSchoolId())->select('id','name','slug','my_class_id')->get();
+        $d['teacher'] = User::where('school_id', Qs::getSchoolId())->where('user_type','teacher')->select('id','name')->get();
+        $d['section'] = Section::where('school_id', Qs::getSchoolId())->select('id','name')->get();
+        $d['currently_assigned'] = DB::table('class_teacher')->where('school_id', Qs::getSchoolId())->get();
+        return $this->respond('success',$d);
+    }
+
+    public function getAssignedTeacher()
+    {
+        //$d['class'] = DB::table('class_teacher')::where('school_id', Qs::getSchoolId()->select('section_id', 'subject_id', 'school_id'));
+        //$d['subject'] = Subject::where('school_id', Qs::getSchoolId())->select('id','name','slug')->get();
+        
+        //return $this->respond('success',$d);
+    }
+        
+    public function setAssignedTeacher(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'section_id' => 'required|integer|min:1',
+            'class_id' => 'required|integer|min:1',
+            'subject_id' => 'required|integer|min:1',
+            'teacher_id' => 'required|integer|min:1',
+        ]);
+        
+        if ($validator->fails()) {
+            return $this->respondWithError($validator->errors()->all());
+        }
+        try{
+            $data = $request->only(['section_id', 'class_id', 'subject_id']);
+
+                $existingRecord = DB::table('class_teacher')
+                    ->where($data)
+                    ->first();
+
+                if ($existingRecord) {
+                    DB::table('class_teacher')
+                        ->where($data)
+                        ->update($request->except(['section_id', 'class_id', 'subject_id']));
+                } else {
+                    DB::table('class_teacher')->insert($request->all());
+                }
+        }catch(Exception $e){
+            return $this->respondWithError($e);
+        }
+
+        return $this->respond('Teacher Assigned Succesfully',[]);
     }
 }

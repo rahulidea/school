@@ -71,7 +71,7 @@ class TimeTableController extends APIController
         $d_date = $req->exam_date ?? $req->day;
         $data['timestamp_from'] = strtotime($d_date.' '.$tms->time_from);
         $data['timestamp_to'] = strtotime($d_date.' '.$tms->time_to);
-        $data['school_id'] = QS::getHeaderSchoolId()[0];
+        $data['school_id'] = QS::getSchoolId()[0];
         
         $this->tt->create($data);
 
@@ -109,7 +109,7 @@ class TimeTableController extends APIController
         $data['timestamp_from'] = strtotime($tf);
         $data['timestamp_to'] = strtotime($tt);
         $data['full'] = $tf.' - '.$tt;
-        $data['school_id'] = QS::getHeaderSchoolId()[0];
+        $data['school_id'] = QS::getSchoolId()[0];
 
         if($tf == $tt){
             return response()->json(['msg' => __('msg.invalid_time_slot'), 'ok' => FALSE]);
@@ -187,7 +187,7 @@ class TimeTableController extends APIController
         $d['my_class'] = $this->my_class->find($ttr->my_class_id);
 
         $d['time_slots'] = $tms = $this->tt->getTimeSlotByTTR($ttr_id);
-        $d['tts'] = $tts = $this->tt->getTimeTable(['ttr_id' => $ttr_id]);
+        $d['tts'] = $tts = $this->tt->getTimeTable(['ttr_id' => $ttr_id])->sortBy('id');
 
         if($ttr->exam_id){
             $d['exam_id'] = $ttr->exam_id;
@@ -228,6 +228,8 @@ class TimeTableController extends APIController
         $d['t_time'] = collect($t_time);
 
         return $this->respond('success',$d);
+
+        //CREATE TABLE `hostinger_school_local`.`class_teacher` ( `id` INT NOT NULL AUTO_INCREMENT , `section_id` INT NOT NULL , `subject_id` INT NOT NULL , `created_at` DATETIME NOT NULL , `updated_at` TIMESTAMP NOT NULL , PRIMARY KEY (`id`)) ENGINE = MyISAM;
     }
     public function print_record($ttr_id)
     {

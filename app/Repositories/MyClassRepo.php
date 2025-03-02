@@ -155,4 +155,7 @@ class MyClassRepo
         return $this->getSubject(['my_class_id'=> $class_id])->orderBy($order_by, 'asc')->with(['my_class', 'teacher'])->get();
     }
 
+    public function getClassSection(){
+        return MyClass::where('school_id',QS::getSchoolId())->with('section:id,name,my_class_id');
+    }
 }
